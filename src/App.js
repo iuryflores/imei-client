@@ -9,9 +9,11 @@ import AppNavbar from "./components/AppNavbar";
 import { HomePage } from "./views/HomePage";
 import { LoginPage } from "./views/LoginPage";
 import { Clientes } from "./views/Clientes.js";
+import { Fornecedores } from "./views/Fornecedores";
 
 function App() {
   const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const userId = sessionStorage.getItem("token");
@@ -65,6 +67,20 @@ function App() {
                   loading={loading}
                   setLoading={setLoading}
                   loadingGif={loadingGif}
+                />
+              }
+            />
+            <Route
+              path="/fornecedores/"
+              element={
+                <Fornecedores
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
                 />
               }
             />

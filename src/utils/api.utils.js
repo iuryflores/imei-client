@@ -56,6 +56,22 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  getAllFornecedores = async () => {
+    try {
+      const { data } = await this.api.get("/fornecedores");
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  addFornecedor = async (fornecedorData) => {
+    try {
+      const { data } = await this.api.post("/fornecedores/new/", fornecedorData);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
 }
 
 export default new Api();
