@@ -3,7 +3,17 @@
 }
 
 
- 
+.modal {
+  /* Estilos para o modal quando não está visível */
+  display: none;
+}
+
+.modal.show {
+  /* Estilos para o modal quando está visível */
+  display: block;
+  /* ou qualquer outra propriedade que você usa para exibir o modal */
+}
+
 /* Estilos gerais */
 body {
   font-family: Arial, sans-serif;

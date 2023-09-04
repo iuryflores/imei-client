@@ -36,7 +36,6 @@ class Api {
       const { data } = await this.api.post("/user/auth/login", loginInfo);
       sessionStorage.setItem("token", data.token);
       sessionStorage.setItem("userId", data.id);
-      sessionStorage.setItem("entidade", data.entidade);
     } catch (error) {
       throw error.response.data.msg;
     }
@@ -44,6 +43,14 @@ class Api {
   signup = async (signupInfo) => {
     try {
       const { data } = await this.api.post("/user/auth/signup", signupInfo);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getAllClients = async () => {
+    try {
+      const { data } = await this.api.get("/clientes/");
       return data;
     } catch (error) {
       throw error.response.data.msg;

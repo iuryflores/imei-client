@@ -5,14 +5,15 @@ import React from "react";
 
 import loadingGif from "./imgs/loading-state.gif";
 
-import Navbar from "./components/Navbar";
-import HomePage from "./views/HomePage";
+import AppNavbar from "./components/AppNavbar";
+import { HomePage } from "./views/HomePage";
 import { LoginPage } from "./views/LoginPage";
+import { Clientes } from "./views/Clientes.js";
 
 function App() {
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   const userId = sessionStorage.getItem("token");
   const [loggedIn, setLoggedIn] = useState(!!userId);
 
@@ -23,7 +24,7 @@ function App() {
     setLoggedIn(true);
     navigate("/");
   };
-  const handleSignup = (username, password, departament, house) => {
+  const handleSignup = (username, password, cpf, email) => {
     // Aqui você pode adicionar lógica para registrar um novo usuário
     // e, em seguida, automaticamente fazer login com as credenciais fornecidas
     setLoggedIn(false);
@@ -38,7 +39,7 @@ function App() {
 
   return (
     <div>
-      {loggedIn ? <Navbar onLogout={logout} /> : null}
+      {loggedIn ? <AppNavbar onLogout={logout} /> : null}
 
       <Routes>
         {loggedIn ? (
@@ -47,6 +48,18 @@ function App() {
               path="/"
               element={
                 <HomePage
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                />
+              }
+            />
+            <Route
+              path="/clientes/"
+              element={
+                <Clientes
                   message={message}
                   setMessage={setMessage}
                   loading={loading}
