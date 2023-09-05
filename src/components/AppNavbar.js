@@ -16,6 +16,9 @@ const AppNavbar = () => {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
+          <Nav.Link as={Link} to="/compras" active={isActive("/compras")}>
+            Compras
+          </Nav.Link>
           <Nav.Link as={Link} to="/vendas" active={isActive("/vendas")}>
             Vendas
           </Nav.Link>
@@ -31,9 +34,6 @@ const AppNavbar = () => {
           </Nav.Link>
           <Nav.Link as={Link} to="/produtos" active={isActive("/produtos")}>
             Produtos
-          </Nav.Link>
-          <Nav.Link as={Link} to="/estoque" active={isActive("/estoque")}>
-            Estoque
           </Nav.Link>
           <Nav.Link as={Link} to="/caixa" active={isActive("/caixa")}>
             Caixa
