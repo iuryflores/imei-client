@@ -9,7 +9,6 @@ export const FornecedoresAdd = ({
   setMessage,
   error,
   setError,
-  atualizar,
 }) => {
   const [fornecedoresData, setFornecedoresData] = useState({
     name: "",
@@ -29,7 +28,6 @@ export const FornecedoresAdd = ({
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    // Adicione a lógica para enviar os dados do cliente para o servidor aqui (por exemplo, uma solicitação POST).
     e.preventDefault();
 
     if (fornecedoresData) {
@@ -55,7 +53,7 @@ export const FornecedoresAdd = ({
   };
 
   return (
-    <div className={`modal ${show ? "show" : ""}`}>
+    <div className={`modal modal-lg ${show ? "show" : ""}`}>
       <div
         className="modal-dialog text-dark"
         style={{ top: "50%", transform: "translateY(-50%)" }}
@@ -63,9 +61,14 @@ export const FornecedoresAdd = ({
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Cadastro de Fornecedor(a)</h5>
-            <button type="button" className="close" onClick={onClose}>
-              <span>&times;</span>
-            </button>
+            <div>
+              <div
+                className="d-flex align-items-center btn btn-outline-info  close"
+                onClick={onClose}
+              >
+                <span>&times;</span>
+              </div>
+            </div>
           </div>
           <div className="modal-body">
             <form>
