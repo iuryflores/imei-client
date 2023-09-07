@@ -64,9 +64,13 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  addFornecedor = async (fornecedorData) => {
+  addFornecedor = async (fornecedorData, userId) => {
     try {
-      const { data } = await this.api.post("/fornecedores/new/", fornecedorData);
+      const { data } = await this.api.post(
+        "/fornecedores/new/",
+        fornecedorData,
+        userId
+      );
       return data;
     } catch (error) {
       throw error.response.data.msg;

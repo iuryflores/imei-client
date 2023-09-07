@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import { FornecedoresAdd } from "../components/FornecedoresAdd";
 
-export const Fornecedores = ({ message, setMessage, error, setError }) => {
+export const Fornecedores = ({
+  message,
+  setMessage,
+  error,
+  setError,
+}) => {
+  const userId = sessionStorage.getItem("userId");
+
   const [allFornecedores, setAllFornecedores] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
@@ -13,6 +20,10 @@ export const Fornecedores = ({ message, setMessage, error, setError }) => {
 
   const closeModal = () => {
     setShowModal(false);
+  };
+
+  const updateFornecedorList = (newFornecedor) => {
+    setAllFornecedores([...allFornecedores, newFornecedor]);
   };
 
   useEffect(() => {
@@ -55,9 +66,9 @@ export const Fornecedores = ({ message, setMessage, error, setError }) => {
                 <tr key={index}>
                   <td className="text-center">
                     {fornecedor.type === "juridica" ? (
-                      <i class="bi bi-building-fill"></i>
+                      <i className="bi bi-building-fill"></i>
                     ) : (
-                      <i class="bi bi-person-fill"></i>
+                      <i className="bi bi-person-fill"></i>
                     )}
                   </td>
                   <td>{fornecedor.full_name}</td>
@@ -77,6 +88,8 @@ export const Fornecedores = ({ message, setMessage, error, setError }) => {
         setMessage={setMessage}
         error={error}
         setError={setError}
+        userId={userId}
+        updateFornecedorList={updateFornecedorList}
       />
     </div>
   );

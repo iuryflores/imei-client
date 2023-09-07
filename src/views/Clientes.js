@@ -56,9 +56,9 @@ export const Clientes = ({ message, setMessage }) => {
                   <tr key={index}>
                     <td className="text-center">
                       {cliente.type === "juridica" ? (
-                        <i class="bi bi-building-fill"></i>
+                        <i className="bi bi-building-fill"></i>
                       ) : (
-                        <i class="bi bi-person-fill"></i>
+                        <i className="bi bi-person-fill"></i>
                       )}
                     </td>
                     <td>{cliente.full_name}</td>

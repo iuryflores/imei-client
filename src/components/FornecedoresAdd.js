@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import InputMask from "react-input-mask";
 import api from "../utils/api.utils";
-import { useNavigate } from "react-router-dom";
 export const FornecedoresAdd = ({
   show,
   onClose,
@@ -9,6 +8,8 @@ export const FornecedoresAdd = ({
   setMessage,
   error,
   setError,
+  userId,
+  updateFornecedorList,
 }) => {
   const [fornecedoresData, setFornecedoresData] = useState({
     name: "",
@@ -25,15 +26,17 @@ export const FornecedoresAdd = ({
     }));
   };
 
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (fornecedoresData) {
       try {
-        await api.addFornecedor({ fornecedoresData });
-        setMessage("Fornecedor(a) cadastrado(a) com sucesso!");
+        const newFornecedor = await api.addFornecedor({
+          fornecedoresData,
+          userId,
+        });
+
         // Em seguida, limpe o formulário e feche o modal.
         setFornecedoresData({
           name: "",
@@ -43,8 +46,10 @@ export const FornecedoresAdd = ({
           type: "fisica",
         });
         onClose();
+        updateFornecedorList(newFornecedor);
+        setMessage("Fornecedor(a) cadastrado(a) com sucesso!");
         setTimeout(() => {
-          navigate(0);
+          setMessage("");
         }, 5000);
       } catch (error) {
         setError(error);

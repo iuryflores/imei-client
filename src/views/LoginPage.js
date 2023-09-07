@@ -164,7 +164,7 @@ export const LoginPage = ({
         ) : (
           <form onSubmit={handleSubmit} className="container-wrap">
             <h1>
-              <i className="bi bi-phone-vibrate"></i>IMEI Manager
+              <i className="bi bi-phone-vibrate"></i> IMEIGyn
             </h1>
             <input
               type="text"
