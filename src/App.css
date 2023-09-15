@@ -87,6 +87,13 @@ body {
   border-bottom: 1px solid lightgray;
   padding: 2px 0px;
 }
+.lista-imeis {
+ padding: 5px;
+  border-bottom:2px solid lightblue
+}
+label {
+  font-weight: bold;
+}
 /* Estilos responsivos */
 @media screen and (max-width: 600px) {
   .container-wrap {
