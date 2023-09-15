@@ -67,6 +67,8 @@ function App() {
                   loading={loading}
                   setLoading={setLoading}
                   loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
                 />
               }
             />

@@ -10,6 +10,7 @@ export const ClienteAdd = ({
   setMessage,
   error,
   setError,
+  userId
 }) => {
   const [customerData, setCustomerData] = useState({
     name: "",
@@ -34,7 +35,7 @@ export const ClienteAdd = ({
 
     if (customerData) {
       try {
-        await api.addCliente({ customerData });
+        await api.addCliente({ customerData , userId});
         setMessage("Cliente cadastrado(a) com sucesso!");
         // Em seguida, limpo o formulário e fecho o modal.
         setCustomerData({

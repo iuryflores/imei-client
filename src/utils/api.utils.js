@@ -76,6 +76,18 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  addCliente = async (clienteData, userId) => {
+    try {
+      const { data } = await this.api.post(
+        "/clientes/new/",
+        clienteData,
+        userId
+      );
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
 }
 
 export default new Api();

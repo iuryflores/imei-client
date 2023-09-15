@@ -2,8 +2,17 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import { ClienteAdd } from "../components/ClienteAdd";
 
-export const Clientes = ({ message, setMessage }) => {
+export const Clientes = ({
+  message,
+  setMessage,
+  error,
+  setError,
+  loading,
+  setLoading,
+}) => {
   const [allClientes, setAllClientes] = useState([]);
+
+  const userId = sessionStorage.getItem("userId");
 
   const [showModal, setShowModal] = useState(false);
 
@@ -69,14 +78,24 @@ export const Clientes = ({ message, setMessage }) => {
               })
             ) : (
               <tr>
-                <td colSpan="4" className="text-center">Nenhum cliente cadastrado!</td>
+                <td colSpan="4" className="text-center">
+                  Nenhum cliente cadastrado!
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
       {/* Modal de cadastro de cliente */}
-      <ClienteAdd show={showModal} onClose={closeModal} />
+      <ClienteAdd
+        show={showModal}
+        onClose={closeModal}
+        message={message}
+        setMessage={setMessage}
+        error={error}
+        setError={setError}
+        userId={userId}
+      />
     </div>
   );
 };
