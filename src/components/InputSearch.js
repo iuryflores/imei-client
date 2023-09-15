@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api.utils";
 
-const InputSearch = ({ title, searchFunc }) => {
+const InputSearch = ({ title, selectedItem, setSelectedItem }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
-  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -84,7 +83,9 @@ const InputSearch = ({ title, searchFunc }) => {
             style={{ border: "none", background: "transparent", width: "auto" }}
             hidden
           />
-          <span className="mx-3">{selectedItem.full_name}</span>
+          <span className="mx-3">
+            {selectedItem.full_name} ({selectedItem.document})
+          </span>
           <div
             className="btn btn-info"
             style={{ width: "auto" }}
