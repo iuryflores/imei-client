@@ -5,9 +5,9 @@ function ItemFornecedor({ item }) {
     <tr key={item._id} className="align-middle">
       <th scope="row">
         {item.type === "juridica" ? (
-          <i class="bi bi-building-fill"></i>
+          <i className="bi bi-building-fill"></i>
         ) : (
-          <i class="bi bi-person-fill"></i>
+          <i className="bi bi-person-fill"></i>
         )}
       </th>
       <td className="text-left capitalize">{item.full_name.toLowerCase()}</td>

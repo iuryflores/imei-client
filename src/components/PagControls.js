@@ -13,7 +13,7 @@ function PagControls({ currentPage, totalPages, onPageChange }) {
     <div className="d-flex align-items-center">
       {currentPage === 1 ? null : (
         <i
-          class="bi bi-arrow-left-square-fill fs-1"
+          className="bi bi-arrow-left-square-fill fs-1"
           onClick={handlePrevPage}
           disabled={currentPage === 1}
         ></i>
@@ -23,7 +23,7 @@ function PagControls({ currentPage, totalPages, onPageChange }) {
       </div>
       {currentPage === totalPages ? null : (
         <i
-          class="bi bi-arrow-right-square-fill fs-1"
+          className="bi bi-arrow-right-square-fill fs-1"
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
         ></i>
