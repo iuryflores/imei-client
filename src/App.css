@@ -77,7 +77,16 @@ body {
   border-radius: 4px;
   cursor: pointer;
 }
-
+.lista-busca {
+  border: 1px solid lightblue;
+  border-radius: 0px 0px 10px 10px;
+  padding: 0px 15px;
+}
+.lista-busca li {
+  list-style-type:none;
+  border-bottom: 1px solid lightgray;
+  padding: 2px 0px;
+}
 /* Estilos responsivos */
 @media screen and (max-width: 600px) {
   .container-wrap {
