@@ -9,7 +9,7 @@ const ImeiReader = ({ onImeiAdd }) => {
         onImeiAdd(imei);
         setImei("");
       }
-    }, 3000); // Aguarde 3 segundos após a última alteração
+    }, 1000); // Aguarde 3 segundos após a última alteração
 
     return () => clearTimeout(timer);
   }, [imei, onImeiAdd]);
