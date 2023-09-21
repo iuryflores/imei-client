@@ -10,14 +10,15 @@ import { HomePage } from "./views/HomePage";
 import { LoginPage } from "./views/LoginPage";
 import { Clientes } from "./views/Clientes.js";
 import { Fornecedores } from "./views/Fornecedores";
+import { Compras } from "./views/Compras";
 
 function App() {
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const userId = sessionStorage.getItem("token");
-  const [loggedIn, setLoggedIn] = useState(!!userId);
+  const userToken = sessionStorage.getItem("token");
+  const [loggedIn, setLoggedIn] = useState(!!userToken);
 
   const navigate = useNavigate();
 
@@ -39,6 +40,18 @@ function App() {
     navigate("/login");
   };
 
+  const userId = sessionStorage.getItem("userId");
+
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <div>
       {loggedIn ? <AppNavbar onLogout={logout} /> : null}
@@ -55,6 +68,27 @@ function App() {
                   loading={loading}
                   setLoading={setLoading}
                   loadingGif={loadingGif}
+                  userId={userId}
+
+                />
+              }
+            />
+            <Route
+              path="/compras/"
+              element={
+                <Compras
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                  openModal={openModal}
+                  closeModal={closeModal}
                 />
               }
             />
