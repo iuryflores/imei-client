@@ -96,6 +96,27 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  addImei = async (customerData, selectedItem, imeiArray, userId) => {
+    try {
+      const { data } = await this.api.post(
+        "/imei/new/",
+        customerData,
+        imeiArray,
+        userId
+      );
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getAllCompras = async () => {
+    try {
+      const { data } = await this.api.get("/compras/");
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
 }
 
 export default new Api();
