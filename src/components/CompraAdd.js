@@ -2,6 +2,7 @@ import React, { useState } from "react";
 //import { useNavigate } from "react-router";
 import InputSearch from "./InputSearch";
 import ImeiReader from "./ImeiReader";
+import api from "../utils/api.utils";
 
 export const CompraAdd = ({
   show,
@@ -11,6 +12,8 @@ export const CompraAdd = ({
   error,
   setError,
   userId,
+  updateCompraList,
+  newCompra,
 }) => {
   //formulario de registro da compra
   const [customerData, setCustomerData] = useState({
@@ -38,7 +41,6 @@ export const CompraAdd = ({
       [name]: value,
     }));
   };
-  console.log(imeiArray);
   //remove Imei
   const removeImei = (index) => {
     const updatedImeiArray = [...imeiArray];
@@ -48,31 +50,33 @@ export const CompraAdd = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(customerData);
-    console.log(selectedItem);
-    console.log(imeiArray);
-    /*
 
     if (customerData) {
       try {
-        await api.addCliente({ customerData, userId });
-        setMessage("Cliente cadastrado(a) com sucesso!");
+        const newCompra = await api.addImei({
+          customerData,
+          selectedItem,
+          imeiArray,
+          userId,
+        });
         // Em seguida, limpo o formulário e fecho o modal.
         setCustomerData({
-          name: "",
-          email: "",
-          phone: "",
-          document: "",
-          type: "fisica",
+          description: "",
+          brand: "",
+          price: "",
+          buyDate: "",
+          imeiArray: "",
         });
         onClose();
+        setMessage("Venda cadastrada com sucesso!");
+        updateCompraList(newCompra);
         setTimeout(() => {
-          navigate(0);
+          setMessage("");
         }, 5000);
       } catch (error) {
         setError(error);
       }
-    }*/
+    }
   };
 
   return (
