@@ -12,20 +12,13 @@ export const Fornecedores = ({
   setError,
   loading,
   setLoading,
+  userId,
+  openModal,
+  showModal,
+  closeModal,
 }) => {
-  const userId = sessionStorage.getItem("userId");
 
   const [allFornecedores, setAllFornecedores] = useState([]);
-
-  const [showModal, setShowModal] = useState(false);
-
-  const openModal = () => {
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-  };
 
   const updateFornecedorList = (newFornecedor) => {
     setAllFornecedores([...allFornecedores, newFornecedor]);

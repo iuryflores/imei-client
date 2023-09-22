@@ -11,6 +11,7 @@ import { LoginPage } from "./views/LoginPage";
 import { Clientes } from "./views/Clientes.js";
 import { Fornecedores } from "./views/Fornecedores";
 import { Compras } from "./views/Compras";
+import { Vendas } from "./views/Vendas";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -69,7 +70,6 @@ function App() {
                   setLoading={setLoading}
                   loadingGif={loadingGif}
                   userId={userId}
-
                 />
               }
             />
@@ -77,6 +77,25 @@ function App() {
               path="/compras/"
               element={
                 <Compras
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                  openModal={openModal}
+                  closeModal={closeModal}
+                />
+              }
+            />
+            <Route
+              path="/vendas/"
+              element={
+                <Vendas
                   message={message}
                   setMessage={setMessage}
                   loading={loading}

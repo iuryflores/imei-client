@@ -117,6 +117,14 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  getAllVendas = async () => {
+    try {
+      const { data } = await this.api.get("/vendas/");
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
 }
 
 export default new Api();
