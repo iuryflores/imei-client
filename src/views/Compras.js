@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import { CompraAdd } from "../components/CompraAdd.js";
+import numeral from "numeral";
 
 export const Compras = ({
   message,
@@ -16,65 +17,84 @@ export const Compras = ({
   closeModal,
 }) => {
   const [compras, setCompras] = useState([]);
-  
+
+  const updateCompraList = (newCompra) => {
+    setCompras([...compras, newCompra]);
+  };
 
   useEffect(() => {
     const getCompras = async () => {
       try {
         const getAllCompras = await api.getAllCompras();
         setCompras(getAllCompras);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching compras:", error);
       }
     };
 
     getCompras();
-  }, []);
+  }, [loading, setLoading]);
+  let valorTotal = 0;
 
-  const updateCompraList = (newCompra) => {
-    setCompras([...compras, newCompra]);
+  const moneyMask = (valor) => {
+    return numeral(valor).format("0000.00").replace(".", ",");
   };
 
   const renderTable = () => {
-    if (loading) {
+    if (loading === false) {
       if (compras.length > 0) {
         return (
           <table className="table mb-0 table-striped table-hover">
             <thead>
               <tr>
-                <th>Data Compra</th>
+                <th>Data</th>
                 <th>Fornecedor</th>
                 <th>Produto</th>
                 <th>IMEI</th>
+                <th>Valor (unitário)</th>
+                <th>Valor (total)</th>
               </tr>
             </thead>
             <tbody>
-              {compras.map((compra, index) => (
-                <tr key={index}>
-                  <td>
-                    {new Date(compra.dateBuy).toLocaleDateString("pt-br", {
-                      day: "numeric",
-                      month: "numeric",
-                      year: "numeric",
-                    })}
-                  </td>
-                  <td className="capitalize">
-                    {compra.fornecedor_id.full_name}
-                  </td>
-                  <td>
-                    {compra.brand} {compra.description}
-                  </td>
-                  <td>
-                    {
-                      compra.imei_id && Array.isArray(compra.imei_id)
-                        ? compra.imei_id.map((imei, index) => {
-                            return <span key={index}>[{imei.number}]</span>;
-                          })
-                        : "N/A" // ou outra mensagem ou tratamento adequado
-                    }
-                  </td>
-                </tr>
-              ))}
+              {compras.map((compra, index) => {
+                valorTotal = compra.imei_id.length * compra.price;
+                return (
+                  <tr
+                    key={index}
+                    className="clickable"
+                    style={{ verticalAlign: "middle" }}
+                  >
+                    <td>
+                      {new Date(compra.dateBuy).toLocaleDateString("pt-br", {
+                        day: "numeric",
+                        month: "numeric",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td className="capitalize">
+                      {compra.fornecedor_id.full_name}
+                    </td>
+                    <td>{compra.description}</td>
+                    <td>
+                      {compra.imei_id.map((imei, index) => {
+                        return (
+                          <span key={index}>
+                            {imei.number}
+                            {index < compra.imei_id.length - 1 && ", "}
+                          </span>
+                        );
+                      })}
+                    </td>
+                    <td style={{ width: "fit-content" }}>
+                      R$ {moneyMask(compra.price)}
+                    </td>
+                    <td style={{ width: "fit-content" }}>
+                      R$ {moneyMask(valorTotal)}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         );

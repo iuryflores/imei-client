@@ -68,7 +68,7 @@ export const CompraAdd = ({
           imeiArray: "",
         });
         onClose();
-        setMessage("Venda cadastrada com sucesso!");
+        setMessage("Compra cadastrada com sucesso!");
         updateCompraList(newCompra);
         setTimeout(() => {
           setMessage("");
@@ -87,7 +87,9 @@ export const CompraAdd = ({
       >
         <div className="modal-content shadow">
           <div className="modal-header">
-            <h5 className="modal-title">Registrando compra</h5>
+            <h5 className="modal-title">
+              <i className="bi bi-cart-plus-fill"></i> Registrando compra
+            </h5>
             <div>
               <div
                 className="d-flex align-items-center btn btn-outline-info  close"
