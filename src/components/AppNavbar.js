@@ -45,6 +45,9 @@ const AppNavbar = () => {
           >
             Estatísticas
           </Nav.Link>
+          <Nav.Link as={Link} to="/auditoria/" active={isActive("/auditoria/")}>
+            Auditoria
+          </Nav.Link>
         </Nav>
         <Nav>
           <NavDropdown title="Usuário" id="basic-nav-dropdown">

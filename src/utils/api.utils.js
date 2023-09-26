@@ -125,6 +125,14 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  getAuditorias = async () => {
+    try {
+      const { data } = await this.api.get("/auditoria/");
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
 }
 
 export default new Api();

@@ -12,6 +12,7 @@ import { Clientes } from "./views/Clientes.js";
 import { Fornecedores } from "./views/Fornecedores";
 import { Compras } from "./views/Compras";
 import { Vendas } from "./views/Vendas";
+import { Auditoria } from "./views/Auditoria";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -51,6 +52,31 @@ function App() {
 
   const closeModal = () => {
     setShowModal(false);
+  };
+
+  //formatar data
+  const formatarData = (dataParaFormatar) => {
+    return new Date(dataParaFormatar).toLocaleDateString("pt-br", {
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute:"2-digit"
+    });
+  };
+  //formatar data e hora
+  const formatarDataEHora = (dataParaFormatar) => {
+    console.log(dataParaFormatar)
+    return new Intl.DateTimeFormat("pt-BR", {
+      day:"numeric",
+      month:"2-digit",
+      year:"2-digit",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      timeZone: "America/Sao_Paulo",
+      hour12: false,
+    }).format(dataParaFormatar);
   };
 
   return (
@@ -108,6 +134,9 @@ function App() {
                   setShowModal={setShowModal}
                   openModal={openModal}
                   closeModal={closeModal}
+                 formatarData={formatarData}
+                 formatarDataEHora={formatarDataEHora}
+                  
                 />
               }
             />
@@ -136,6 +165,23 @@ function App() {
                   loadingGif={loadingGif}
                   error={error}
                   setError={setError}
+                />
+              }
+            />
+            <Route
+              path="/auditoria/"
+              element={
+                <Auditoria
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
                 />
               }
             />
