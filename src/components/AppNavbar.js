@@ -5,30 +5,36 @@ import { Link, useLocation } from "react-router-dom";
 const AppNavbar = () => {
   const isActive = (path) => {
     const { pathname } = useLocation();
-    return pathname === path;
+    const newLocation = pathname.split("/")
+    return newLocation[1] === path;
   };
 
+
+  
+
+
+
   return (
-    <Navbar bg="light" className="px-3" expand="lg">
+    <Navbar className="px-3 " expand="lg">
       <Navbar.Brand as={Link} to="/">
         Gyn Distribuidora
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
+      <Navbar.Collapse id="basic-navbar-nav" >
         <Nav className="mr-auto">
-          <Nav.Link as={Link} to="/compras" active={isActive("/compras")}>
+          <Nav.Link as={Link} to="/compras" active={isActive("compras")}>
             Compras
           </Nav.Link>
-          <Nav.Link as={Link} to="/vendas" active={isActive("/vendas")}>
+          <Nav.Link as={Link} to="/vendas" active={isActive("vendas")}>
             Vendas
           </Nav.Link>
-          <Nav.Link as={Link} to="/clientes" active={isActive("/clientes")}>
+          <Nav.Link as={Link} to="/clientes" active={isActive("clientes")}>
             Clientes
           </Nav.Link>
           <Nav.Link
             as={Link}
             to="/fornecedores/"
-            active={isActive("/fornecedores/")}
+            active={isActive("fornecedores")}
           >
             Fornecedores
           </Nav.Link>
