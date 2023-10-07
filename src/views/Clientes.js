@@ -36,7 +36,7 @@ export const Clientes = ({
     getClientes();
   }, []);
   return (
-    <div className="p-3 m-3 text-light d-flex flex-column align-items-center">
+    <div className="p-3 m-3  d-flex flex-column align-items-center">
       <h1>Lista de Clientes</h1>
       {message ? <div className="alert alert-success">{message}</div> : null}
       <div className="mb-3">
@@ -48,7 +48,7 @@ export const Clientes = ({
           <i className="bi bi-plus-circle-fill mx-1 fs-6"></i>
         </div>
       </div>
-      <div className="border p-2 bg-light shadow rounded w-100">
+      <div className="border p-2 shadow rounded w-100">
         <table className="table mb-0 table-striped table-hover">
           <thead>
             <tr>

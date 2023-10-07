@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import { CompraAdd } from "../components/CompraAdd.js";
-import numeral from "numeral";
 
 export const Compras = ({
   message,
@@ -35,10 +34,45 @@ export const Compras = ({
 
     getCompras();
   }, [loading, setLoading]);
-  let valorTotal = 0;
 
-  const moneyMask = (valor) => {
-    return numeral(valor).format("0000.00").replace(".", ",");
+  const formatarValorMonetario = (valor) => {
+    // Converte o valor para string
+    const valorString = valor.toString();
+    if (valorString.includes(".")) {
+      // Separar os centavos
+      const separado = valorString.split(".");
+      let centavos = separado[1];
+      if (centavos.length === 1) {
+        centavos = centavos + "0";
+      }
+
+      // Reverter a string e agrupar os milhares de três em três
+      const parteAntesDaVirgula = separado[0].split(".").join("");
+      const reais = parteAntesDaVirgula.slice(-3); // Pegar os 3 últimos dígitos antes da vírgula
+      let milhares = parteAntesDaVirgula.slice(0, -3); // Pegar os milhares
+
+      let total = "";
+      if (milhares && reais) {
+        total = milhares + "." + reais + "," + centavos;
+      } else if (!milhares && reais) {
+        total = reais + "," + centavos;
+      } else {
+        total = 0 + "," + centavos;
+      }
+
+      return total;
+    } else {
+      let reais = "";
+      let milhares = "";
+      if (valorString.length > 3) {
+        reais = valorString.slice(-3); // Pegar os milhares
+        milhares = valorString.slice(0, -3);
+        let total = milhares + "." + reais + ",00";
+        return total;
+      } else {
+        return valorString + ",00";
+      }
+    }
   };
 
   const renderTable = () => {
@@ -51,14 +85,15 @@ export const Compras = ({
                 <th>Data</th>
                 <th>Fornecedor</th>
                 <th>Produto</th>
-                <th>IMEI</th>
+                <th>Qtd</th>
                 <th>Valor (unitário)</th>
                 <th>Valor (total)</th>
               </tr>
             </thead>
             <tbody>
               {compras.map((compra, index) => {
-                valorTotal = compra.imei_id.length * compra.price;
+                const valorTotalCompra = compra.imei_id.length * compra.price;
+
                 return (
                   <tr
                     key={index}
@@ -76,21 +111,12 @@ export const Compras = ({
                       {compra.fornecedor_id.full_name}
                     </td>
                     <td>{compra.description}</td>
-                    <td>
-                      {compra.imei_id.map((imei, index) => {
-                        return (
-                          <span key={index}>
-                            {imei.number}
-                            {index < compra.imei_id.length - 1 && ", "}
-                          </span>
-                        );
-                      })}
+                    <td>{compra.imei_id.length}</td>
+                    <td style={{ width: "fit-content" }}>
+                      R$ {formatarValorMonetario(compra.price)}
                     </td>
                     <td style={{ width: "fit-content" }}>
-                      R$ {moneyMask(compra.price)}
-                    </td>
-                    <td style={{ width: "fit-content" }}>
-                      R$ {moneyMask(valorTotal)}
+                      R$ {formatarValorMonetario(valorTotalCompra)}
                     </td>
                   </tr>
                 );
@@ -111,7 +137,7 @@ export const Compras = ({
   };
 
   return (
-    <div className="p-3 m-3 text-light d-flex flex-column align-items-center">
+    <div className="p-3 m-3 d-flex flex-column align-items-center">
       <h1>Compras</h1>
       {message ? <div className="alert alert-success">{message}</div> : null}
       <div className="mb-3">
@@ -123,9 +149,7 @@ export const Compras = ({
           <i className="bi bi-plus-circle-fill mx-1 fs-6"></i>
         </div>
       </div>
-      <div className="border p-2 bg-light shadow rounded w-100">
-        {renderTable()}
-      </div>
+      <div className="border p-2 shadow rounded w-100">{renderTable()}</div>
       {/* Modal de cadastro de cliente */}
       <CompraAdd
         show={showModal}

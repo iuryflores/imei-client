@@ -72,6 +72,22 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  buscaCliente = async (term) => {
+    try {
+      const { data } = await this.api.get(`/clientes/busca/${term}`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  buscarImeiDados = async (imeiNumber) => {
+    try {
+      const { data } = await this.api.get(`/imei/${imeiNumber}`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
   addFornecedor = async (fornecedorData, userId) => {
     try {
       const { data } = await this.api.post(
@@ -96,11 +112,13 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  addImei = async (customerData, selectedItem, imeiArray, userId) => {
+  addImei = async (customerData, selectedItem, priceDb, imeiArray, userId) => {
     try {
       const { data } = await this.api.post(
         "/imei/new/",
         customerData,
+        priceDb,
+        selectedItem,
         imeiArray,
         userId
       );

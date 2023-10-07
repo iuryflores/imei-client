@@ -13,6 +13,7 @@ import { Fornecedores } from "./views/Fornecedores";
 import { Compras } from "./views/Compras";
 import { Vendas } from "./views/Vendas";
 import { Auditoria } from "./views/Auditoria";
+import AddVenda from "./views/AddVenda";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -61,16 +62,16 @@ function App() {
       month: "numeric",
       year: "numeric",
       hour: "2-digit",
-      minute:"2-digit"
+      minute: "2-digit",
     });
   };
   //formatar data e hora
   const formatarDataEHora = (dataParaFormatar) => {
-    console.log(dataParaFormatar)
+    console.log(dataParaFormatar);
     return new Intl.DateTimeFormat("pt-BR", {
-      day:"numeric",
-      month:"2-digit",
-      year:"2-digit",
+      day: "numeric",
+      month: "2-digit",
+      year: "2-digit",
       hour: "numeric",
       minute: "numeric",
       second: "numeric",
@@ -134,9 +135,29 @@ function App() {
                   setShowModal={setShowModal}
                   openModal={openModal}
                   closeModal={closeModal}
-                 formatarData={formatarData}
-                 formatarDataEHora={formatarDataEHora}
-                  
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                />
+              }
+            />
+            <Route
+              path="/vendas/cadastrando/"
+              element={
+                <AddVenda
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                  openModal={openModal}
+                  closeModal={closeModal}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
                 />
               }
             />

@@ -85,10 +85,10 @@ export const Auditoria = ({
   };
 
   return (
-    <div className="p-3 m-3 text-light d-flex flex-column align-items-center">
+    <div className="p-3 m-3 d-flex flex-column align-items-center">
       <h1>Ações do sistema</h1>
 
-      <div className="border p-2 bg-light shadow rounded w-100">
+      <div className="border p-2 shadow rounded w-100">
         <table className="table mb-0 table-striped table-hover">
           <thead>
             <tr>

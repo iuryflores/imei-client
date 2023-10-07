@@ -4,6 +4,8 @@ import InputSearch from "./InputSearch";
 import ImeiReader from "./ImeiReader";
 import api from "../utils/api.utils";
 
+import InputMask from "react-input-mask";
+
 export const CompraAdd = ({
   show,
   onClose,
@@ -19,7 +21,6 @@ export const CompraAdd = ({
   const [customerData, setCustomerData] = useState({
     description: "",
     brand: "",
-    price: "",
     buyDate: "",
   });
   //pick fornecedor
@@ -41,6 +42,25 @@ export const CompraAdd = ({
       [name]: value,
     }));
   };
+
+  const [price, setPrice] = useState("");
+  const [priceDb, setPriceDb] = useState("");
+
+  const handleValorChange = (e) => {
+    const inputValor = e.target.value;
+    const valorNumerico = parseFloat(inputValor.replace(/[^0-9]/g, '')) / 100;
+    setPriceDb(valorNumerico)
+
+    if (!isNaN(valorNumerico)) {
+      setPrice(valorNumerico.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }));
+    } else {
+      setPrice('');
+    }
+  };
+
   //remove Imei
   const removeImei = (index) => {
     const updatedImeiArray = [...imeiArray];
@@ -55,6 +75,7 @@ export const CompraAdd = ({
       try {
         const newCompra = await api.addImei({
           customerData,
+          priceDb,
           selectedItem,
           imeiArray,
           userId,
@@ -63,7 +84,6 @@ export const CompraAdd = ({
         setCustomerData({
           description: "",
           brand: "",
-          price: "",
           buyDate: "",
           imeiArray: "",
         });
@@ -174,13 +194,17 @@ export const CompraAdd = ({
                 </div>
                 <div className="form-group">
                   <label htmlFor="price">Valor (individual):</label>
-                  <input
-                    type="text"
-                    className="form-control"
+
+                  <InputMask
+                    mask=""
+                    maskChar=""
+                    alwaysShowMask={false}
                     id="price"
                     name="price"
-                    value={customerData.price}
-                    onChange={handleChange}
+                    value={price}
+                    placeholder="0,00"
+                    onChange={handleValorChange}
+                    className="form-control"
                   />
                 </div>
               </div>

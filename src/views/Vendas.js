@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import { VendaAdd } from "../components/VendaAdd.js";
 import numeral from "numeral";
+import { Link } from "react-router-dom";
 
 export const Vendas = ({
   message,
@@ -103,19 +104,19 @@ export const Vendas = ({
   };
 
   return (
-    <div className="p-3 m-3 text-light d-flex flex-column align-items-center">
+    <div className="p-3 m-3  d-flex flex-column align-items-center">
       <h1>Vendas</h1>
       {message ? <div className="alert alert-success">{message}</div> : null}
       <div className="mb-3">
-        <div
+        <Link
           className="d-flex align-items-center btn btn-outline-info"
-          onClick={openModal}
+          to="/vendas/cadastrando/"
         >
           <span>Adicionar</span>
           <i className="bi bi-plus-circle-fill mx-1 fs-6"></i>
-        </div>
+        </Link>
       </div>
-      <div className="border p-2 bg-light shadow rounded w-100">
+      <div className="border p-2  shadow rounded w-100">
         {renderTable()}
       </div>
       {/* Modal de cadastro de cliente */}
