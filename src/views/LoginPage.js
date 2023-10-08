@@ -67,18 +67,6 @@ export const LoginPage = ({
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
       <div className="col-md-12 login-container">
-        <div className="d-flex flex-column align-items-center w-100 mt-3">
-          {message && (
-            <div className="alert alert-success d-flex flex-column align-items-center w-100">
-              {message}
-            </div>
-          )}
-          {error && (
-            <div className="alert alert-danger d-flex flex-column align-items-center w-100">
-              {error}
-            </div>
-          )}
-        </div>
         {signupMode ? (
           <form onSubmit={handleSignupSubmit} className="p-3 container-wrap">
             <h2 className="mb-3">Cadastro de usuário</h2>
@@ -146,6 +134,18 @@ export const LoginPage = ({
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            <div className="d-flex flex-column align-items-center w-100 mt-3">
+              {message && (
+                <div className="alert alert-success d-flex flex-column align-items-center w-100">
+                  {message}
+                </div>
+              )}
+              {error && (
+                <div className="alert alert-danger d-flex flex-column align-items-center w-100">
+                  {error}
+                </div>
+              )}
+            </div>
             <div className="mt-3 d-flex flex-column mb-3">
               <button type="submit" className="btn btn-primary">
                 Registrar
@@ -186,6 +186,18 @@ export const LoginPage = ({
               <button type="submit" className="btn btn-primary">
                 Entrar
               </button>
+            </div>
+            <div className="d-flex flex-column align-items-center w-100 mt-3">
+              {message && (
+                <div className="alert alert-success d-flex flex-column align-items-center w-100">
+                  {message}
+                </div>
+              )}
+              {error && (
+                <div className="alert alert-danger d-flex flex-column align-items-center w-100">
+                  {error}
+                </div>
+              )}
             </div>
             <div className="mt-3 d-flex flex-column">
               <span className="d-flex flex-column align-items-center w-100">

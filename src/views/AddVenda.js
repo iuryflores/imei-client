@@ -1,4 +1,4 @@
-import React, { /*useEffect,*/ useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import SearchClient from "../components/SearchClient";
 import ImeiReader from "../components/ImeiReader";
@@ -26,9 +26,6 @@ const AddVenda = ({
 
   //IMEI components
   const [imeiArray, setImeiArray] = useState([]);
-  const [ setBuyData] = useState([]);
-  const [porcento, setPorcento] = useState("");
-  // const [lucro, setLucro] = useState("");
 
   const [erroImei, setErrorImei] = useState(null);
   const handleImeiAdd = async (imei) => {
@@ -41,15 +38,14 @@ const AddVenda = ({
       );
 
       if (!isImeiAlreadyAdded) {
-        setImeiArray([...imeiArray, getImei]);
+        setImeiArray([...imeiArray, { ...getImei, porcento: "" }]);
         // Se não existe, adiciona o IMEI ao imeiArray
       } else {
         setErrorImei("IMEI já foi incluído.");
       }
-      setBuyData(getImei);
     } catch (error) {
       setErrorImei(error);
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -68,7 +64,10 @@ const AddVenda = ({
   };
 
   const formatarValor = (valor) => {
-    const valorFormatado = valor.toLocaleString("pt-BR");
+    const valorFormatado = valor.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
     return valorFormatado;
   };
 
@@ -103,11 +102,30 @@ const AddVenda = ({
     }
   };
 
-  console.log(porcento);
+  const [valorVenda, setValorVenda] = useState(0);
+
+  const sumImeis = () => {
+    return imeiArray
+      .reduce((total, imei) => {
+        return (
+          total +
+          (imei.buy_id
+            ? (imei.buy_id.price * parseFloat(imei.porcento || 0)) / 100 +
+              imei.buy_id.price
+            : 0)
+        );
+      }, 0)
+      .toFixed(2);
+  };
+
+  useEffect(() => {
+    const totalValue = sumImeis();
+    setValorVenda(parseFloat(totalValue));
+  }, [imeiArray]);
 
   return (
     <div className="container mt-3">
-      <div className="">
+      <div className="d-flex flex-column">
         <hr className="espacamento-02" />
         <h5 className="mt-3">
           <i className="bi bi-cash-coin"></i> Registrando Venda
@@ -152,7 +170,10 @@ const AddVenda = ({
                       <th></th>
                       <th
                         className="text-center text-light"
-                        style={{ backgroundColor: "grey", borderRadius:"5px 5px 0 0" }}
+                        style={{
+                          backgroundColor: "grey",
+                          borderRadius: "5px 5px 0 0",
+                        }}
                         colSpan={2}
                       >
                         Lucro/Prejuízo
@@ -170,51 +191,83 @@ const AddVenda = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {imeiArray.map((imei, index) => (
-                      <tr key={index} className="lista-imeis w-100">
-                        <td>
-                          <div
-                            className="btn btn-danger"
-                            style={{ width: "auto" }}
-                            onClick={() => removeImei(index)}
-                          >
-                            <i className="bi bi-trash"></i>
-                          </div>
-                        </td>
-                        <td>{imei.number}</td>
-                        <td>{imei.buy_id.description}</td>
-                        <td>R$ {formatarValor(imei.buy_id.price)},00</td>
-                        <td>
-                          <input
-                            className="form-control"
-                            type="text"
-                            value={porcento}
-                            onChange={(e) => setPorcento(e.target.value)}
-                            placeholder="Lucro/Desconto"
-                          />
-                        </td>
-                        <td className="text-center bg-light">
-                          R${" "}
-                          {(imei.buy_id.price * porcento) / 100 +
-                            imei.buy_id.price}
-                          ,00
-                        </td>
-                      </tr>
-                    ))}
+                    {imeiArray &&
+                      imeiArray.map((imei, index) => (
+                        <tr key={index} className="lista-imeis w-100">
+                          <td>
+                            <div
+                              className="btn btn-danger"
+                              style={{ width: "auto" }}
+                              onClick={() => removeImei(index)}
+                            >
+                              <i className="bi bi-trash"></i>
+                            </div>
+                          </td>
+                          <td>{imei.number}</td>
+                          <td>{imei.buy_id && imei.buy_id.description}</td>
+                          <td>
+                            R$ {imei.buy_id && formatarValor(imei.buy_id.price)}
+                          </td>
+                          <td>
+                            <input
+                              className="form-control"
+                              type="text"
+                              value={imei.porcento}
+                              onChange={(e) => {
+                                const updateImeiArray = [...imeiArray];
+                                updateImeiArray[index].porcento =
+                                  e.target.value;
+                                setImeiArray(updateImeiArray);
+                              }}
+                              placeholder="Lucro/Desconto"
+                            />
+                          </td>
+                          <td className="text-center bg-light">
+                            R${" "}
+                            {imei.buy_id &&
+                              formatarValor(
+                                (imei.buy_id.price *
+                                  parseFloat(imei.porcento || 0)) /
+                                  100 +
+                                  imei.buy_id.price
+                              )}
+                          </td>
+                        </tr>
+                      ))}
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td colSpan="2" className="text-center valorVenda">
+                        Valor total da venda
+                      </td>
+                    </tr>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+
+                      <td colSpan={2} className="valorVenda2">
+                        R$ {valorVenda && formatarValor(valorVenda)}
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
         </form>
-
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleSubmit}
-        >
-          Cadastrar
-        </button>
+        <div className="d-flex flex-column align-items-end">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleSubmit}
+          >
+            Cadastrar
+          </button>
+        </div>
       </div>
     </div>
   );

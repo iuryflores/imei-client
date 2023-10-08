@@ -18,12 +18,13 @@ const ImeiReader = ({ onImeiAdd }) => {
     setImei(event.target.value);
   };
 
+
   return (
     <div className="d-flex flex-column form-group">
       <label>Leitura de IMEI</label>
       <input
         className="form-control"
-        type="text"
+        type="number"
         value={imei}
         onChange={handleImeiChange}
         placeholder="Insira o IMEI"

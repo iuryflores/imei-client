@@ -26,7 +26,16 @@
 background-color: lightblue !important;
 border-radius: 5px 10px;
 }
-
+.valorVenda {
+  background-color: rgb(128, 227, 240) !important;
+  font-weight: bolder;
+}
+.valorVenda2 {
+  background-color: rgb(182, 231, 255) !important;
+}
+ .btn {
+  width: auto !important;
+}
 .button-filter {
   border: 0;
 
