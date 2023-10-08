@@ -172,6 +172,10 @@ function App() {
                   loadingGif={loadingGif}
                   error={error}
                   setError={setError}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                  openModal={openModal}
+                  closeModal={closeModal}
                 />
               }
             />
@@ -186,6 +190,10 @@ function App() {
                   loadingGif={loadingGif}
                   error={error}
                   setError={setError}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                  openModal={openModal}
+                  closeModal={closeModal}
                 />
               }
             />

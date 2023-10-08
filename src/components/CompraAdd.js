@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 //import { useNavigate } from "react-router";
-import InputSearch from "./InputSearch";
+import SearchFornecedor from "./SearchFornecedor";
 import ImeiReader from "./ImeiReader";
 import api from "../utils/api.utils";
 
@@ -48,19 +48,21 @@ export const CompraAdd = ({
 
   const handleValorChange = (e) => {
     const inputValor = e.target.value;
-    const valorNumerico = parseFloat(inputValor.replace(/[^0-9]/g, '')) / 100;
-    setPriceDb(valorNumerico)
+    const valorNumerico = parseFloat(inputValor.replace(/[^0-9]/g, "")) / 100;
+    setPriceDb(valorNumerico);
 
     if (!isNaN(valorNumerico)) {
-      setPrice(valorNumerico.toLocaleString('pt-BR', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }));
+      setPrice(
+        valorNumerico.toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      );
     } else {
-      setPrice('');
+      setPrice("");
     }
   };
-
+  console.log(show);
   //remove Imei
   const removeImei = (index) => {
     const updatedImeiArray = [...imeiArray];
@@ -136,7 +138,7 @@ export const CompraAdd = ({
                 </div>
               </div>
               <div className="form-group w-100">
-                <InputSearch
+                <SearchFornecedor
                   title="Fornecedor"
                   selectedItem={selectedItem}
                   setSelectedItem={setSelectedItem}

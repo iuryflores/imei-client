@@ -151,11 +151,11 @@ const AddVenda = ({
                       <th></th>
                       <th></th>
                       <th
-                        className="text-center"
-                        style={{ backgroundColor: "grey" }}
+                        className="text-center text-light"
+                        style={{ backgroundColor: "grey", borderRadius:"5px 5px 0 0" }}
                         colSpan={2}
                       >
-                        Lucro/Desconto
+                        Lucro/Prejuízo
                       </th>
                     </tr>
                     <tr>
@@ -193,7 +193,7 @@ const AddVenda = ({
                             placeholder="Lucro/Desconto"
                           />
                         </td>
-                        <td className="text-center">
+                        <td className="text-center bg-light">
                           R${" "}
                           {(imei.buy_id.price * porcento) / 100 +
                             imei.buy_id.price}

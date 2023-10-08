@@ -108,7 +108,13 @@ export const Compras = ({
                       })}
                     </td>
                     <td className="capitalize">
-                      {compra.fornecedor_id.full_name}
+                      {compra.fornecedor_id.type === "juridica" ? (
+                        <i className="bi bi-building-fill"></i>
+                      ) : (
+                        <i className="bi bi-person-fill"></i>
+                      )}{" "}
+                      {compra.fornecedor_id.full_name} (
+                      {compra.fornecedor_id.document})
                     </td>
                     <td>{compra.description}</td>
                     <td>{compra.imei_id.length}</td>
@@ -137,18 +143,21 @@ export const Compras = ({
   };
 
   return (
-    <div className="p-3 m-3 d-flex flex-column align-items-center">
-      <h1>Compras</h1>
-      {message ? <div className="alert alert-success">{message}</div> : null}
-      <div className="mb-3">
-        <div
-          className="d-flex align-items-center btn btn-outline-info"
-          onClick={openModal}
-        >
-          <span>Adicionar</span>
-          <i className="bi bi-plus-circle-fill mx-1 fs-6"></i>
+    <div className="p-3 m-3 d-flex flex-column">
+      <div className="d-flex align-items-baseline justify-content-between">
+        <h1>Compras</h1>
+        <div className="mb-3">
+          <div
+            className="d-flex align-items-center btn btn-outline-info"
+            onClick={openModal}
+          >
+            <span>Adicionar</span>
+            <i className="bi bi-plus-circle-fill mx-1 fs-6"></i>
+          </div>
         </div>
       </div>
+      <hr />
+      {message ? <div className="alert alert-success">{message}</div> : null}
       <div className="border p-2 shadow rounded w-100">{renderTable()}</div>
       {/* Modal de cadastro de cliente */}
       <CompraAdd

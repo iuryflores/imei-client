@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api.utils";
 
-const InputSearch = ({ title, selectedItem, setSelectedItem }) => {
+const SearchFornecedor = ({ title, selectedItem, setSelectedItem }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
 
@@ -99,4 +99,4 @@ const InputSearch = ({ title, selectedItem, setSelectedItem }) => {
   );
 };
 
-export default InputSearch;
+export default SearchFornecedor;

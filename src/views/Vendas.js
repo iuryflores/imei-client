@@ -104,21 +104,22 @@ export const Vendas = ({
   };
 
   return (
-    <div className="p-3 m-3  d-flex flex-column align-items-center">
-      <h1>Vendas</h1>
+    <div className="p-3 m-3  d-flex flex-column">
+      <div className="d-flex align-items-baseline justify-content-between">
+        <h1>Vendas</h1>
+        <div className="mb-3">
+          <Link
+            className="d-flex align-items-center btn btn-outline-info"
+            to="/vendas/cadastrando/"
+          >
+            <span>Adicionar</span>
+            <i className="bi bi-plus-circle-fill mx-1 fs-6"></i>
+          </Link>
+        </div>
+      </div>
+      <hr />
       {message ? <div className="alert alert-success">{message}</div> : null}
-      <div className="mb-3">
-        <Link
-          className="d-flex align-items-center btn btn-outline-info"
-          to="/vendas/cadastrando/"
-        >
-          <span>Adicionar</span>
-          <i className="bi bi-plus-circle-fill mx-1 fs-6"></i>
-        </Link>
-      </div>
-      <div className="border p-2  shadow rounded w-100">
-        {renderTable()}
-      </div>
+      <div className="border p-2  shadow rounded w-100">{renderTable()}</div>
       {/* Modal de cadastro de cliente */}
       <VendaAdd
         show={showModal}

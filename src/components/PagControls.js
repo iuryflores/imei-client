@@ -18,7 +18,7 @@ function PagControls({ currentPage, totalPages, onPageChange }) {
           disabled={currentPage === 1}
         ></i>
       )}
-      <div className="px-3">
+      <div className="p-3">
         {currentPage} de {totalPages}
       </div>
       {currentPage === totalPages ? null : (

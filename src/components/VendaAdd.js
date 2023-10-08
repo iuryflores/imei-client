@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import InputSearch from "./InputSearch";
+import SearchFornecedor from "./SearchFornecedor";
 import ImeiReader from "./ImeiReader";
 import api from "../utils/api.utils";
 
@@ -113,7 +113,7 @@ export const VendaAdd = ({
                 </div>
               </div>
               <div className="form-group w-100">
-                <InputSearch
+                <SearchFornecedor
                   title="Cliente"
                   selectedItem={selectedItem}
                   setSelectedItem={setSelectedItem}

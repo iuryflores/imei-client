@@ -3,7 +3,7 @@ import React from "react";
 function ItemFornecedor({ item }) {
   return (
     <tr key={item._id} className="align-middle">
-      <th scope="row">
+      <th scope="row" className="text-center">
         {item.type === "juridica" ? (
           <i className="bi bi-building-fill"></i>
         ) : (

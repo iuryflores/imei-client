@@ -17,7 +17,6 @@ export const Fornecedores = ({
   showModal,
   closeModal,
 }) => {
-
   const [allFornecedores, setAllFornecedores] = useState([]);
 
   const updateFornecedorList = (newFornecedor) => {
@@ -75,6 +74,7 @@ export const Fornecedores = ({
 
   const renderPagControle = (
     <PagControls
+      
       currentPage={currentPage}
       totalPages={totalPages}
       onPageChange={handlePageChange}
@@ -87,11 +87,11 @@ export const Fornecedores = ({
     ),
   ];
 
-    // Função de clique para o caractere "#"
-    const handleClickHash = () => {
-      setSelectedAlphabet(""); // Limpa qualquer filtro alfabético
-      setCurrentPage(1);
-    };
+  // Função de clique para o caractere "#"
+  const handleClickHash = () => {
+    setSelectedAlphabet(""); // Limpa qualquer filtro alfabético
+    setCurrentPage(1);
+  };
 
   const renderAlphabetFilter = (
     <FilterAlphabet
@@ -102,23 +102,23 @@ export const Fornecedores = ({
     />
   );
 
-
-
   return (
-    <div className="p-3 m-3 text-light d-flex flex-column align-items-center">
-      <h1>Lista de Fornecedores ({allFornecedores.length})</h1>
-      {message ? <div className="alert alert-success">{message}</div> : null}
-      <div className="mb-3">
-        <div
-          className="d-flex align-items-center btn btn-outline-info"
-          onClick={openModal}
-        >
-          <span>Adicionar</span>
-          <i className="bi bi-plus-circle-fill mx-1 fs-6"></i>
+    <div className="p-3 m-3 d-flex flex-column">
+      <div className="d-flex align-items-baseline justify-content-between">
+        <h1>Fornecedores</h1>
+        <div className="mb-3">
+          <div
+            className="d-flex align-items-center btn btn-outline-info"
+            onClick={openModal}
+          >
+            <span>Adicionar</span>
+            <i className="bi bi-plus-circle-fill mx-1 fs-6"></i>
+          </div>
         </div>
       </div>
-
-      <div className="border p-2 bg-light shadow rounded w-100">
+      <hr />
+      {message ? <div className="alert alert-success">{message}</div> : null}
+      <div className="border p-2 shadow rounded w-100">
         {renderAlphabetFilter}
         <table className="table mb-0 table-striped table-hover">
           <thead>
