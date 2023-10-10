@@ -14,6 +14,7 @@ import { Compras } from "./views/Compras";
 import { Vendas } from "./views/Vendas";
 import { Auditoria } from "./views/Auditoria";
 import AddVenda from "./views/AddVenda";
+import Produtos from "./views/Produtos";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -165,6 +166,25 @@ function App() {
               path="/clientes/"
               element={
                 <Clientes
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                  openModal={openModal}
+                  closeModal={closeModal}
+                />
+              }
+            />
+            
+            <Route
+              path="/produtos/"
+              element={
+                <Produtos
                   message={message}
                   setMessage={setMessage}
                   loading={loading}

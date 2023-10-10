@@ -75,7 +75,7 @@ const AddVenda = ({
 
     if (selectedCliente && imeiArray) {
       try {
-        const newVenda = await api.addVenda({
+        await api.addVenda({
           sellDate,
           selectedCliente, //clienteID
           imeiArray,

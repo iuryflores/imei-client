@@ -31,7 +31,7 @@ export const Vendas = ({
     };
 
     getVendas();
-  }, [loading, setLoading]);
+  }, [ setLoading]);
 
   const updateVendaList = (newVenda) => {
     setVendas([...vendas, newVenda]);
