@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import SearchClient from "../components/SearchClient";
 import ImeiReader from "../components/ImeiReader";
+import { useNavigate } from "react-router-dom";
 
 const AddVenda = ({
   show,
@@ -15,19 +16,18 @@ const AddVenda = ({
   newVenda,
 }) => {
   //formulario de registro da venda
-  const [customerData, setCustomerData] = useState({
-    description: "",
-    brand: "",
-    price: "",
-    buyDate: "",
-  });
+  const [sellDate, setSellDate] = useState();
+
   //pick Cliente
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedCliente, setSelectedCliente] = useState(null);
 
   //IMEI components
   const [imeiArray, setImeiArray] = useState([]);
 
+  const [valorVenda, setValorVenda] = useState(0);
+
   const [erroImei, setErrorImei] = useState(null);
+
   const handleImeiAdd = async (imei) => {
     try {
       const getImei = await api.buscarImeiDados(imei);
@@ -36,9 +36,15 @@ const AddVenda = ({
       const isImeiAlreadyAdded = imeiArray.some(
         (existingImei) => existingImei.number === getImei.number
       );
-
       if (!isImeiAlreadyAdded) {
-        setImeiArray([...imeiArray, { ...getImei, porcento: "" }]);
+        setImeiArray([
+          ...imeiArray,
+          {
+            ...getImei,
+            porcento: "",
+            price: calculatePriceFromPorcento(getImei),
+          },
+        ]);
         // Se não existe, adiciona o IMEI ao imeiArray
       } else {
         setErrorImei("IMEI já foi incluído.");
@@ -49,13 +55,6 @@ const AddVenda = ({
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCustomerData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
   //remove Imei
   const removeImei = (index) => {
     const updatedImeiArray = [...imeiArray];
@@ -70,39 +69,46 @@ const AddVenda = ({
     });
     return valorFormatado;
   };
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (customerData) {
+    if (selectedCliente && imeiArray) {
       try {
         const newVenda = await api.addVenda({
-          customerData,
-          selectedItem, //clienteID
+          sellDate,
+          selectedCliente, //clienteID
           imeiArray,
+          valorVenda,
           userId,
         });
         // Em seguida, limpo o formulário e fecho o modal.
-        setCustomerData({
-          description: "",
-          brand: "",
-          price: "",
-          buyDate: "",
-          imeiArray: "",
-        });
-        onClose();
+        setSellDate("");
+        setSelectedCliente(null);
+        setImeiArray([]);
+        setValorVenda("");
+
         setMessage("Venda cadastrada com sucesso!");
-        updateVendaList(newVenda);
+
+        navigate("/vendas/");
         setTimeout(() => {
           setMessage("");
         }, 5000);
       } catch (error) {
-        setError(error);
+        console.log(error);
+        // setError(error);
       }
     }
   };
 
-  const [valorVenda, setValorVenda] = useState(0);
+  const calculatePriceFromPorcento = (imei) => {
+    if (imei.buy_id) {
+      const porcento = parseFloat(imei.porcento || 0);
+      const newPrice = (imei.buy_id.price * porcento) / 100 + imei.buy_id.price;
+      return newPrice;
+    }
+    return "";
+  };
 
   const sumImeis = () => {
     return imeiArray
@@ -141,16 +147,16 @@ const AddVenda = ({
                 className="form-control"
                 id="buyDate"
                 name="buyDate"
-                value={customerData.sellDate}
-                onChange={handleChange}
+                value={sellDate}
+                onChange={(e) => setSellDate(e.target.value)}
               />
             </div>
           </div>
           <div className="form-group w-100">
             <SearchClient
               title="Cliente"
-              selectedItem={selectedItem}
-              setSelectedItem={setSelectedItem}
+              selectedItem={selectedCliente}
+              setSelectedItem={setSelectedCliente}
             />
           </div>
 
@@ -214,16 +220,47 @@ const AddVenda = ({
                               type="text"
                               value={imei.porcento}
                               onChange={(e) => {
-                                const updateImeiArray = [...imeiArray];
-                                updateImeiArray[index].porcento =
-                                  e.target.value;
-                                setImeiArray(updateImeiArray);
+                                const newPorcento =
+                                  parseFloat(e.target.value) || 0;
+
+                                const updatedImeiArray = [...imeiArray];
+                                updatedImeiArray[index].porcento = newPorcento;
+
+                                // Calculate and update the "price" based on the new "porcento"
+                                if (imei.buy_id) {
+                                  const calculatedPrice =
+                                    (imei.buy_id.price * newPorcento) / 100 +
+                                    imei.buy_id.price;
+                                  updatedImeiArray[index].price = parseFloat(
+                                    calculatedPrice.toFixed(2)
+                                  );
+                                }
+
+                                setImeiArray(updatedImeiArray);
                               }}
-                              placeholder="Lucro/Desconto"
+                              placeholder="%"
                             />
                           </td>
                           <td className="text-center bg-light">
                             R${" "}
+                            <input
+                              className="form-control"
+                              type="text"
+                              value={parseFloat(
+                                calculatePriceFromPorcento(imei)
+                              )}
+                              onChange={(e) => {
+                                const updatedImeiArray = [...imeiArray];
+
+                                // Convert the value to a number and update the "price"
+                                updatedImeiArray[index].price = parseFloat(
+                                  e.target.value
+                                );
+
+                                setImeiArray(updatedImeiArray);
+                              }}
+                              hidden
+                            />
                             {imei.buy_id &&
                               formatarValor(
                                 (imei.buy_id.price *

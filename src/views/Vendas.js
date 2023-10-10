@@ -36,7 +36,7 @@ export const Vendas = ({
   const updateVendaList = (newVenda) => {
     setVendas([...vendas, newVenda]);
   };
-  let valorTotal = 0;
+  let valorUnitario = 0;
 
   const moneyMask = (valor) => {
     return numeral(valor).format("0000.00").replace(".", ",");
@@ -51,26 +51,24 @@ export const Vendas = ({
               <tr>
                 <th>Data</th>
                 <th>Cliente</th>
-                <th>Produto</th>
-                <th>IMEI</th>
+                <th>IMEI's</th>
                 <th>Valor (unitário)</th>
                 <th>Valor (total)</th>
               </tr>
             </thead>
             <tbody>
               {vendas.map((venda, index) => {
-                valorTotal = venda.imei_id.length * venda.price;
+                valorUnitario = venda.price / venda.imei_id.length;
                 return (
                   <tr key={index}>
                     <td>
-                      {new Date(venda.dateBuy).toLocaleDateString("pt-br", {
+                      {new Date(venda.dateSell).toLocaleDateString("pt-br", {
                         day: "numeric",
                         month: "numeric",
                         year: "numeric",
                       })}
                     </td>
                     <td className="capitalize">{venda.cliente_id.full_name}</td>
-                    <td>{venda.description}</td>
                     <td>
                       {venda.imei_id.map((imei, index) => {
                         return (
@@ -81,8 +79,8 @@ export const Vendas = ({
                         );
                       })}
                     </td>
-                    <td>R$ {moneyMask(venda.price)}(k</td>
-                    <td>R$ {moneyMask(valorTotal)}</td>
+                    <td>R$ {moneyMask(valorUnitario)}</td>
+                    <td>R$ {moneyMask(venda.price)}</td>
                   </tr>
                 );
               })}

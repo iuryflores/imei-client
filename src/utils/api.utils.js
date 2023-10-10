@@ -151,6 +151,14 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  addVenda = async (sellData) => {
+    try {
+      const { data } = await this.api.post("/vendas/new/", sellData);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
 }
 
 export default new Api();
