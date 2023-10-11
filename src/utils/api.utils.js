@@ -167,6 +167,14 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  deleteVenda = async (vendaData) => {
+    try {
+      const { data } = await this.api.put("/vendas/delete/", vendaData);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
 }
 
 export default new Api();

@@ -3,6 +3,9 @@
 * {
   transition: all 1s;
 }
+table tr td{
+  vertical-align: middle;
+}
 
 .App {
   text-align: center;

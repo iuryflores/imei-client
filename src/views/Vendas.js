@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import { VendaAdd } from "../components/VendaAdd.js";
-import numeral from "numeral";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Vendas = ({
   message,
@@ -19,6 +18,8 @@ export const Vendas = ({
 }) => {
   const [vendas, setVendas] = useState([]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getVendas = async () => {
       try {
@@ -31,15 +32,35 @@ export const Vendas = ({
     };
 
     getVendas();
-  }, [ setLoading]);
+  }, [setLoading]);
 
   const updateVendaList = (newVenda) => {
     setVendas([...vendas, newVenda]);
   };
   let valorUnitario = 0;
 
-  const moneyMask = (valor) => {
-    return numeral(valor).format("0000.00").replace(".", ",");
+  const formatarValor = (valor) => {
+    if (valor) {
+      const valorFormatado = valor.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return valorFormatado;
+    }
+  };
+
+  const deleteVenda = async (venda_id) => {
+    try {
+      const deleteVenda = await api.deleteVenda({ venda_id });
+      if (deleteVenda) {
+        navigate("/vendas/");
+        setMessage(deleteVenda.msg);
+      } else {
+        console.log("nao foi possivel encontrar venda");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderTable = () => {
@@ -54,6 +75,7 @@ export const Vendas = ({
                 <th>IMEI's</th>
                 <th>Valor (unitário)</th>
                 <th>Valor (total)</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -70,17 +92,28 @@ export const Vendas = ({
                     </td>
                     <td className="capitalize">{venda.cliente_id.full_name}</td>
                     <td>
+                      ({venda.imei_id.length}) -
                       {venda.imei_id.map((imei, index) => {
                         return (
                           <span key={index}>
-                            {imei.number}
-                            {index < venda.imei_id.length - 1 && ", "}
+                            [{imei.number}]
+                            {index < venda.imei_id.length - 1 && ","}
                           </span>
                         );
                       })}
                     </td>
-                    <td>R$ {moneyMask(valorUnitario)}</td>
-                    <td>R$ {moneyMask(venda.price)}</td>
+                    <td>R$ {formatarValor(valorUnitario)}</td>
+                    <td>R$ {formatarValor(venda.price)}</td>
+                    <td>
+                      <div
+                        className="btn btn-outline-danger"
+                        onClick={() => {
+                          deleteVenda(venda._id);
+                        }}
+                      >
+                        <i className="bi bi-trash3-fill"></i>
+                      </div>
+                    </td>
                   </tr>
                 );
               })}
