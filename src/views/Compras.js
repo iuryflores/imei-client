@@ -24,6 +24,7 @@ export const Compras = ({
   useEffect(() => {
     const getCompras = async () => {
       try {
+        setMessage("")
         const getAllCompras = await api.getAllCompras();
         setCompras(getAllCompras);
         setLoading(false);
@@ -75,6 +76,26 @@ export const Compras = ({
     }
   };
 
+  const deleteCompra = async (compra_id) => {
+    try {
+      setLoading(true);
+      const deleteCompra = await api.deleteCompra({ compra_id });
+      setLoading(false);
+      setMessage(deleteCompra.msg);
+
+      // Remove the deleted venda from the list
+      setCompras((prevCompras) =>
+        prevCompras.filter((compra) => compra._id !== compra_id)
+      );
+
+      setTimeout(() => {
+        setMessage("");
+      }, 5000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const renderTable = () => {
     if (loading === false) {
       if (compras.length > 0) {
@@ -88,6 +109,7 @@ export const Compras = ({
                 <th>Qtd</th>
                 <th>Valor (unitário)</th>
                 <th>Valor (total)</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -123,6 +145,16 @@ export const Compras = ({
                     </td>
                     <td style={{ width: "fit-content" }}>
                       R$ {formatarValorMonetario(valorTotalCompra)}
+                    </td>
+                    <td>
+                      <div
+                        className="btn btn-outline-danger"
+                        onClick={() => {
+                          deleteCompra(compra._id);
+                        }}
+                      >
+                        <i className="bi bi-trash3-fill"></i>
+                      </div>
                     </td>
                   </tr>
                 );

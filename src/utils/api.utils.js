@@ -88,6 +88,14 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  buscarImeiDadosCompra = async (imeiNumber) => {
+    try {
+      const { data } = await this.api.get(`/imei/${imeiNumber}/compra`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
   addFornecedor = async (fornecedorData, userId) => {
     try {
       const { data } = await this.api.post(
@@ -170,6 +178,14 @@ class Api {
   deleteVenda = async (vendaData) => {
     try {
       const { data } = await this.api.put("/vendas/delete/", vendaData);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  deleteCompra = async (compraData) => {
+    try {
+      const { data } = await this.api.put("/compras/delete/", compraData);
       return data;
     } catch (error) {
       throw error.response.data.msg;

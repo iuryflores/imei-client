@@ -29,8 +29,29 @@ export const CompraAdd = ({
   //IMEI components
   const [imeiArray, setImeiArray] = useState([]);
 
-  const handleImeiAdd = (imei) => {
-    setImeiArray([...imeiArray, imei]);
+  const [errorImei, setErrorImei] = useState(null);
+
+  const handleImeiAdd = async (imei) => {
+    try {
+      const getImei = await api.buscarImeiDadosCompra(imei);
+      console.log(imei);
+
+      console.log(imeiArray);
+      // Verifica se o IMEI já existe no imeiArray
+      const isImeiAlreadyAdded = imeiArray.some(
+        (existingImei) => existingImei.number === imei
+      );
+      console.log(isImeiAlreadyAdded);
+      if (!isImeiAlreadyAdded) {
+        // If the IMEI doesn't exist in imeiArray, add it without porcento and price
+        setImeiArray([...imeiArray, { number: imei }]);
+      } else {
+        setErrorImei("IMEI já incluso nessa compra!");
+      }
+    } catch (error) {
+      setErrorImei(error);
+      console.error(error);
+    }
   };
 
   //const navigate = useNavigate();
@@ -62,7 +83,6 @@ export const CompraAdd = ({
       setPrice("");
     }
   };
-  console.log(show);
   //remove Imei
   const removeImei = (index) => {
     const updatedImeiArray = [...imeiArray];
@@ -174,6 +194,10 @@ export const CompraAdd = ({
                 <div className="w-50">
                   {/* Integre o componente ImeiReader e passe a função de callback */}
                   <ImeiReader onImeiAdd={handleImeiAdd} />
+                  {errorImei && (
+                    <div className="alert alert-danger">{errorImei}</div>
+                  )}
+
                   <div>
                     <label>IMEIs adicionados:</label>
                     <ul className="p-0">
@@ -187,7 +211,7 @@ export const CompraAdd = ({
                             <i className="bi bi-trash"></i>
                           </div>
                           <div className="lista-imeis w-100">
-                            IMEI {index + 1}: {imei}
+                            IMEI {index + 1}: {imei.number}
                           </div>
                         </li>
                       ))}
