@@ -32,7 +32,7 @@ export const Vendas = ({
     };
 
     getVendas();
-  }, [setLoading]);
+  }, [setVendas, setLoading]);
 
   const updateVendaList = (newVenda) => {
     setVendas([...vendas, newVenda]);
@@ -51,13 +51,20 @@ export const Vendas = ({
 
   const deleteVenda = async (venda_id) => {
     try {
+      setLoading(true);
       const deleteVenda = await api.deleteVenda({ venda_id });
-      if (deleteVenda) {
-        navigate("/vendas/");
-        setMessage(deleteVenda.msg);
-      } else {
-        console.log("nao foi possivel encontrar venda");
-      }
+      setLoading(false);
+      setMessage(deleteVenda.msg);
+
+      // Remove the deleted venda from the list
+      setVendas((prevVendas) =>
+        prevVendas.filter((venda) => venda._id !== venda_id)
+      );
+
+      navigate("/vendas/");
+      setTimeout(() => {
+        setMessage("");
+      }, 5000);
     } catch (error) {
       console.log(error);
     }
@@ -122,7 +129,7 @@ export const Vendas = ({
         );
       } else {
         return (
-          <div className="text-center text-dark">Nenhuma venda registrada!</div>
+          <div className="text-center text-dark alert alert-warning">Nenhuma venda registrada!</div>
         );
       }
     } else {
