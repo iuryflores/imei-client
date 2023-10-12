@@ -71,10 +71,11 @@ export const Vendas = ({
             <thead>
               <tr>
                 <th>Data</th>
+                <th>Nº da Venda</th>
                 <th>Cliente</th>
-                <th>IMEI's</th>
                 <th>Valor (unitário)</th>
                 <th>Valor (total)</th>
+                <th>Vendedor</th>
                 <th></th>
               </tr>
             </thead>
@@ -90,20 +91,11 @@ export const Vendas = ({
                         year: "numeric",
                       })}
                     </td>
+                    <td>{venda.venda_number || ""}</td>
                     <td className="capitalize">{venda.cliente_id.full_name}</td>
-                    <td>
-                      ({venda.imei_id.length}) -
-                      {venda.imei_id.map((imei, index) => {
-                        return (
-                          <span key={index}>
-                            [{imei.number}]
-                            {index < venda.imei_id.length - 1 && ","}
-                          </span>
-                        );
-                      })}
-                    </td>
                     <td>R$ {formatarValor(valorUnitario)}</td>
                     <td>R$ {formatarValor(venda.price)}</td>
+                    <td>{venda.user_sell && venda.user_sell.full_name}</td>
                     <td>
                       <div
                         className="btn btn-outline-danger"
