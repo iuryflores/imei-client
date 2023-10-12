@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
-import { VendaAdd } from "../components/VendaAdd.js";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Vendas = ({
@@ -12,9 +11,6 @@ export const Vendas = ({
   setLoading,
   loadingGif,
   userId,
-  openModal,
-  showModal,
-  closeModal,
 }) => {
   const [vendas, setVendas] = useState([]);
 
@@ -34,9 +30,6 @@ export const Vendas = ({
     getVendas();
   }, [setVendas, setLoading]);
 
-  const updateVendaList = (newVenda) => {
-    setVendas([...vendas, newVenda]);
-  };
   let valorUnitario = 0;
 
   const formatarValor = (valor) => {
@@ -52,7 +45,7 @@ export const Vendas = ({
   const deleteVenda = async (venda_id) => {
     try {
       setLoading(true);
-      const deleteVenda = await api.deleteVenda({ venda_id });
+      const deleteVenda = await api.deleteVenda({ venda_id, userId });
       setLoading(false);
       setMessage(deleteVenda.msg);
 
@@ -129,7 +122,9 @@ export const Vendas = ({
         );
       } else {
         return (
-          <div className="text-center text-dark alert alert-warning">Nenhuma venda registrada!</div>
+          <div className="text-center text-dark alert alert-warning">
+            Nenhuma venda registrada!
+          </div>
         );
       }
     } else {
@@ -158,17 +153,6 @@ export const Vendas = ({
       <hr />
       {message ? <div className="alert alert-success">{message}</div> : null}
       <div className="border p-2  shadow rounded w-100">{renderTable()}</div>
-      {/* Modal de cadastro de cliente */}
-      <VendaAdd
-        show={showModal}
-        onClose={closeModal}
-        message={message}
-        setMessage={setMessage}
-        error={error}
-        setError={setError}
-        userId={userId}
-        updateVendaList={updateVendaList}
-      />
     </div>
   );
 };

@@ -38,10 +38,10 @@ const AppNavbar = () => {
           >
             Fornecedores
           </Nav.Link>
-          <Nav.Link as={Link} to="/produtos" active={isActive("/produtos")}>
-            Produtos
+          <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
+            Estoque
           </Nav.Link>
-          <Nav.Link as={Link} to="/caixa" active={isActive("/caixa")}>
+          <Nav.Link as={Link} to="/caixa/" active={isActive("caixa")}>
             Caixa
           </Nav.Link>
           <Nav.Link
@@ -51,7 +51,7 @@ const AppNavbar = () => {
           >
             Estatísticas
           </Nav.Link>
-          <Nav.Link as={Link} to="/auditoria/" active={isActive("/auditoria/")}>
+          <Nav.Link as={Link} to="/auditoria/" active={isActive("auditoria")}>
             Auditoria
           </Nav.Link>
         </Nav>

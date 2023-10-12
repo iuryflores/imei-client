@@ -22,7 +22,7 @@ export const Auditoria = ({
     };
     getAuditoria();
   }, []);
-
+  console.log(auditorias);
   const renderTableRows = () => {
     return auditorias.map((auditoria, index) => {
       let populate = "";
@@ -59,15 +59,16 @@ export const Auditoria = ({
         case !!auditoria.sell_id:
           populate =
             "- " +
-            auditoria.sell_id.full_name +
+            auditoria.sell_id.cliente_id.full_name +
             " (" +
-            auditoria.buy_id.fornecedor_id.document +
+            auditoria.sell_id.cliente_id.document +
             ")";
           break;
         default:
           populate = null;
           break;
       }
+      console.log(populate)
       if (!auditoria.imei_id || !auditoria.imei_id === null) {
         return (
           <tr key={index}>

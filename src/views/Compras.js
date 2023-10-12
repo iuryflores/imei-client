@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
-import { CompraAdd } from "../components/CompraAdd.js";
+import { Link } from "react-router-dom";
 
 export const Compras = ({
   message,
@@ -11,20 +11,13 @@ export const Compras = ({
   setLoading,
   loadingGif,
   userId,
-  openModal,
-  showModal,
-  closeModal,
 }) => {
   const [compras, setCompras] = useState([]);
-
-  const updateCompraList = (newCompra) => {
-    setCompras([...compras, newCompra]);
-  };
 
   useEffect(() => {
     const getCompras = async () => {
       try {
-        setMessage("")
+        setMessage("");
         const getAllCompras = await api.getAllCompras();
         setCompras(getAllCompras);
         setLoading(false);
@@ -104,11 +97,13 @@ export const Compras = ({
             <thead>
               <tr>
                 <th>Data</th>
+                <th>Nº da compra</th>
                 <th>Fornecedor</th>
                 <th>Produto</th>
                 <th>Qtd</th>
                 <th>Valor (unitário)</th>
                 <th>Valor (total)</th>
+                <th>Comprador(a)</th>
                 <th></th>
               </tr>
             </thead>
@@ -129,6 +124,7 @@ export const Compras = ({
                         year: "numeric",
                       })}
                     </td>
+                    <td>COM{compra.buy_number || ""}</td>
                     <td className="capitalize">
                       {compra.fornecedor_id.type === "juridica" ? (
                         <i className="bi bi-building-fill"></i>
@@ -146,6 +142,7 @@ export const Compras = ({
                     <td style={{ width: "fit-content" }}>
                       R$ {formatarValorMonetario(valorTotalCompra)}
                     </td>
+                    <td>{compra.user_buy}</td>
                     <td>
                       <div
                         className="btn btn-outline-danger"
@@ -179,29 +176,18 @@ export const Compras = ({
       <div className="d-flex align-items-baseline justify-content-between">
         <h1>Compras</h1>
         <div className="mb-3">
-          <div
+          <Link
             className="d-flex align-items-center btn btn-outline-info"
-            onClick={openModal}
+            to="/compras/cadastrando/"
           >
             <span>Adicionar</span>
             <i className="bi bi-plus-circle-fill mx-1 fs-6"></i>
-          </div>
+          </Link>
         </div>
       </div>
       <hr />
       {message ? <div className="alert alert-success">{message}</div> : null}
       <div className="border p-2 shadow rounded w-100">{renderTable()}</div>
-      {/* Modal de cadastro de cliente */}
-      <CompraAdd
-        show={showModal}
-        onClose={closeModal}
-        message={message}
-        setMessage={setMessage}
-        error={error}
-        setError={setError}
-        userId={userId}
-        updateCompraList={updateCompraList}
-      />
     </div>
   );
 };

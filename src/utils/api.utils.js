@@ -123,7 +123,7 @@ class Api {
   addImei = async (customerData, selectedItem, priceDb, imeiArray, userId) => {
     try {
       const { data } = await this.api.post(
-        "/imei/new/",
+        "/compras/new/",
         customerData,
         priceDb,
         selectedItem,
@@ -175,9 +175,9 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  deleteVenda = async (vendaData) => {
+  deleteVenda = async (vendaData, userId) => {
     try {
-      const { data } = await this.api.put("/vendas/delete/", vendaData);
+      const { data } = await this.api.put("/vendas/delete/", vendaData, userId);
       return data;
     } catch (error) {
       throw error.response.data.msg;

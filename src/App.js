@@ -15,6 +15,8 @@ import { Vendas } from "./views/Vendas";
 import { Auditoria } from "./views/Auditoria";
 import AddVenda from "./views/AddVenda";
 import Produtos from "./views/Produtos";
+import Caixa from "./views/Caixa";
+import AddCompra from "./views/AddCompra";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -153,10 +155,23 @@ function App() {
                   error={error}
                   setError={setError}
                   userId={userId}
-                  showModal={showModal}
-                  setShowModal={setShowModal}
-                  openModal={openModal}
-                  closeModal={closeModal}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                />
+              }
+            />
+            <Route
+              path="/compras/cadastrando/"
+              element={
+                <AddCompra
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
                 />
@@ -180,9 +195,9 @@ function App() {
                 />
               }
             />
-            
+
             <Route
-              path="/produtos/"
+              path="/estoque/"
               element={
                 <Produtos
                   message={message}
@@ -221,6 +236,23 @@ function App() {
               path="/auditoria/"
               element={
                 <Auditoria
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                />
+              }
+            />
+            <Route
+              path="/caixa/"
+              element={
+                <Caixa
                   message={message}
                   setMessage={setMessage}
                   loading={loading}

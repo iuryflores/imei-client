@@ -29,7 +29,6 @@ const Produtos = ({
     };
     getProdutos();
   }, [setLoading]);
-  console.log(produtos);
 
   const formatarValor = (valor) => {
     if (valor) {
@@ -41,6 +40,14 @@ const Produtos = ({
     }
   };
 
+  let valorEstoque = 0;
+  for (let index = 0; index < produtos.length; index++) {
+    if (produtos[index].buy_id) {
+      const element = produtos[index].buy_id || null;
+      valorEstoque += element.price;
+    }
+  }
+
   const renderTable = () => {
     if (loading === false) {
       if (produtos.length > 0) {
@@ -49,6 +56,7 @@ const Produtos = ({
             <thead>
               <tr>
                 <th>Data (compra)</th>
+                <th>Nº da compra</th>
                 <th>IMEI's</th>
                 <th>Valor (compra)</th>
               </tr>
@@ -67,10 +75,12 @@ const Produtos = ({
                         }
                       )}
                     </td>
+                    <td>COM{produto.buy_id.buy_number || ""}</td>
                     <td>
                       {produto.buy_id.description} (IMEI: {produto.number})
                     </td>
                     <td>R$ {formatarValor(produto.buy_id.price)}</td>
+                    <td></td>
                   </tr>
                 );
               })}
@@ -102,6 +112,8 @@ const Produtos = ({
             <span>
               Quantidade: <b> {produtos.length}</b>
             </span>
+            <span className="mx-3"> | </span>
+            <span>Total: R$ {formatarValor(valorEstoque)}</span>
           </div>
         </div>
       </div>

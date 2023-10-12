@@ -5,8 +5,6 @@ import ImeiReader from "../components/ImeiReader";
 import { useNavigate } from "react-router-dom";
 
 const AddVenda = ({
-  show,
-  onClose,
   message,
   setMessage,
   error,
@@ -69,7 +67,9 @@ const AddVenda = ({
     });
     return valorFormatado;
   };
+
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
