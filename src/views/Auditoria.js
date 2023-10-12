@@ -22,38 +22,41 @@ export const Auditoria = ({
     };
     getAuditoria();
   }, []);
-  console.log(auditorias);
   const renderTableRows = () => {
     return auditorias.map((auditoria, index) => {
       let populate = "";
+      let entidade = "";
+      let className = "";
+
+      switch (auditoria.operacao) {
+        case "DELETE":
+          className = "danger";
+          break;
+
+        case "CADASTRO":
+          className = "info";
+          break;
+        case "LOGIN":
+          className = "success";
+          break;
+        default:
+          className = "";
+      }
 
       const dataAud = formatarData(auditoria.createdAt);
 
       switch (true) {
-        case !!auditoria.fornecedor_id:
-          populate =
-            "- " +
-            auditoria.fornecedor_id.full_name +
-            " (" +
-            auditoria.fornecedor_id.document +
-            ")";
+        case !!auditoria.buy_id:
+          populate = "COM" + auditoria.buy_id.buy_number;
+          entidade = "COMPRAS";
           break;
         case !!auditoria.cliente_id:
           populate =
-            "- " +
             auditoria.cliente_id.full_name +
             " (" +
             auditoria.cliente_id.document +
             ")";
-          break;
-
-        case !!auditoria.buy_id:
-          populate =
-            "- " +
-            auditoria.buy_id.fornecedor_id.full_name +
-            " (" +
-            auditoria.buy_id.fornecedor_id.document +
-            ")";
+          entidade = "CLIENTES";
           break;
 
         case !!auditoria.sell_id:
@@ -63,20 +66,26 @@ export const Auditoria = ({
             " (" +
             auditoria.sell_id.cliente_id.document +
             ")";
+          entidade = "VENDAS";
+
+          break;
+
+        case !!auditoria.user_id:
+          populate = "Fez login";
+          entidade = "USUÁRIOS";
           break;
         default:
           populate = null;
           break;
       }
-      console.log(populate)
+      console.log(populate);
       if (!auditoria.imei_id || !auditoria.imei_id === null) {
         return (
-          <tr key={index}>
+          <tr key={index} className={`table-${className}`}>
             <td className="text-center">{dataAud}</td>
             <td>{auditoria.operacao}</td>
-            <td>
-              {auditoria.descricao} {populate}
-            </td>
+            <td>{entidade}</td>
+            <td>{populate}</td>
             <td>{auditoria.user_id.full_name}</td>
           </tr>
         );
@@ -95,6 +104,7 @@ export const Auditoria = ({
             <tr>
               <th className="text-center">Data</th>
               <th>Operação</th>
+              <th>Entidade</th>
               <th>Descrição</th>
               <th>Usuário</th>
             </tr>
