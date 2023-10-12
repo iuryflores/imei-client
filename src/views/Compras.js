@@ -142,7 +142,7 @@ export const Compras = ({
                     <td style={{ width: "fit-content" }}>
                       R$ {formatarValorMonetario(valorTotalCompra)}
                     </td>
-                    <td>{compra.user_buy}</td>
+                    <td>{compra.user_buy && compra.user_buy.full_name}</td>
                     <td>
                       <div
                         className="btn btn-outline-danger"
