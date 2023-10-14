@@ -3,7 +3,8 @@
 * {
   transition: all 1s;
 }
-table tr td{
+
+table tr td {
   vertical-align: middle;
 }
 
@@ -17,6 +18,11 @@ table tr td{
   transition: 2s ease-in-out;
 }
 
+.navbar .dropdown-menu {
+  background-color: #6a6767 !important;
+  color: black !important
+}
+
 .navbar a {
   color: white;
 }
@@ -25,20 +31,25 @@ table tr td{
   border-radius: 5px 10px;
   background-color: lightblue;
 }
+
 .active {
-background-color: lightblue !important;
-border-radius: 5px 10px;
+  background-color: lightblue !important;
+  border-radius: 5px 10px;
 }
+
 .valorVenda {
   background-color: rgb(128, 227, 240) !important;
   font-weight: bolder;
 }
+
 .valorVenda2 {
   background-color: rgb(182, 231, 255) !important;
 }
- .btn {
+
+.btn {
   width: auto !important;
 }
+
 .button-filter {
   border: 0;
 

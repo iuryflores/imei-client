@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import SearchFornecedor from "../components/SearchFornecedor";
 import ImeiReader from "../components/ImeiReader";
 import api from "../utils/api.utils";
@@ -6,15 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import InputMask from "react-input-mask";
 
-const AddCompra = ({
-  message,
-  setMessage,
-  error,
-  setError,
-  userId,
-  updateCompraList,
-  newCompra,
-}) => {
+const AddCompra = ({ message, setMessage, error, setError, userId }) => {
   //formulario de registro da compra
   const [customerData, setCustomerData] = useState({
     description: "",
@@ -26,8 +18,6 @@ const AddCompra = ({
 
   //IMEI components
   const [imeiArray, setImeiArray] = useState([]);
-
-  const [valorCompra, setValorCompra] = useState(0);
 
   const [errorImei, setErrorImei] = useState(null);
 
@@ -56,14 +46,6 @@ const AddCompra = ({
     const updatedImeiArray = [...imeiArray];
     updatedImeiArray.splice(index, 1);
     setImeiArray(updatedImeiArray);
-  };
-
-  const formatarValor = (valor) => {
-    const valorFormatado = valor.toLocaleString("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-    return valorFormatado;
   };
 
   const navigate = useNavigate();
@@ -106,25 +88,26 @@ const AddCompra = ({
           priceDb,
           selectedItem,
           imeiArray,
-          valorCompra,
           userId,
         });
-        // Em seguida, limpo o formulário e fecho o modal.
-        setCustomerData({
-          description: "",
-          brand: "",
-          buyDate: "",
-          imeiArray: "",
-        });
-        setCustomerData("");
-        setSelectedItem("");
-        setPrice("");
-        setPriceDb("");
-        setMessage("Compra cadastrada com sucesso!");
-        navigate("/compras/");
-        setTimeout(() => {
-          setMessage("");
-        }, 5000);
+        if (newCompra) {
+          // Em seguida, limpo o formulário e fecho o modal.
+          setCustomerData({
+            description: "",
+            brand: "",
+            buyDate: "",
+            imeiArray: "",
+          });
+          setCustomerData("");
+          setSelectedItem("");
+          setPrice("");
+          setPriceDb("");
+          setMessage("Compra cadastrada com sucesso!");
+          navigate("/compras/");
+          setTimeout(() => {
+            setMessage("");
+          }, 5000);
+        }
       } catch (error) {
         setError(error);
       }

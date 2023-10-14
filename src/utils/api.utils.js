@@ -191,6 +191,38 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  getUserNav = async (userId) => {
+    try {
+      const { data } = await this.api.get(`/user/${userId}`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getUsers = async () => {
+    try {
+      const { data } = await this.api.get(`/user/`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getUserData = async (user_Id) => {
+    try {
+      const { data } = await this.api.get(`/user/edit/`, user_Id);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getCaixas = async () => {
+    try {
+      const { data } = await this.api.get(`/caixas/`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
 }
 
 export default new Api();

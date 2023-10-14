@@ -1,7 +1,8 @@
 import "./App.css";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+import api from "./utils/api.utils";
 
 import loadingGif from "./imgs/loading-state.gif";
 
@@ -17,6 +18,8 @@ import AddVenda from "./views/AddVenda";
 import Produtos from "./views/Produtos";
 import Caixa from "./views/Caixa";
 import AddCompra from "./views/AddCompra";
+import User from "./views/User";
+import ViewUser from "./views/ViewUser";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -83,9 +86,35 @@ function App() {
     }).format(dataParaFormatar);
   };
 
+  const [userData, setUserData] = useState("");
+
+  useEffect(() => {
+    const getUser = async (userId) => {
+      try {
+        const data = await api.getUserNav(userId);
+        setUserData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUser(userId);
+  }, [userId]);
+
+  const [isAdmin, setIsAdmin] = useState(
+    () => userData && userData.admin === true
+  );
+
+  useEffect(() => {
+    if (userData && userData.admin !== undefined) {
+      setIsAdmin(userData.admin === true);
+    }
+  }, [userData]);
+
   return (
     <div>
-      {loggedIn ? <AppNavbar onLogout={logout} /> : null}
+      {loggedIn ? (
+        <AppNavbar onLogout={logout} isAdmin={isAdmin} userData={userData} />
+      ) : null}
 
       <Routes>
         {loggedIn ? (
@@ -103,6 +132,7 @@ function App() {
                 />
               }
             />
+
             <Route
               path="/compras/"
               element={
@@ -246,6 +276,38 @@ function App() {
                   userId={userId}
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
+                />
+              }
+            />
+            <Route
+              path="/usuarios/"
+              element={
+                <User
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                />
+              }
+            />
+            <Route
+              path="/usuarios/:id"
+              element={
+                <ViewUser
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
                 />
               }
             />
