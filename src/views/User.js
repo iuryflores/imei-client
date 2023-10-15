@@ -10,6 +10,7 @@ const User = ({
   loadingGif,
   userId,
   userData,
+  formatarDataEHora,
 }) => {
   const navigate = useNavigate();
 
@@ -45,14 +46,14 @@ const User = ({
         <table className="table table-hover">
           <thead>
             <tr>
-              <th scope="col"></th>
-
+              <th scope="col">Ativo?</th>
               <th scope="col">Nome completo</th>
               <th scope="col" className="no-mobile">
                 CPF
               </th>
               <th scope="col">Email</th>
               <th>Cadastro</th>
+              <th>Última alteração</th>
             </tr>
           </thead>
           <tbody>
@@ -92,6 +93,7 @@ const User = ({
                       }).format(new Date(user.createdAt))}
                       h
                     </td>
+                    <td>{formatarDataEHora(user.updatedAt)}h</td>
                   </tr>
                 );
               })

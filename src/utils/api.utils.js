@@ -9,6 +9,7 @@ class Api {
     this.api.interceptors.request.use(
       (config) => {
         const token = sessionStorage.getItem("token");
+
         if (token) {
           config.headers = {
             Authorization: `Bearer ${token}`,
@@ -25,9 +26,8 @@ class Api {
       (error) => {
         if (error.response.status === 401) {
           sessionStorage.removeItem("token");
-          window.location = "/admin/login";
+          window.location.replace("/admin/login"); // Use window.location.replace para fazer o redirecionamento
         }
-        throw error;
       }
     );
   }
@@ -215,9 +215,49 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  editUser = async (userDataEdit, userId) => {
+    try {
+      const { data } = await this.api.put(`/user/edit/`, userDataEdit, userId);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
   getCaixas = async () => {
     try {
       const { data } = await this.api.get(`/caixas/`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getCaixasAtivos = async () => {
+    try {
+      const { data } = await this.api.get(`/caixas/ativos/`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  addCaixas = async (caixaData, userId) => {
+    try {
+      const { data } = await this.api.post(`/caixas/new/`, caixaData, userId);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getCaixaData = async (caixa_id) => {
+    try {
+      const { data } = await this.api.get(`/caixas/edit/${caixa_id}`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  editCaixa = async (caixaData, userId) => {
+    try {
+      const { data } = await this.api.put(`/caixas/edit/`, caixaData, userId);
       return data;
     } catch (error) {
       throw error.response.data.msg;

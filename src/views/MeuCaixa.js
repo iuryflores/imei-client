@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
-const Caixa = ({ message, setMessage, loading, setLoading, loadingGif }) => {
-  const [caixa, setCaixa] = useState();
+const MeuCaixa = ({ message, setMessage, loading, setLoading, loadingGif }) => {
+  const [caixas, setCaixa] = useState();
 
   const renderTable = () => {
     if (loading === false) {
-      if (caixa.length > 0) {
+      if (caixas.length > 0) {
         return (
           <table className="table mb-0 table-striped table-hover">
             <thead>
@@ -16,7 +16,7 @@ const Caixa = ({ message, setMessage, loading, setLoading, loadingGif }) => {
               </tr>
             </thead>
             <tbody>
-              {caixa.map((caixa, index) => {
+              {caixas.map((caixa, index) => {
                 return (
                   <tr key={index}>
                     <td></td>
@@ -48,14 +48,13 @@ const Caixa = ({ message, setMessage, loading, setLoading, loadingGif }) => {
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
         <h1>
-          <i className="bi bi-cash-coin"></i>
-          {" "}Caixa
+          <i className="bi bi-cash-coin"></i> Caixa
         </h1>
         <div className="mb-3">
           <input className="form-control" type="date" />
           <div className="d-flex align-items-center alert alert-info">
             <span>
-              Caixa: <b>R$ {caixa}</b>
+              Caixa: <b>R$ {caixas}</b>
             </span>
           </div>
         </div>
@@ -67,4 +66,4 @@ const Caixa = ({ message, setMessage, loading, setLoading, loadingGif }) => {
   );
 };
 
-export default Caixa;
+export default MeuCaixa;

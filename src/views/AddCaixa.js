@@ -37,7 +37,6 @@ const AddCaixa = ({
           userId,
         });
         setCaixaData({
-          ativo: false,
           nome: "",
           dataInicio: "",
           saldoInicial: 0,
@@ -53,6 +52,8 @@ const AddCaixa = ({
         console.log({ error });
         //setError(error);
       }
+    } else {
+      setError("Os campos Nome e data de início são obrigatórios!");
     }
   };
 
@@ -78,18 +79,6 @@ const AddCaixa = ({
                   className="form-control"
                   name="nome"
                   value={caixaData.nome}
-                  onChange={handleInputChange}
-                />
-              </label>
-            </div>
-            <div className="form-group col-md-2">
-              <label className="mr-2 d-flex flex-column align-items-center">
-                Ativo?
-                <input
-                  type="checkbox"
-                  className="form-check-input ml-2"
-                  name="ativo"
-                  checked={caixaData.ativo}
                   onChange={handleInputChange}
                 />
               </label>

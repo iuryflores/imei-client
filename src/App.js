@@ -16,10 +16,12 @@ import { Vendas } from "./views/Vendas";
 import { Auditoria } from "./views/Auditoria";
 import AddVenda from "./views/AddVenda";
 import Produtos from "./views/Produtos";
-import Caixa from "./views/Caixa";
+import Caixas from "./views/Caixas";
 import AddCompra from "./views/AddCompra";
 import User from "./views/User";
 import ViewUser from "./views/ViewUser";
+import AddCaixa from "./views/AddCaixa";
+import ViewCaixa from "./views/ViewCaixa";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -32,13 +34,10 @@ function App() {
   const navigate = useNavigate();
 
   const handleLogin = (username) => {
-    // Aqui você pode realizar a autenticação adequada e definir o estado loggedIn
     setLoggedIn(true);
     navigate("/");
   };
   const handleSignup = (username, password, cpf, email) => {
-    // Aqui você pode adicionar lógica para registrar um novo usuário
-    // e, em seguida, automaticamente fazer login com as credenciais fornecidas
     setLoggedIn(false);
   };
 
@@ -67,37 +66,35 @@ function App() {
       day: "numeric",
       month: "numeric",
       year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
     });
   };
   //formatar data e hora
   const formatarDataEHora = (dataParaFormatar) => {
-    console.log(dataParaFormatar);
-    return new Intl.DateTimeFormat("pt-BR", {
+    return new Date(dataParaFormatar).toLocaleDateString("pt-br", {
       day: "numeric",
       month: "2-digit",
-      year: "2-digit",
+      year: "numeric",
       hour: "numeric",
       minute: "numeric",
-      second: "numeric",
       timeZone: "America/Sao_Paulo",
       hour12: false,
-    }).format(dataParaFormatar);
+    });
   };
 
   const [userData, setUserData] = useState("");
 
   useEffect(() => {
-    const getUser = async (userId) => {
-      try {
-        const data = await api.getUserNav(userId);
-        setUserData(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getUser(userId);
+    if (userId) {
+      const getUser = async (userId) => {
+        try {
+          const data = await api.getUserNav(userId);
+          setUserData(data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getUser(userId);
+    }
   }, [userId]);
 
   const [isAdmin, setIsAdmin] = useState(
@@ -312,9 +309,43 @@ function App() {
               }
             />
             <Route
-              path="/caixa/"
+              path="/caixas/"
               element={
-                <Caixa
+                <Caixas
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                />
+              }
+            />
+            <Route
+              path="/caixas/cadastrando/"
+              element={
+                <AddCaixa
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                />
+              }
+            />
+            <Route
+              path="/caixas/:id/"
+              element={
+                <ViewCaixa
                   message={message}
                   setMessage={setMessage}
                   loading={loading}

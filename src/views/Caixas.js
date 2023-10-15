@@ -9,6 +9,7 @@ const Caixas = ({
   setLoading,
   loadingGif,
   formatarData,
+  formatarDataEHora,
 }) => {
   const [caixas, setCaixas] = useState([]);
 
@@ -17,6 +18,7 @@ const Caixas = ({
   useEffect(() => {
     const getCaixas = async () => {
       try {
+        setLoading(true);
         const data = await api.getCaixas();
         setCaixas(data);
         setLoading(false);
@@ -39,56 +41,52 @@ const Caixas = ({
     return valorFormatado;
   };
   const renderTable = () => {
-    if (loading === false) {
-      if (caixas.length > 0) {
-        return (
-          <table className="table mb-0 table-striped table-hover">
-            <thead>
-              <tr>
-                <th className="text-center">Ativo?</th>
-                <th>Data de Início</th>
-                <th>Nome do Caixa</th>
-                <th>Saldo Inicial</th>
-              </tr>
-            </thead>
-            <tbody>
-              {caixas.map((caixa, index) => {
-                let iconActive;
-                if (caixa.status === true) {
-                  iconActive = "green";
-                } else {
-                  iconActive = "red";
-                }
+    if (caixas.length > 0) {
+      return (
+        <table className="table mb-0 table-striped table-hover">
+          <thead>
+            <tr>
+              <th className="text-center">Ativo?</th>
+              <th>Data de Início</th>
+              <th>Nome do Caixa</th>
+              <th>Saldo Inicial</th>
+              <th>Cadastro</th>
+              <th>Última alteração</th>
+            </tr>
+          </thead>
+          <tbody>
+            {caixas.map((caixa, index) => {
+              let iconActive;
+              if (caixa.status === true) {
+                iconActive = "green";
+              } else {
+                iconActive = "red";
+              }
 
-                return (
-                  <tr
-                    key={index}
-                    className="clickable "
-                    onClick={() => goToCaixa(caixa._id)}
-                  >
-                    <td style={{ color: iconActive }} className="text-center">
-                      <i className="bi bi-circle-fill"></i>
-                    </td>
+              return (
+                <tr
+                  key={index}
+                  className="clickable "
+                  onClick={() => goToCaixa(caixa._id)}
+                >
+                  <td style={{ color: iconActive }} className="text-center">
+                    <i className="bi bi-circle-fill"></i>
+                  </td>
 
-                    <td>{formatarData(caixa.dia_inicio)}</td>
-                    <td>{caixa.name}</td>
-                    <td>R$ {formatarValor(caixa.saldo_inicial)}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        );
-      } else {
-        return (
-          <div className="text-center text-dark">Nenhum caixa cadastrado!</div>
-        );
-      }
+                  <td>{formatarData(caixa.dia_inicio)}</td>
+                  <td>{caixa.name}</td>
+                  <td>R$ {formatarValor(caixa.saldo_inicial)}</td>
+                  <td>{formatarDataEHora(caixa.createdAt)}h</td>
+                  <td>{formatarDataEHora(caixa.updatedAt)}h</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      );
     } else {
       return (
-        <div className="d-flex justify-content-center">
-          <img style={{ width: "100px" }} src={loadingGif} alt="Loading gif" />
-        </div>
+        <div className="text-center text-dark">Nenhum caixa cadastrado!</div>
       );
     }
   };
@@ -111,7 +109,13 @@ const Caixas = ({
       </div>
       <hr />
       {message ? <div className="alert alert-success">{message}</div> : null}
-      <div className="border p-2  shadow rounded w-100">{renderTable()}</div>
+      {!loading ? (
+        <div className="border p-2  shadow rounded w-100">{renderTable()}</div>
+      ) : (
+        <div className="d-flex justify-content-center">
+          <img style={{ width: "100px" }} src={loadingGif} alt="Loading gif" />
+        </div>
+      )}
     </div>
   );
 };

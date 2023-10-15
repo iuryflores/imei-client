@@ -17,15 +17,19 @@ export const LoginPage = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await api.login({ username, password });
-      handleLogin(username);
-    } catch (error) {
-      setError(error);
-      console.log({ error });
+
+    if (!username || !password) {
+      setError("Necessário preencher usuário e senha!");
+    } else {
+      try {
+        await api.login({ username, password });
+        handleLogin(username);
+      } catch (error) {
+        console.log(error);
+        setError(error);
+      }
     }
   };
-
   const [signupMode, setSignupMode] = useState(false);
 
   const signModeSwith = () => {
