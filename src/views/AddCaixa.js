@@ -19,6 +19,7 @@ const AddCaixa = ({
   });
 
   const handleInputChange = (event) => {
+    setError(null);
     const { name, value, type } = event.target;
 
     const newValue = type === "checkbox" ? event.target.checked : value;
@@ -28,7 +29,6 @@ const AddCaixa = ({
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(caixaData);
 
     if (caixaData.nome && caixaData.dataInicio) {
       try {

@@ -25,8 +25,6 @@ export const Auditoria = ({
   }, []);
   const renderTableRows = () => {
     return auditorias.map((auditoria, index) => {
-      let populate = "";
-      let entidade = "";
       let className = "";
 
       switch (auditoria.operacao) {
@@ -48,64 +46,60 @@ export const Auditoria = ({
 
       const dataAud = formatarDataEHora(auditoria.createdAt);
 
-      switch (true) {
-        case !!auditoria.buy_id:
-          populate = "COM" + auditoria.buy_id.buy_number;
-          entidade = "COMPRAS";
-          break;
+      // switch (true) {
+      //   case !!auditoria.buy_id:
+      //     populate = "COM" + auditoria.buy_id.buy_number;
+      //     entidade = "COMPRAS";
+      //     break;
 
-        case !!auditoria.cliente_id:
-          populate =
-            auditoria.cliente_id.full_name +
-            " (" +
-            auditoria.cliente_id.document +
-            ")";
-          entidade = "CLIENTES";
-          break;
+      //   case !!auditoria.cliente_id:
+      //     populate =
+      //       auditoria.cliente_id.full_name +
+      //       " (" +
+      //       auditoria.cliente_id.document +
+      //       ")";
+      //     entidade = "CLIENTES";
+      //     break;
 
-        case !!auditoria.sell_id:
-          populate =
-            "- " +
-            auditoria.sell_id.cliente_id.full_name +
-            " (" +
-            auditoria.sell_id.cliente_id.document +
-            ")";
-          entidade = "VENDAS";
-          break;
+      //   case !!auditoria.sell_id:
+      //     populate =
+      //       "- " +
+      //       auditoria.sell_id.cliente_id.full_name +
+      //       " (" +
+      //       auditoria.sell_id.cliente_id.document +
+      //       ")";
+      //     entidade = "VENDAS";
+      //     break;
 
-        case !!auditoria.user_id_changed:
-          populate = auditoria.user_id_changed.full_name;
-          entidade = "USUÁRIOS";
-          break;
+      //   case !!auditoria.user_id_changed && !auditoria.caixa_id:
+      //     populate = auditoria.user_id_changed.full_name;
+      //     entidade = "USUÁRIOS";
+      //     break;
 
-        case !!auditoria.caixa_id && !!auditoria.user_id:
-          populate = auditoria.caixa_id.name;
-          entidade = "CAIXAS";
-          break;
+      //   case !!auditoria.caixa_id && !!auditoria.user_id:
+      //     populate = auditoria.caixa_id.name;
+      //     entidade = "CAIXAS";
+      //     break;
 
-        case !!auditoria.user_id && !auditoria.caixa_id:
-          populate = "Fez login";
-          entidade = "USUÁRIOS";
-          break;
+      //   case !auditoria.caixa_id && !!auditoria.user_id:
+      //     populate = "Fez login";
+      //     entidade = "USUÁRIOS";
+      //     break;
 
-        default:
-          populate = null;
-          entidade = null;
-          break;
-      }
-
-      if (!auditoria.imei_id || !auditoria.imei_id === null) {
-        return (
-          <tr key={index} className={`table-${className}`}>
-            <td className="text-center">{dataAud}h</td>
-            <td>{auditoria.operacao}</td>
-            <td>{entidade}</td>
-            <td>{populate}</td>
-            <td>{auditoria.user_id.full_name}</td>
-          </tr>
-        );
-      }
-      return null;
+      //   default:
+      //     populate = null;
+      //     entidade = null;
+      //     break;
+      // }
+      return (
+        <tr key={index} className={`table-${className}`}>
+          <td className="text-center">{dataAud}h</td>
+          <td>{auditoria.operacao}</td>
+          <td>{auditoria.entidade}</td>
+          <td>{auditoria.descricao}</td>
+          <td>{auditoria.user_id.full_name}</td>
+        </tr>
+      );
     });
   };
 
