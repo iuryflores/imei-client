@@ -7,7 +7,6 @@ const AppNavbar = ({ userData, isAdmin }) => {
   const newLocation = pathname.split("/");
   const isActive = (path) => newLocation[1] === path;
 
-
   return (
     <>
       <Navbar className="px-3 " expand="lg">
@@ -39,9 +38,7 @@ const AppNavbar = ({ userData, isAdmin }) => {
             <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
               Estoque
             </Nav.Link>
-            <Nav.Link as={Link} to="/caixa/" active={isActive("caixa")}>
-              Caixa
-            </Nav.Link>
+
             {isAdmin === true ? (
               <>
                 <Nav.Link
@@ -64,6 +61,9 @@ const AppNavbar = ({ userData, isAdmin }) => {
                   active={isActive("usuarios")}
                 >
                   Usuários
+                </Nav.Link>
+                <Nav.Link as={Link} to="/caixas/" active={isActive("caixas")}>
+                  Caixas
                 </Nav.Link>
               </>
             ) : null}
