@@ -38,6 +38,9 @@ const AppNavbar = ({ userData, isAdmin }) => {
             <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
               Estoque
             </Nav.Link>
+            <Nav.Link as={Link} to="/meu-caixa/" active={isActive("meu-caixa")}>
+              Meu Caixa
+            </Nav.Link>
 
             {isAdmin === true ? (
               <>

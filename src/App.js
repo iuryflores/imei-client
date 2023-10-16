@@ -22,6 +22,7 @@ import User from "./views/User";
 import ViewUser from "./views/ViewUser";
 import AddCaixa from "./views/AddCaixa";
 import ViewCaixa from "./views/ViewCaixa";
+import MeuCaixa from "./views/MeuCaixa";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -107,6 +108,13 @@ function App() {
     }
   }, [userData]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setError(null);
+      setMessage(null);
+    }, 5000);
+  }, [message, setMessage, error, setError]);
+
   return (
     <div>
       {loggedIn ? (
@@ -184,6 +192,7 @@ function App() {
                   userId={userId}
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
+                  userData={userData}
                 />
               }
             />
@@ -256,6 +265,24 @@ function App() {
                   setShowModal={setShowModal}
                   openModal={openModal}
                   closeModal={closeModal}
+                />
+              }
+            />
+            <Route
+              path="/meu-caixa/"
+              element={
+                <MeuCaixa
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                  userData={userData}
                 />
               }
             />
