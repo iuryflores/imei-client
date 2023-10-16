@@ -99,6 +99,7 @@ export const Clientes = ({
       handleClickHash={handleClickHash}
     />
   );
+  console.log(selectedAlphabet);
   return (
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
@@ -130,12 +131,18 @@ export const Clientes = ({
           <tbody>{renderData}</tbody>
         </table>
       </div>
-      {renderData.length > 1 ? (
-        renderPagControle
+      {allClientes.length > 0 ? (
+        renderData.length < 1 && totalPages < 1 ? (
+          <div className="text-center text-dark alert alert-warning mt-3">
+            Acabou a lista com inicial <strong>{selectedAlphabet}</strong>
+          </div>
+        ) : (
+          renderPagControle
+        )
       ) : (
-        <>
-          Acabou a lita com inicial <strong>{selectedAlphabet}</strong>
-        </>
+        <div className="text-center text-dark alert alert-warning mt-3">
+          Nenhum cliente cadastrado.
+        </div>
       )}
       {/* Modal de cadastro de cliente */}
       <ClienteAdd

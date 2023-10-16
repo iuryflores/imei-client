@@ -93,18 +93,16 @@ function App() {
   const [userData, setUserData] = useState("");
 
   useEffect(() => {
-    if (userId) {
-      const getUser = async (userId) => {
-        try {
-          const data = await api.getUserNav(userId);
-          setUserData(data);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      getUser(userId);
-    }
-  }, [userId]);
+    const getUser = async (userId) => {
+      try {
+        const data = await api.getUserNav(userId);
+        setUserData(data);
+      } catch (error) {
+        setError(error);
+      }
+    };
+    getUser(userId);
+  }, []);
 
   const [isAdmin, setIsAdmin] = useState(
     () => userData && userData.admin === true
@@ -126,7 +124,13 @@ function App() {
   return (
     <div>
       {loggedIn ? (
-        <AppNavbar onLogout={logout} isAdmin={isAdmin} userData={userData} />
+        <AppNavbar
+          onLogout={logout}
+          isAdmin={isAdmin}
+          userData={userData}
+          setError={setError}
+          userId={userId}
+        />
       ) : null}
 
       <Routes>
@@ -406,6 +410,8 @@ function App() {
                   handleSignup={handleSignup}
                   message={message}
                   setMessage={setMessage}
+                  error={error}
+                  setError={setError}
                 />
               }
             />
@@ -417,6 +423,8 @@ function App() {
                   handleSignup={handleSignup}
                   message={message}
                   setMessage={setMessage}
+                  error={error}
+                  setError={setError}
                 />
               }
             />
