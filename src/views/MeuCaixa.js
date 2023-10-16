@@ -9,6 +9,8 @@ const MeuCaixa = ({
   loadingGif,
   userId,
   userData,
+  formatarDataEHora,
+  formatarValor,
 }) => {
   const [caixas, setCaixas] = useState([]);
   const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
@@ -25,27 +27,47 @@ const MeuCaixa = ({
 
     return `${year}-${month}-${day}`;
   }
+  const [newUser, setNewUser] = useState(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const userDataNew = await api.getUserNav(userId);
+      setNewUser(userDataNew);
+    };
+    getUser();
+  }, []);
 
   useEffect(() => {
     const getCaixa = async () => {
       try {
         if (selectedDate) {
-          const getCaixaDia = await api.getCaixaDia(
-            selectedDate,
-            userData.caixa_id
-          );
+          const caixa_id = newUser.caixa_id;
+          const getCaixaDia = await api.getCaixaDia(selectedDate, caixa_id);
           setCaixas(getCaixaDia);
-          console.log(getCaixaDia);
           setLoading(false);
         }
       } catch (error) {
         console.log(error);
       }
     };
-    getCaixa();
-  }, [selectedDate]);
+    if (newUser) {
+      getCaixa();
+    }
+  }, [selectedDate, newUser]);
+  const sumLancamentos = () => {
+    return caixas
+      .reduce((total, caixa) => {
+        return total + caixa.valor;
+      }, 0)
+      .toFixed(2);
+  };
 
-  console.log(caixas);
+  const [valorTotal, setValorTotal] = useState(0);
+
+  useEffect(() => {
+    const totalValue = sumLancamentos();
+    setValorTotal(parseFloat(totalValue));
+  }, [caixas]);
 
   const renderTable = () => {
     if (loading === false) {
@@ -54,18 +76,24 @@ const MeuCaixa = ({
           <table className="table mb-0 table-striped table-hover">
             <thead>
               <tr>
-                <th>Data (compra)</th>
-                <th>IMEI's</th>
-                <th>Valor (compra)</th>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Tipo</th>
+                <th>Origem</th>
+                <th>Forma de pagamento</th>
+                <th>Valor</th>
               </tr>
             </thead>
             <tbody>
               {caixas.map((caixa, index) => {
                 return (
                   <tr key={index}>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{formatarDataEHora(caixa.createdAt)}</td>
+                    <td>{caixa.description}</td>
+                    <td>{caixa.tipo}</td>
+                    <td>{caixa.origem_id}</td>
+                    <td>{caixa.forma_pagamento}</td>
+                    <td>R$ {formatarValor(caixa.valor)}</td>
                   </tr>
                 );
               })}
@@ -103,7 +131,7 @@ const MeuCaixa = ({
           />
           <div className="d-flex align-items-center alert alert-info">
             <span>
-              Caixa: <b>R$ {}</b>
+              Caixa: <b>R$ {formatarValor(valorTotal)}</b>
             </span>
           </div>
         </div>

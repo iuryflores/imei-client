@@ -81,7 +81,15 @@ function App() {
       hour12: false,
     });
   };
-
+  const formatarValor = (valor) => {
+    if (valor) {
+      const valorFormatado = valor.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return valorFormatado;
+    }
+  };
   const [userData, setUserData] = useState("");
 
   useEffect(() => {
@@ -283,6 +291,7 @@ function App() {
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
                   userData={userData}
+                  formatarValor={formatarValor}
                 />
               }
             />
