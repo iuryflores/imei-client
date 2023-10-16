@@ -19,6 +19,7 @@ class Api {
       },
       (error) => {
         console.log(error);
+        throw error;
       }
     );
     this.api.interceptors.response.use(
@@ -26,8 +27,11 @@ class Api {
       (error) => {
         if (error.response.status === 401) {
           sessionStorage.removeItem("token");
-          window.location.replace("/admin/login"); // Use window.location.replace para fazer o redirecionamento
+          if (window.location.pathname !== "/admin/login") {
+            window.location.replace("/admin/login"); // Use window.location.replace para fazer o redirecionamento
+          }
         }
+        throw error;
       }
     );
   }

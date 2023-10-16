@@ -160,7 +160,11 @@ export const Compras = ({
           </table>
         );
       } else {
-        return <div className="text-center">Nenhuma compra registrada!</div>;
+        return (
+          <div className="text-center text-dark alert alert-warning">
+            Nenhuma compra registrada!
+          </div>
+        );
       }
     } else {
       return (

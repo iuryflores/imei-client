@@ -15,7 +15,13 @@ function FilterAlphabet({
       <button
         className="button-filter btn"
         onClick={handleClickHash}
-        style={{ backgroundColor: "lightgrey" }}
+        // style={{ backgroundColor: "lightgrey" }}
+
+        style={{
+          fontWeight: selectedAlphabet === "" ? "bold" : "normal",
+          backgroundColor: selectedAlphabet === "" ? "black" : "lightgrey",
+          color: selectedAlphabet === "" ? "white" : "black",
+        }}
       >
         Tudo
       </button>
