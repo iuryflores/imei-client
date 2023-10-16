@@ -1,7 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import api from "../utils/api.utils";
 
-const MeuCaixa = ({ message, setMessage, loading, setLoading, loadingGif }) => {
-  const [caixas, setCaixa] = useState();
+const MeuCaixa = ({
+  message,
+  setMessage,
+  loading,
+  setLoading,
+  loadingGif,
+  userId,
+  userData,
+  formatarDataEHora,
+  formatarValor,
+}) => {
+  const [caixas, setCaixas] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
+
+  function getCurrentFormattedDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+
+    // Pad the month and day with leading zeroes if needed
+    month = month < 10 ? `0${month}` : month;
+    day = day < 10 ? `0${day}` : day;
+
+    return `${year}-${month}-${day}`;
+  }
+  const [newUser, setNewUser] = useState(null);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const userDataNew = await api.getUserNav(userId);
+      setNewUser(userDataNew);
+    };
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    const getCaixa = async () => {
+      try {
+        if (selectedDate) {
+          const caixa_id = newUser.caixa_id;
+          const getCaixaDia = await api.getCaixaDia(selectedDate, caixa_id);
+          setCaixas(getCaixaDia);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (newUser) {
+      getCaixa();
+    }
+  }, [selectedDate, newUser]);
+  const sumLancamentos = () => {
+    return caixas
+      .reduce((total, caixa) => {
+        return total + caixa.valor;
+      }, 0)
+      .toFixed(2);
+  };
+
+  const [valorTotal, setValorTotal] = useState(0);
+
+  useEffect(() => {
+    const totalValue = sumLancamentos();
+    setValorTotal(parseFloat(totalValue));
+  }, [caixas]);
 
   const renderTable = () => {
     if (loading === false) {
@@ -10,18 +76,24 @@ const MeuCaixa = ({ message, setMessage, loading, setLoading, loadingGif }) => {
           <table className="table mb-0 table-striped table-hover">
             <thead>
               <tr>
-                <th>Data (compra)</th>
-                <th>IMEI's</th>
-                <th>Valor (compra)</th>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Tipo</th>
+                <th>Origem</th>
+                <th>Forma de pagamento</th>
+                <th>Valor</th>
               </tr>
             </thead>
             <tbody>
               {caixas.map((caixa, index) => {
                 return (
                   <tr key={index}>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{formatarDataEHora(caixa.createdAt)}</td>
+                    <td>{caixa.description}</td>
+                    <td>{caixa.tipo}</td>
+                    <td>{caixa.origem_id}</td>
+                    <td>{caixa.forma_pagamento}</td>
+                    <td>R$ {formatarValor(caixa.valor)}</td>
                   </tr>
                 );
               })}
@@ -31,7 +103,7 @@ const MeuCaixa = ({ message, setMessage, loading, setLoading, loadingGif }) => {
       } else {
         return (
           <div className="text-center text-dark">
-            Nenhum produto em estoque!
+            Nenhum lançamento registrado!
           </div>
         );
       }
@@ -51,10 +123,15 @@ const MeuCaixa = ({ message, setMessage, loading, setLoading, loadingGif }) => {
           <i className="bi bi-cash-coin"></i> Caixa
         </h1>
         <div className="mb-3">
-          <input className="form-control" type="date" />
+          <input
+            className="form-control"
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
           <div className="d-flex align-items-center alert alert-info">
             <span>
-              Caixa: <b>R$ {caixas}</b>
+              Caixa: <b>R$ {formatarValor(valorTotal)}</b>
             </span>
           </div>
         </div>

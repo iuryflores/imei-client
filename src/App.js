@@ -22,6 +22,7 @@ import User from "./views/User";
 import ViewUser from "./views/ViewUser";
 import AddCaixa from "./views/AddCaixa";
 import ViewCaixa from "./views/ViewCaixa";
+import MeuCaixa from "./views/MeuCaixa";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -80,7 +81,15 @@ function App() {
       hour12: false,
     });
   };
-
+  const formatarValor = (valor) => {
+    if (valor) {
+      const valorFormatado = valor.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return valorFormatado;
+    }
+  };
   const [userData, setUserData] = useState("");
 
   useEffect(() => {
@@ -104,6 +113,13 @@ function App() {
       setIsAdmin(userData.admin === true);
     }
   }, [userData]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setError(null);
+      setMessage(null);
+    }, 5000);
+  }, [message, setMessage, error, setError]);
 
   return (
     <div>
@@ -188,6 +204,7 @@ function App() {
                   userId={userId}
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
+                  userData={userData}
                 />
               }
             />
@@ -260,6 +277,25 @@ function App() {
                   setShowModal={setShowModal}
                   openModal={openModal}
                   closeModal={closeModal}
+                />
+              }
+            />
+            <Route
+              path="/meu-caixa/"
+              element={
+                <MeuCaixa
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                  userData={userData}
+                  formatarValor={formatarValor}
                 />
               }
             />

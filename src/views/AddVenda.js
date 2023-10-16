@@ -12,6 +12,7 @@ const AddVenda = ({
   userId,
   updateVendaList,
   newVenda,
+  userData,
 }) => {
   //formulario de registro da venda
   const [sellDate, setSellDate] = useState();
@@ -26,26 +27,34 @@ const AddVenda = ({
 
   const [erroImei, setErrorImei] = useState(null);
 
+  const [dataPagamento, setDataPagamento] = useState("");
+  const [formaPagamento, setFormaPagamento] = useState("");
+
   const handleImeiAdd = async (imei) => {
     try {
       const getImei = await api.buscarImeiDados(imei);
 
-      // Verifica se o IMEI já existe no imeiArray
-      const isImeiAlreadyAdded = imeiArray.some(
-        (existingImei) => existingImei.number === getImei.number
-      );
-      if (!isImeiAlreadyAdded) {
-        setImeiArray([
-          ...imeiArray,
-          {
-            ...getImei,
-            porcento: "",
-            price: calculatePriceFromPorcento(getImei),
-          },
-        ]);
-        // Se não existe, adiciona o IMEI ao imeiArray
+      if (getImei) {
+        setErrorImei(null);
+        // Verifica se o IMEI já existe no imeiArray
+        const isImeiAlreadyAdded = imeiArray.some(
+          (existingImei) => existingImei.number === getImei.number
+        );
+        if (!isImeiAlreadyAdded) {
+          setImeiArray([
+            ...imeiArray,
+            {
+              ...getImei,
+              porcento: "",
+              price: calculatePriceFromPorcento(getImei),
+            },
+          ]);
+          // Se não existe, adiciona o IMEI ao imeiArray
+        } else {
+          setErrorImei("IMEI já foi incluído.");
+        }
       } else {
-        setErrorImei("IMEI já foi incluído.");
+        setErrorImei("Imei nao encontrado");
       }
     } catch (error) {
       setErrorImei(error);
@@ -81,6 +90,9 @@ const AddVenda = ({
           imeiArray,
           valorVenda,
           userId,
+          userData,
+          dataPagamento,
+          formaPagamento,
         });
         // Em seguida, limpo o formulário e fecho o modal.
         setSellDate("");
@@ -102,12 +114,11 @@ const AddVenda = ({
   };
 
   const calculatePriceFromPorcento = (imei) => {
-    if (imei.buy_id) {
+    if (imei && imei.buy_id) {
       const porcento = parseFloat(imei.porcento || 0);
       const newPrice = (imei.buy_id.price * porcento) / 100 + imei.buy_id.price;
       return newPrice;
     }
-    return "";
   };
 
   const sumImeis = () => {
@@ -209,7 +220,7 @@ const AddVenda = ({
                               <i className="bi bi-trash"></i>
                             </div>
                           </td>
-                          <td>{imei.number}</td>
+                          <td>{imei.number && imei.number}</td>
                           <td>{imei.buy_id && imei.buy_id.description}</td>
                           <td>
                             R$ {imei.buy_id && formatarValor(imei.buy_id.price)}
@@ -261,7 +272,8 @@ const AddVenda = ({
                               }}
                               hidden
                             />
-                            {imei.buy_id &&
+                            {imei &&
+                              imei.buy_id &&
                               formatarValor(
                                 (imei.buy_id.price *
                                   parseFloat(imei.porcento || 0)) /
@@ -293,6 +305,39 @@ const AddVenda = ({
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+          <div className="w-100 d-flex justify-content-between">
+            <div className="form-group col-md-2">
+              <label htmlFor="dataPagamento">Data de Pagamento</label>
+              <input
+                type="date"
+                className="form-control"
+                id="dataPagamento"
+                name="dataPagamento"
+                value={dataPagamento}
+                onChange={(e) => setDataPagamento(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group col-md-8">
+              <label htmlFor="formaPagamento">Forma de Pagamento</label>
+              <select
+                className="form-control"
+                id="formaPagamento"
+                name="formaPagamento"
+                value={formaPagamento}
+                onChange={(e) => setFormaPagamento(e.target.value)}
+              >
+                <option value="">Selecione a forma de pagamento</option>
+                <option value="cartao_credito">Cartão de Crédito</option>
+                <option value="cartao_debito">Cartão de Débito</option>
+                <option value="dinheiro">Dinheiro</option>
+                <option value="pix">PIX</option>
+                <option value="transferencia_bancaria">
+                  Transferência Bancária
+                </option>
+              </select>
             </div>
           </div>
         </form>

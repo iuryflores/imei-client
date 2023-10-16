@@ -139,23 +139,21 @@ const ViewUser = ({
               {caixas.length === 0 ? (
                 <div>Necessário cadastrar Caixas</div>
               ) : (
-                !userDataEdit.caixa_id && (
-                  <select
-                    id="caixa_id"
-                    name="caixa_id"
-                    value={userDataEdit.caixa_id}
-                    onChange={handleInputChange}
-                    className="form-control"
-                  >
-                    <option value={""}>Selecione uma opção</option>
+                <select
+                  id="caixa_id"
+                  name="caixa_id"
+                  value={userDataEdit.caixa_id || ""}
+                  onChange={handleInputChange}
+                  className="form-control"
+                >
+                  <option value={""}>Selecione uma opção</option>
 
-                    {caixas.map((caixa) => (
-                      <option key={caixa._id} value={caixa._id}>
-                        {caixa.name}
-                      </option>
-                    ))}
-                  </select>
-                )
+                  {caixas.map((caixa) => (
+                    <option key={caixa._id} value={caixa._id}>
+                      {caixa.name}
+                    </option>
+                  ))}
+                </select>
               )}
             </div>
             <button type="submit" className="btn btn-primary">
