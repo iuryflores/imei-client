@@ -9,11 +9,11 @@ export const LoginPage = ({
   handleSignup,
   message,
   setMessage,
+  error,
+  setError,
 }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +25,6 @@ export const LoginPage = ({
         await api.login({ username, password });
         handleLogin(username);
       } catch (error) {
-        console.log(error);
         setError(error);
       }
     }
@@ -58,15 +57,16 @@ export const LoginPage = ({
         setError(error);
       }
     } else {
-      alert("Passwords do not match");
+      setError("Senhas não são iguais");
     }
   };
 
   useEffect(() => {
     setTimeout(() => {
       setError(null);
-    }, 8000);
-  }, [message, setMessage]);
+      setMessage(null);
+    }, 10000);
+  }, [setError, setMessage]);
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
@@ -145,7 +145,7 @@ export const LoginPage = ({
                 </div>
               )}
               {error && (
-                <div className="alert alert-danger d-flex flex-column align-items-center w-100">
+                <div className="alert alert-danger d-flex flex-column align-items-center w-100 text-center">
                   {error}
                 </div>
               )}
@@ -198,7 +198,7 @@ export const LoginPage = ({
                 </div>
               )}
               {error && (
-                <div className="alert alert-danger d-flex flex-column align-items-center w-100">
+                <div className="alert alert-danger d-flex flex-column align-items-center w-100 text-center">
                   {error}
                 </div>
               )}

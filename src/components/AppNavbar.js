@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
+import api from "../utils/api.utils";
 
-const AppNavbar = ({ userData, isAdmin }) => {
+const AppNavbar = ({ isAdmin, setError, userId }) => {
   const { pathname } = useLocation();
   const newLocation = pathname.split("/");
   const isActive = (path) => newLocation[1] === path;
 
+  const [userData, setUserData] = useState("");
+
+  useEffect(() => {
+    const getUser = async (userId) => {
+      try {
+        const data = await api.getUserNav(userId);
+        setUserData(data);
+      } catch (error) {
+        setError(error);
+      }
+    };
+    getUser(userId);
+  }, []);
   return (
     <>
       <Navbar className="px-3 " expand="lg">
@@ -37,6 +51,9 @@ const AppNavbar = ({ userData, isAdmin }) => {
             </Nav.Link>
             <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
               Estoque
+            </Nav.Link>
+            <Nav.Link as={Link} to="/meu-caixa/" active={isActive("meu-caixa")}>
+              Meu Caixa
             </Nav.Link>
 
             {isAdmin === true ? (

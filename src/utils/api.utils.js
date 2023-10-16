@@ -19,6 +19,7 @@ class Api {
       },
       (error) => {
         console.log(error);
+        throw error;
       }
     );
     this.api.interceptors.response.use(
@@ -26,8 +27,11 @@ class Api {
       (error) => {
         if (error.response.status === 401) {
           sessionStorage.removeItem("token");
-          window.location.replace("/admin/login"); // Use window.location.replace para fazer o redirecionamento
+          if (window.location.pathname !== "/admin/login") {
+            window.location.replace("/admin/login"); // Use window.location.replace para fazer o redirecionamento
+          }
         }
+        throw error;
       }
     );
   }
@@ -83,9 +87,16 @@ class Api {
   buscarImeiDados = async (imeiNumber) => {
     try {
       const { data } = await this.api.get(`/imei/${imeiNumber}`);
-      return data;
+      console.log(data);
+      if (data) {
+        return data;
+      } else {
+        throw new Error("teste");
+      }
     } catch (error) {
-      throw error.response.data.msg;
+      if (error === "teste") {
+        throw Error("Não encontrado");
+      }
     }
   };
   buscarImeiDadosCompra = async (imeiNumber) => {
@@ -159,9 +170,28 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  addVenda = async (sellData) => {
+  addVenda = async (
+    sellDate,
+    selectedCliente,
+    imeiArray,
+    valorVenda,
+    userId,
+    userData,
+    dataPagamento,
+    formaPagamento
+  ) => {
     try {
-      const { data } = await this.api.post("/vendas/new/", sellData);
+      const { data } = await this.api.post(
+        "/vendas/new/",
+        sellDate,
+        selectedCliente,
+        imeiArray,
+        valorVenda,
+        userId,
+        userData,
+        dataPagamento,
+        formaPagamento
+      );
       return data;
     } catch (error) {
       throw error.response.data.msg;
@@ -226,6 +256,16 @@ class Api {
   getCaixas = async () => {
     try {
       const { data } = await this.api.get(`/caixas/`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getCaixaDia = async (selectedDate, caixa_id) => {
+    try {
+      const { data } = await this.api.get(
+        `/lancamentos/meu-caixa/${selectedDate}/${caixa_id}`
+      );
       return data;
     } catch (error) {
       throw error.response.data.msg;

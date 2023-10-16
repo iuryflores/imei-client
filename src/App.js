@@ -22,6 +22,7 @@ import User from "./views/User";
 import ViewUser from "./views/ViewUser";
 import AddCaixa from "./views/AddCaixa";
 import ViewCaixa from "./views/ViewCaixa";
+import MeuCaixa from "./views/MeuCaixa";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -80,22 +81,28 @@ function App() {
       hour12: false,
     });
   };
-
+  const formatarValor = (valor) => {
+    if (valor) {
+      const valorFormatado = valor.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return valorFormatado;
+    }
+  };
   const [userData, setUserData] = useState("");
 
   useEffect(() => {
-    if (userId) {
-      const getUser = async (userId) => {
-        try {
-          const data = await api.getUserNav(userId);
-          setUserData(data);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      getUser(userId);
-    }
-  }, [userId]);
+    const getUser = async (userId) => {
+      try {
+        const data = await api.getUserNav(userId);
+        setUserData(data);
+      } catch (error) {
+        setError(error);
+      }
+    };
+    getUser(userId);
+  }, []);
 
   const [isAdmin, setIsAdmin] = useState(
     () => userData && userData.admin === true
@@ -107,10 +114,23 @@ function App() {
     }
   }, [userData]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setError(null);
+      setMessage(null);
+    }, 5000);
+  }, [message, setMessage, error, setError]);
+
   return (
     <div>
       {loggedIn ? (
-        <AppNavbar onLogout={logout} isAdmin={isAdmin} userData={userData} />
+        <AppNavbar
+          onLogout={logout}
+          isAdmin={isAdmin}
+          userData={userData}
+          setError={setError}
+          userId={userId}
+        />
       ) : null}
 
       <Routes>
@@ -184,6 +204,7 @@ function App() {
                   userId={userId}
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
+                  userData={userData}
                 />
               }
             />
@@ -256,6 +277,25 @@ function App() {
                   setShowModal={setShowModal}
                   openModal={openModal}
                   closeModal={closeModal}
+                />
+              }
+            />
+            <Route
+              path="/meu-caixa/"
+              element={
+                <MeuCaixa
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                  userData={userData}
+                  formatarValor={formatarValor}
                 />
               }
             />
@@ -370,6 +410,8 @@ function App() {
                   handleSignup={handleSignup}
                   message={message}
                   setMessage={setMessage}
+                  error={error}
+                  setError={setError}
                 />
               }
             />
@@ -381,6 +423,8 @@ function App() {
                   handleSignup={handleSignup}
                   message={message}
                   setMessage={setMessage}
+                  error={error}
+                  setError={setError}
                 />
               }
             />
