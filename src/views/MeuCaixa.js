@@ -82,6 +82,7 @@ const MeuCaixa = ({
                 <th>Origem</th>
                 <th>Forma de pagamento</th>
                 <th>Valor</th>
+                <th className="text-center">Conciliado</th>
               </tr>
             </thead>
             <tbody>
@@ -94,6 +95,20 @@ const MeuCaixa = ({
                     <td>{caixa.origem_id}</td>
                     <td>{caixa.forma_pagamento}</td>
                     <td>R$ {formatarValor(caixa.valor)}</td>
+                    <td className="text-center">
+                      <i
+                        style={{
+                          backgroundColor: caixa.conciliado ? "green" : " ",
+                          color: caixa.conciliado ? "white" : " #ccc",
+                          border: caixa.conciliado
+                            ? "2px solid"
+                            : "1px solid #ccc",
+                          borderRadius: caixa.conciliado ? "5px" : "",
+                          padding: "2px 5px",
+                        }}
+                        className="bi bi-check-lg"
+                      ></i>
+                    </td>
                   </tr>
                 );
               })}

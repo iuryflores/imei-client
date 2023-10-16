@@ -8,7 +8,7 @@ class Api {
     });
     this.api.interceptors.request.use(
       (config) => {
-        const token = sessionStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
         if (token) {
           config.headers = {
@@ -26,7 +26,7 @@ class Api {
       (response) => response,
       (error) => {
         if (error.response.status === 401) {
-          sessionStorage.removeItem("token");
+          localStorage.removeItem("token");
           if (window.location.pathname !== "/admin/login") {
             window.location.replace("/admin/login"); // Use window.location.replace para fazer o redirecionamento
           }
@@ -38,8 +38,8 @@ class Api {
   login = async (loginInfo) => {
     try {
       const { data } = await this.api.post("/user/auth/login", loginInfo);
-      sessionStorage.setItem("token", data.token);
-      sessionStorage.setItem("userId", data.id);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.id);
     } catch (error) {
       throw error.response.data.msg;
     }
@@ -87,16 +87,9 @@ class Api {
   buscarImeiDados = async (imeiNumber) => {
     try {
       const { data } = await this.api.get(`/imei/${imeiNumber}`);
-      console.log(data);
-      if (data) {
-        return data;
-      } else {
-        throw new Error("teste");
-      }
+      return data;
     } catch (error) {
-      if (error === "teste") {
-        throw Error("Não encontrado");
-      }
+      throw error.response.data.msg;
     }
   };
   buscarImeiDadosCompra = async (imeiNumber) => {

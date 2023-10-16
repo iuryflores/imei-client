@@ -19,7 +19,17 @@ table tr td {
 }
 
 .navbar .dropdown-menu {
-  background-color: #6a6767 !important;
+  background-color: #484848 !important;
+  color: black !important
+}
+
+
+.navbar-nav .nav-link.show {
+  color: white !important
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
   color: black !important
 }
 

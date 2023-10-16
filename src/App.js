@@ -29,7 +29,7 @@ function App() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const userToken = sessionStorage.getItem("token");
+  const userToken = localStorage.getItem("token");
   const [loggedIn, setLoggedIn] = useState(!!userToken);
 
   const navigate = useNavigate();
@@ -43,13 +43,13 @@ function App() {
   };
 
   const logout = () => {
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("userId");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
     setLoggedIn(false);
     navigate("/login");
   };
 
-  const userId = sessionStorage.getItem("userId");
+  const userId = localStorage.getItem("userId");
 
   const [showModal, setShowModal] = useState(false);
 

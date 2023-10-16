@@ -51,10 +51,10 @@ const AddVenda = ({
           ]);
           // Se não existe, adiciona o IMEI ao imeiArray
         } else {
-          setErrorImei("IMEI já foi incluído.");
+          setErrorImei("IMEI já foi incluso na lista");
         }
       } else {
-        setErrorImei("Imei nao encontrado");
+        setErrorImei("Erro ao buscar IMEI");
       }
     } catch (error) {
       setErrorImei(error);
@@ -78,11 +78,11 @@ const AddVenda = ({
   };
 
   const navigate = useNavigate();
-
+  console.log(selectedCliente);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (selectedCliente && imeiArray) {
+    if (selectedCliente !== null && imeiArray) {
       try {
         await api.addVenda({
           sellDate,
@@ -105,11 +105,13 @@ const AddVenda = ({
         navigate("/vendas/");
         setTimeout(() => {
           setMessage("");
-        }, 5000);
+        }, 10000);
       } catch (error) {
         console.log(error);
-        // setError(error);
+        setError(error);
       }
+    } else {
+      setError("Necessário informar o cliente e ao menos 01 IMEI");
     }
   };
 
@@ -142,14 +144,13 @@ const AddVenda = ({
 
   return (
     <div className="container mt-3">
-      <div className="d-flex flex-column">
+      <div className="d-flex flex-column mb-3">
         <hr className="espacamento-02" />
         <h5 className="mt-3">
           <i className="bi bi-cash-coin"></i> Registrando Venda
         </h5>
 
         <form className="d-flex flex-column align-items-end">
-          {error ? <div className="alert alert-danger">{error}</div> : null}
           <div className="d-flex align-items-baseline">
             <div className="form-group">
               <label htmlFor="buyDate">Data da venda</label>
@@ -341,6 +342,12 @@ const AddVenda = ({
             </div>
           </div>
         </form>
+        {error ? (
+          <div className="alert alert-danger text-center">
+            <b>{error}</b>
+          </div>
+        ) : null}
+
         <div className="d-flex flex-column align-items-end">
           <button
             type="button"

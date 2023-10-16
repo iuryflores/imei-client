@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import api from "../utils/api.utils";
 
@@ -58,30 +58,53 @@ const AppNavbar = ({ isAdmin, setError, userId }) => {
 
             {isAdmin === true ? (
               <>
-                <Nav.Link
-                  as={Link}
-                  to="/estatisticas"
-                  active={isActive("estatisticas")}
+                <NavDropdown
+                  title="Administração"
+                  id="admin-dropdown"
+                  active={
+                    isActive("estatisticas") ||
+                    isActive("caixas") ||
+                    isActive("usuarios") ||
+                    isActive("auditoria")
+                  }
                 >
-                  Estatísticas
-                </Nav.Link>
-                <Nav.Link
-                  as={Link}
-                  to="/auditoria/"
-                  active={isActive("auditoria")}
-                >
-                  Auditoria
-                </Nav.Link>
-                <Nav.Link
-                  as={Link}
-                  to="/usuarios/"
-                  active={isActive("usuarios")}
-                >
-                  Usuários
-                </Nav.Link>
-                <Nav.Link as={Link} to="/caixas/" active={isActive("caixas")}>
-                  Caixas
-                </Nav.Link>
+                  <NavDropdown.Item
+                    as={Link}
+                    to="/estatisticas"
+                    active={isActive("estatisticas")}
+                  >
+                    Estatísticas
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    as={Link}
+                    to="/conciliacao"
+                    active={isActive("conciliacao")}
+                  >
+                    Conciliação
+                  </NavDropdown.Item>
+
+                  <NavDropdown.Item
+                    as={Link}
+                    to="/caixas"
+                    active={isActive("caixas")}
+                  >
+                    Caixas
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    as={Link}
+                    to="/usuarios"
+                    active={isActive("usuarios")}
+                  >
+                    Usuários
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    as={Link}
+                    to="/auditoria/"
+                    active={isActive("auditoria")}
+                  >
+                    Auditoria
+                  </NavDropdown.Item>
+                </NavDropdown>
               </>
             ) : null}
             <Nav.Link as={Link} to="/sair" active={isActive("/sair")}>
