@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api.utils";
 
-const SearchFornecedor = ({ title, selectedItem, setSelectedItem }) => {
+const SearchFornecedor = ({
+  title,
+  selectedItem,
+  setSelectedItem,
+  setError,
+  error,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
 
@@ -11,7 +17,7 @@ const SearchFornecedor = ({ title, selectedItem, setSelectedItem }) => {
         const data = await api.buscaFornecedor(searchTerm);
         setResults(data);
       } catch (error) {
-        console.error(`Erro ao buscar ${title}:`, error);
+        setError(error);
       }
     };
 
@@ -93,6 +99,11 @@ const SearchFornecedor = ({ title, selectedItem, setSelectedItem }) => {
           >
             <i className="bi bi-pencil-square"></i>
           </div>
+        </div>
+      ) : null}
+      {error ? (
+        <div className="alert alert-danger text-center">
+          <b>{error}</b>
         </div>
       ) : null}
     </div>

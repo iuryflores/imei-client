@@ -74,7 +74,6 @@ export const Fornecedores = ({
 
   const renderPagControle = (
     <PagControls
-      
       currentPage={currentPage}
       totalPages={totalPages}
       onPageChange={handlePageChange}
@@ -133,12 +132,18 @@ export const Fornecedores = ({
           <tbody>{renderData}</tbody>
         </table>
       </div>
-      {renderData.length > 1 ? (
-        renderPagControle
+      {allFornecedores.length > 0 ? (
+        renderData.length < 1 && totalPages < 1 ? (
+          <div className="text-center text-dark alert alert-warning mt-3">
+            Acabou a lista com inicial <strong>{selectedAlphabet}</strong>
+          </div>
+        ) : (
+          renderPagControle
+        )
       ) : (
-        <>
-          Acabou a lista com inicial <strong>{selectedAlphabet}</strong>
-        </>
+        <div className="text-center text-dark alert alert-warning mt-3">
+          Nenhum fornecedor cadastrado.
+        </div>
       )}
       {/* Modal de cadastro de cliente */}
       <FornecedoresAdd

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchFornecedor from "../components/SearchFornecedor";
 import ImeiReader from "../components/ImeiReader";
 import api from "../utils/api.utils";
@@ -114,6 +114,12 @@ const AddCompra = ({ message, setMessage, error, setError, userId }) => {
     }
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      setError(null);
+    }, 10000);
+  },[]);
+
   return (
     <div className="container mt-3">
       <div className="d-flex flex-column">
@@ -123,7 +129,6 @@ const AddCompra = ({ message, setMessage, error, setError, userId }) => {
         </h5>
 
         <form className="d-flex flex-column align-items-end">
-          {error ? <div className="alert alert-danger">{error}</div> : null}
           <div className="d-flex align-items-baseline">
             <div className="form-group">
               <label htmlFor="buyDate">Data da compra</label>
@@ -142,6 +147,8 @@ const AddCompra = ({ message, setMessage, error, setError, userId }) => {
               title="Fornecedor"
               selectedItem={selectedItem}
               setSelectedItem={setSelectedItem}
+              setError={setError}
+              error={error}
             />
           </div>
 

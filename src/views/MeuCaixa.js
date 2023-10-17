@@ -4,6 +4,8 @@ import api from "../utils/api.utils";
 const MeuCaixa = ({
   message,
   setMessage,
+  error,
+  setError,
   loading,
   setLoading,
   loadingGif,
@@ -27,20 +29,29 @@ const MeuCaixa = ({
 
     return `${year}-${month}-${day}`;
   }
-  const [newUser, setNewUser] = useState(null);
+  const [newUser, setNewUser] = useState("");
 
   useEffect(() => {
     const getUser = async () => {
       const userDataNew = await api.getUserNav(userId);
       setNewUser(userDataNew);
+      setLoading(false);
     };
     getUser();
+
+    setTimeout(() => {
+      setError(null);
+    }, 90000);
   }, []);
 
   useEffect(() => {
     const getCaixa = async () => {
       try {
-        if (selectedDate) {
+        if (!newUser.caixa_id) {
+          setError("Esse usuário não tem caixa definido!");
+        }
+
+        if (selectedDate && newUser.caixa_id) {
           const caixa_id = newUser.caixa_id;
           const getCaixaDia = await api.getCaixaDia(selectedDate, caixa_id);
           setCaixas(getCaixaDia);
@@ -71,57 +82,49 @@ const MeuCaixa = ({
 
   const renderTable = () => {
     if (loading === false) {
-      if (caixas.length > 0) {
-        return (
-          <table className="table mb-0 table-striped table-hover">
-            <thead>
-              <tr>
-                <th>Data</th>
-                <th>Descrição</th>
-                <th>Tipo</th>
-                <th>Origem</th>
-                <th>Forma de pagamento</th>
-                <th>Valor</th>
-                <th className="text-center">Conciliado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {caixas.map((caixa, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{formatarDataEHora(caixa.createdAt)}</td>
-                    <td>{caixa.description}</td>
-                    <td>{caixa.tipo}</td>
-                    <td>{caixa.origem_id}</td>
-                    <td>{caixa.forma_pagamento}</td>
-                    <td>R$ {formatarValor(caixa.valor)}</td>
-                    <td className="text-center">
-                      <i
-                        style={{
-                          backgroundColor: caixa.conciliado ? "green" : " ",
-                          color: caixa.conciliado ? "white" : " #ccc",
-                          border: caixa.conciliado
-                            ? "2px solid"
-                            : "1px solid #ccc",
-                          borderRadius: caixa.conciliado ? "5px" : "",
-                          padding: "2px 5px",
-                        }}
-                        className="bi bi-check-lg"
-                      ></i>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        );
-      } else {
-        return (
-          <div className="text-center text-dark">
-            Nenhum lançamento registrado!
-          </div>
-        );
-      }
+      return (
+        <table className="table mb-0 table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Tipo</th>
+              <th>Origem</th>
+              <th>Forma de pagamento</th>
+              <th>Valor</th>
+              <th className="text-center">Conciliado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {caixas.map((caixa, index) => {
+              return (
+                <tr key={index}>
+                  <td>{formatarDataEHora(caixa.createdAt)}</td>
+                  <td>{caixa.description}</td>
+                  <td>{caixa.tipo}</td>
+                  <td>{caixa.origem_id}</td>
+                  <td>{caixa.forma_pagamento}</td>
+                  <td>R$ {formatarValor(caixa.valor)}</td>
+                  <td className="text-center">
+                    <i
+                      style={{
+                        backgroundColor: caixa.conciliado ? "green" : " ",
+                        color: caixa.conciliado ? "white" : " #ccc",
+                        border: caixa.conciliado
+                          ? "2px solid"
+                          : "1px solid #ccc",
+                        borderRadius: caixa.conciliado ? "5px" : "",
+                        padding: "2px 5px",
+                      }}
+                      className="bi bi-check-lg"
+                    ></i>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      );
     } else {
       return (
         <div className="d-flex justify-content-center">
@@ -130,6 +133,8 @@ const MeuCaixa = ({
       );
     }
   };
+
+  let caixaId = newUser.caixa_id;
 
   return (
     <div className="p-3 m-3  d-flex flex-column">
@@ -146,14 +151,27 @@ const MeuCaixa = ({
           />
           <div className="d-flex align-items-center alert alert-info">
             <span>
-              Caixa: <b>R$ {formatarValor(valorTotal)}</b>
+              Caixa: <b>R$ {formatarValor(valorTotal) || <span>0,00</span>}</b>
             </span>
           </div>
         </div>
       </div>
       <hr />
+      {!caixaId && (
+        <div className="alert alert-danger text-center">
+          <b>Nenhum caixa foi definido para esse Usuário.</b>
+        </div>
+      )}
+
       {message ? <div className="alert alert-success">{message}</div> : null}
-      <div className="border p-2  shadow rounded w-100">{renderTable()}</div>
+
+      {caixas.length > 0 ? (
+        <div className="border p-2  shadow rounded w-100">{renderTable()}</div>
+      ) : (
+        <div className="text-center text-dark alert alert-warning mt-3">
+          Nenhum lançamento registrado!
+        </div>
+      )}
     </div>
   );
 };

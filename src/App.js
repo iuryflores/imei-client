@@ -118,7 +118,7 @@ function App() {
     setTimeout(() => {
       setError(null);
       setMessage(null);
-    }, 5000);
+    }, 10000);
   }, [message, setMessage, error, setError]);
 
   return (

@@ -89,7 +89,7 @@ const Produtos = ({
         );
       } else {
         return (
-          <div className="text-center text-dark">
+          <div className="text-center text-dark alert alert-warning mt-3">
             Nenhum produto em estoque!
           </div>
         );
