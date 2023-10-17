@@ -298,7 +298,17 @@ class Api {
   };
   checkCaixaAberto = async (selectedDate) => {
     try {
-      const { data } = await this.api.get(`/caixaDiario/aberto/${selectedDate}`);
+      const { data } = await this.api.get(
+        `/caixaDiario/aberto/${selectedDate}`
+      );
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  abrirCaixa = async (userId) => {
+    try {
+      const { data } = await this.api.post(`/caixaDiario/abrir/`, userId);
       return data;
     } catch (error) {
       throw error.response.data.msg;

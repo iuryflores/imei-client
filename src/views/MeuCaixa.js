@@ -80,8 +80,6 @@ const MeuCaixa = ({
     setValorTotal(parseFloat(totalValue));
   }, [caixas]);
 
-  console.log(selectedDate);
-
   const renderTable = () => {
     if (loading === false) {
       return (
@@ -138,21 +136,28 @@ const MeuCaixa = ({
 
   let caixaId = newUser.caixa_id;
 
+  const [caixaDiario, setCaixaDiario] = useState(null);
+
   useEffect(() => {
     const checkCaixaAberto = async () => {
       try {
         const caixaAberto = await api.checkCaixaAberto(selectedDate);
-        console.log(caixaAberto);
+        setCaixaDiario(caixaAberto);
       } catch (error) {
         console.log(error);
-        const [caixaDiario, setCaixaDiario] = useState(null);
       }
     };
     checkCaixaAberto();
   }, []);
 
-
-
+  const handleAbrirCaixa = async () => {
+    try {
+      const abrirCaixa = await api.abrirCaixa({ userId });
+      setCaixaDiario(abrirCaixa);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="p-3 m-3  d-flex flex-column">
@@ -160,6 +165,14 @@ const MeuCaixa = ({
         <h1>
           <i className="bi bi-cash-coin"></i> Caixa
         </h1>
+        {!caixaDiario && (
+          <div className="d-flex flex-column align-items-center">
+            <h5>Não existe nenhum caixa aberto para o dia de hoje.</h5>
+            <div className="btn btn-outline-success" onClick={handleAbrirCaixa}>
+              Abrir caixa
+            </div>
+          </div>
+        )}
         <div className="mb-3">
           <input
             className="form-control"
