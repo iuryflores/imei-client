@@ -80,6 +80,8 @@ const MeuCaixa = ({
     setValorTotal(parseFloat(totalValue));
   }, [caixas]);
 
+  console.log(selectedDate);
+
   const renderTable = () => {
     if (loading === false) {
       return (
@@ -136,6 +138,22 @@ const MeuCaixa = ({
 
   let caixaId = newUser.caixa_id;
 
+  useEffect(() => {
+    const checkCaixaAberto = async () => {
+      try {
+        const caixaAberto = await api.checkCaixaAberto(selectedDate);
+        console.log(caixaAberto);
+      } catch (error) {
+        console.log(error);
+        const [caixaDiario, setCaixaDiario] = useState(null);
+      }
+    };
+    checkCaixaAberto();
+  }, []);
+
+
+
+
   return (
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
@@ -151,7 +169,8 @@ const MeuCaixa = ({
           />
           <div className="d-flex align-items-center alert alert-info">
             <span>
-              Caixa: <b>R$ {formatarValor(valorTotal) || <span>0,00</span>}</b>
+              Saldo Atual:{" "}
+              <b>R$ {formatarValor(valorTotal) || <span>0,00</span>}</b>
             </span>
           </div>
         </div>

@@ -296,6 +296,14 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  checkCaixaAberto = async (selectedDate) => {
+    try {
+      const { data } = await this.api.get(`/caixaDiario/aberto/${selectedDate}`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
 }
 
 export default new Api();
