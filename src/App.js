@@ -34,6 +34,8 @@ function App() {
 
   const navigate = useNavigate();
 
+  const [caixaDiario, setCaixaDiario] = useState(null);
+
   const handleLogin = (username) => {
     setLoggedIn(true);
     navigate("/");
@@ -120,6 +122,8 @@ function App() {
       setMessage(null);
     }, 10000);
   }, [message, setMessage, error, setError]);
+
+  console.log(caixaDiario);
 
   return (
     <div>
@@ -296,6 +300,8 @@ function App() {
                   formatarDataEHora={formatarDataEHora}
                   userData={userData}
                   formatarValor={formatarValor}
+                  caixaDiario={caixaDiario}
+                  setCaixaDiario={setCaixaDiario}
                 />
               }
             />

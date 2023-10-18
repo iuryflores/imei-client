@@ -13,6 +13,8 @@ const MeuCaixa = ({
   userData,
   formatarDataEHora,
   formatarValor,
+  caixaDiario,
+  setCaixaDiario,
 }) => {
   const [caixas, setCaixas] = useState([]);
   const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
@@ -136,14 +138,11 @@ const MeuCaixa = ({
 
   let caixaId = newUser.caixa_id;
 
-  const [caixaDiario, setCaixaDiario] = useState(null);
-
   //VERIFICA SE EXISTE CAIXA ABERTO
   useEffect(() => {
     const checkCaixaAberto = async () => {
       try {
         const caixaAberto = await api.checkCaixaAberto(selectedDate);
-        console.log(caixaAberto);
         setCaixaDiario(caixaAberto);
       } catch (error) {
         console.log(error);
@@ -161,7 +160,6 @@ const MeuCaixa = ({
       console.log(error);
     }
   };
-  console.log(caixaDiario);
   return (
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
