@@ -138,10 +138,12 @@ const MeuCaixa = ({
 
   const [caixaDiario, setCaixaDiario] = useState(null);
 
+  //VERIFICA SE EXISTE CAIXA ABERTO
   useEffect(() => {
     const checkCaixaAberto = async () => {
       try {
         const caixaAberto = await api.checkCaixaAberto(selectedDate);
+        console.log(caixaAberto);
         setCaixaDiario(caixaAberto);
       } catch (error) {
         console.log(error);
@@ -150,15 +152,16 @@ const MeuCaixa = ({
     checkCaixaAberto();
   }, []);
 
+  //ABRE O CAIXA
   const handleAbrirCaixa = async () => {
     try {
-      const abrirCaixa = await api.abrirCaixa({ userId });
+      const abrirCaixa = await api.abrirCaixa({ userId, selectedDate });
       setCaixaDiario(abrirCaixa);
     } catch (error) {
       console.log(error);
     }
   };
-
+  console.log(caixaDiario);
   return (
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">

@@ -306,9 +306,13 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  abrirCaixa = async (userId) => {
+  abrirCaixa = async (userId, selectedDate) => {
     try {
-      const { data } = await this.api.post(`/caixaDiario/abrir/`, userId);
+      const { data } = await this.api.post(
+        `/caixaDiario/abrir/`,
+        userId,
+        selectedDate
+      );
       return data;
     } catch (error) {
       throw error.response.data.msg;
