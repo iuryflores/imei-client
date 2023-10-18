@@ -36,13 +36,33 @@ const AppNavbar = ({ isAdmin, setError, userId }) => {
             <Nav.Link as={Link} to="/" active={isActive("")}>
               Caixa
             </Nav.Link>
-            <Nav.Link as={Link} to="/compras" active={isActive("compras")}>
+            {/* <Nav.Link as={Link} to="/compras" active={isActive("compras")}>
               Compras
             </Nav.Link>
             <Nav.Link as={Link} to="/vendas" active={isActive("vendas")}>
               Vendas
-            </Nav.Link>
-            <Nav.Link as={Link} to="/clientes" active={isActive("clientes")}>
+            </Nav.Link> */}
+            <NavDropdown
+              title="Pessoas"
+              id="admin-dropdown"
+              active={isActive("clientes") || isActive("fornecedores")}
+            >
+              <NavDropdown.Item
+                as={Link}
+                to="/clientes"
+                active={isActive("clientes")}
+              >
+                Clientes
+              </NavDropdown.Item>
+              <NavDropdown.Item
+                as={Link}
+                to="/fornecedores"
+                active={isActive("fornecedores")}
+              >
+                Fornecedores
+              </NavDropdown.Item>
+            </NavDropdown>
+            {/* <Nav.Link as={Link} to="/clientes" active={isActive("clientes")}>
               Clientes
             </Nav.Link>
             <Nav.Link
@@ -51,7 +71,34 @@ const AppNavbar = ({ isAdmin, setError, userId }) => {
               active={isActive("fornecedores")}
             >
               Fornecedores
-            </Nav.Link>
+            </Nav.Link> */}
+            {isAdmin !== true ? (
+              <NavDropdown
+                title="Estatística"
+                id="admin-dropdown"
+                active={
+                  isActive("compras") ||
+                  isActive("vendas") ||
+                  isActive("usuarios") ||
+                  isActive("auditoria")
+                }
+              >
+                <NavDropdown.Item
+                  as={Link}
+                  to="/compras"
+                  active={isActive("compras")}
+                >
+                  Compra
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  as={Link}
+                  to="/vendas"
+                  active={isActive("vendas")}
+                >
+                  Vendas
+                </NavDropdown.Item>
+              </NavDropdown>
+            ) : null}
             <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
               Estoque
             </Nav.Link>

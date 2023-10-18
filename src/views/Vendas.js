@@ -91,7 +91,9 @@ export const Vendas = ({
                         year: "numeric",
                       })}
                     </td>
-                    <td>VEN{venda.sell_number || ""}</td>
+                    <td>
+                      <b>VEN{venda.sell_number || ""}</b>
+                    </td>
                     <td className="capitalize">{venda.cliente_id.full_name}</td>
                     <td>R$ {formatarValor(valorUnitario)}</td>
                     <td>R$ {formatarValor(venda.price)}</td>

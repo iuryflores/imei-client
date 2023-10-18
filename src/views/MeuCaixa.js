@@ -38,22 +38,54 @@ const MeuCaixa = ({
               <th>Data</th>
               <th>Descrição</th>
               <th>Tipo</th>
-              <th>Origem</th>
+              {/* <th>Origem</th> */}
               <th>Forma de pagamento</th>
               <th>Valor</th>
+              <th>Vendedor</th>
               <th className="text-center">Conciliado</th>
             </tr>
           </thead>
           <tbody>
             {caixas.map((caixa, index) => {
+              let newForma;
+              switch (caixa.forma_pagamento) {
+                case "pix":
+                  newForma = "Pix";
+                  break;
+                case "cartao_debito":
+                  newForma = "Débito";
+                  break;
+                case "cartao_credito":
+                  newForma = "Crédito";
+                  break;
+
+                default:
+                  break;
+              }
               return (
-                <tr key={index}>
-                  <td>{formatarDataEHora(caixa.createdAt)}</td>
-                  <td>{caixa.description}</td>
+                <tr
+                  key={index}
+                  className={caixa.tipo === "ENTRADA" ? "table-light" : " "}
+                >
+                  <td>{formatarDataEHora(caixa.createdAt)}h</td>
+                  <td>
+                    <b>
+                      VEN
+                      {arrayVendas.map((venda, index) => {
+                        return venda.sell_number;
+                      })}
+                    </b>{" "}
+                    <small>({caixa.origem_id})</small>
+                  </td>
                   <td>{caixa.tipo}</td>
-                  <td>{caixa.origem_id}</td>
-                  <td>{caixa.forma_pagamento}</td>
+                  {/* <td>{caixa.origem_id}</td> */}
+                  <td>{newForma}</td>
                   <td>R$ {formatarValor(caixa.valor)}</td>
+                  <td>
+                    {arrayVendas.map((venda, index) => {
+                      return venda.user_sell.full_name;
+                    })}
+                  </td>
                   <td className="text-center">
                     <i
                       style={{

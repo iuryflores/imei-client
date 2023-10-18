@@ -176,8 +176,6 @@ function App() {
     checkCaixaAberto();
   }, [selectedDate]);
 
-  console.log(caixaDiario);
-
   return (
     <div>
       {loggedIn ? (
