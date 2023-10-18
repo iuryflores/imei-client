@@ -13,6 +13,7 @@ const AddVenda = ({
   updateVendaList,
   newVenda,
   userData,
+  caixaDiario,
 }) => {
   //formulario de registro da venda
   const [sellDate, setSellDate] = useState();
@@ -29,6 +30,8 @@ const AddVenda = ({
 
   const [dataPagamento, setDataPagamento] = useState("");
   const [formaPagamento, setFormaPagamento] = useState("");
+
+  console.log(caixaDiario);
 
   const handleImeiAdd = async (imei) => {
     try {
@@ -78,12 +81,15 @@ const AddVenda = ({
   };
 
   const navigate = useNavigate();
-  console.log(selectedCliente);
+
+  console.log(caixaDiario);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (selectedCliente !== null && imeiArray) {
       try {
+        const idCaixa = caixaDiario._id;
         await api.addVenda({
           sellDate,
           selectedCliente, //clienteID
@@ -93,6 +99,7 @@ const AddVenda = ({
           userData,
           dataPagamento,
           formaPagamento,
+          idCaixa,
         });
         // Em seguida, limpo o formulário e fecho o modal.
         setSellDate("");

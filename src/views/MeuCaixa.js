@@ -15,58 +15,9 @@ const MeuCaixa = ({
   formatarValor,
   caixaDiario,
   setCaixaDiario,
+  caixas,
+  selectedDate, setSelectedDate
 }) => {
-  const [caixas, setCaixas] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
-
-  function getCurrentFormattedDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    let day = today.getDate();
-
-    // Pad the month and day with leading zeroes if needed
-    month = month < 10 ? `0${month}` : month;
-    day = day < 10 ? `0${day}` : day;
-
-    return `${year}-${month}-${day}`;
-  }
-  const [newUser, setNewUser] = useState("");
-
-  useEffect(() => {
-    const getUser = async () => {
-      const userDataNew = await api.getUserNav(userId);
-      setNewUser(userDataNew);
-      setLoading(false);
-    };
-    getUser();
-
-    setTimeout(() => {
-      setError(null);
-    }, 90000);
-  }, []);
-
-  useEffect(() => {
-    const getCaixa = async () => {
-      try {
-        if (!newUser.caixa_id) {
-          setError("Esse usuário não tem caixa definido!");
-        }
-
-        if (selectedDate && newUser.caixa_id) {
-          const caixa_id = newUser.caixa_id;
-          const getCaixaDia = await api.getCaixaDia(selectedDate, caixa_id);
-          setCaixas(getCaixaDia);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    if (newUser) {
-      getCaixa();
-    }
-  }, [selectedDate, newUser]);
   const sumLancamentos = () => {
     return caixas
       .reduce((total, caixa) => {
@@ -136,20 +87,7 @@ const MeuCaixa = ({
     }
   };
 
-  let caixaId = newUser.caixa_id;
-
-  //VERIFICA SE EXISTE CAIXA ABERTO
-  useEffect(() => {
-    const checkCaixaAberto = async () => {
-      try {
-        const caixaAberto = await api.checkCaixaAberto(selectedDate);
-        setCaixaDiario(caixaAberto);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    checkCaixaAberto();
-  }, []);
+  let caixaId = userData.caixa_id;
 
   //ABRE O CAIXA
   const handleAbrirCaixa = async () => {
@@ -160,6 +98,7 @@ const MeuCaixa = ({
       console.log(error);
     }
   };
+  console.log(caixaDiario);
   return (
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">

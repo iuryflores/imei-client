@@ -123,7 +123,60 @@ function App() {
     }, 10000);
   }, [message, setMessage, error, setError]);
 
-  console.log(caixaDiario);
+  //CAIXA
+  const [caixas, setCaixas] = useState([]);
+
+  const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
+
+  function getCurrentFormattedDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+
+    // Pad the month and day with leading zeroes if needed
+    month = month < 10 ? `0${month}` : month;
+    day = day < 10 ? `0${day}` : day;
+
+    return `${year}-${month}-${day}`;
+  }
+
+  useEffect(() => {
+    const getCaixa = async () => {
+      try {
+        if (!userData.caixa_id) {
+          setError("Esse usuário não tem caixa definido!");
+        }
+
+        if (selectedDate && userData.caixa_id) {
+          const caixa_id = userData.caixa_id;
+          const getCaixaDia = await api.getCaixaDia(selectedDate, caixa_id);
+          setCaixas(getCaixaDia);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (userData) {
+      getCaixa();
+    }
+  }, [selectedDate, userData]);
+
+  //VERIFICA SE EXISTE CAIXA ABERTO
+  useEffect(() => {
+    const checkCaixaAberto = async () => {
+      try {
+        const caixaAberto = await api.checkCaixaAberto(selectedDate);
+        setCaixaDiario(caixaAberto);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    checkCaixaAberto();
+  }, [selectedDate]);
+
+  console.log(caixaDiario)
 
   return (
     <div>
@@ -209,6 +262,7 @@ function App() {
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
                   userData={userData}
+                  caixaDiario={caixaDiario}
                 />
               }
             />
@@ -302,6 +356,9 @@ function App() {
                   formatarValor={formatarValor}
                   caixaDiario={caixaDiario}
                   setCaixaDiario={setCaixaDiario}
+                  caixas={caixas}
+                  selectedDate={selectedDate}
+                  setSelectedDate={setSelectedDate}
                 />
               }
             />

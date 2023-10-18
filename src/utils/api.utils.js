@@ -171,7 +171,8 @@ class Api {
     userId,
     userData,
     dataPagamento,
-    formaPagamento
+    formaPagamento,
+    idCaixa
   ) => {
     try {
       const { data } = await this.api.post(
@@ -183,7 +184,8 @@ class Api {
         userId,
         userData,
         dataPagamento,
-        formaPagamento
+        formaPagamento,
+        idCaixa
       );
       return data;
     } catch (error) {
