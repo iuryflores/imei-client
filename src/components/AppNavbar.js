@@ -33,6 +33,9 @@ const AppNavbar = ({ isAdmin, setError, userId }) => {
           className="justify-content-between"
         >
           <Nav className="mr-auto">
+            <Nav.Link as={Link} to="/" active={isActive("")}>
+              Caixa
+            </Nav.Link>
             <Nav.Link as={Link} to="/compras" active={isActive("compras")}>
               Compras
             </Nav.Link>
@@ -51,9 +54,6 @@ const AppNavbar = ({ isAdmin, setError, userId }) => {
             </Nav.Link>
             <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
               Estoque
-            </Nav.Link>
-            <Nav.Link as={Link} to="/meu-caixa/" active={isActive("meu-caixa")}>
-              Meu Caixa
             </Nav.Link>
 
             {isAdmin === true ? (

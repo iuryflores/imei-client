@@ -7,7 +7,7 @@ import api from "./utils/api.utils";
 import loadingGif from "./imgs/loading-state.gif";
 
 import AppNavbar from "./components/AppNavbar";
-import { HomePage } from "./views/HomePage";
+// import { HomePage } from "./views/HomePage";
 import { LoginPage } from "./views/LoginPage";
 import { Clientes } from "./views/Clientes.js";
 import { Fornecedores } from "./views/Fornecedores";
@@ -176,7 +176,7 @@ function App() {
     checkCaixaAberto();
   }, [selectedDate]);
 
-  console.log(caixaDiario)
+  console.log(caixaDiario);
 
   return (
     <div>
@@ -193,7 +193,7 @@ function App() {
       <Routes>
         {loggedIn ? (
           <>
-            <Route
+            {/*  <Route
               path="/"
               element={
                 <HomePage
@@ -205,7 +205,7 @@ function App() {
                   userId={userId}
                 />
               }
-            />
+            />*/}
 
             <Route
               path="/compras/"
@@ -339,7 +339,7 @@ function App() {
               }
             />
             <Route
-              path="/meu-caixa/"
+              path="/"
               element={
                 <MeuCaixa
                   message={message}

@@ -16,7 +16,8 @@ const MeuCaixa = ({
   caixaDiario,
   setCaixaDiario,
   caixas,
-  selectedDate, setSelectedDate
+  selectedDate,
+  setSelectedDate,
 }) => {
   const sumLancamentos = () => {
     return caixas
@@ -27,11 +28,6 @@ const MeuCaixa = ({
   };
 
   const [valorTotal, setValorTotal] = useState(0);
-
-  useEffect(() => {
-    const totalValue = sumLancamentos();
-    setValorTotal(parseFloat(totalValue));
-  }, [caixas]);
 
   const renderTable = () => {
     if (loading === false) {
@@ -87,7 +83,28 @@ const MeuCaixa = ({
     }
   };
 
-  let caixaId = userData.caixa_id;
+  useEffect(() => {
+    const totalValue = sumLancamentos();
+    setValorTotal(parseFloat(totalValue));
+  }, [caixas]);
+
+  const [arrayVendas, setArrayVendas] = useState([]);
+
+  //VERIFICA SE EXISTE CAIXA ABERTO
+  useEffect(() => {
+    const checkCaixaAberto = async () => {
+      try {
+        setLoading(true);
+        const caixaAberto = await api.checkCaixaAberto(selectedDate);
+        setCaixaDiario(caixaAberto);
+        setArrayVendas(caixaAberto.vendas);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    checkCaixaAberto();
+  }, [selectedDate]);
 
   //ABRE O CAIXA
   const handleAbrirCaixa = async () => {
@@ -98,6 +115,7 @@ const MeuCaixa = ({
       console.log(error);
     }
   };
+
   console.log(caixaDiario);
   return (
     <div className="p-3 m-3  d-flex flex-column">
@@ -129,15 +147,9 @@ const MeuCaixa = ({
         </div>
       </div>
       <hr />
-      {!caixaId && (
-        <div className="alert alert-danger text-center">
-          <b>Nenhum caixa foi definido para esse Usuário.</b>
-        </div>
-      )}
-
       {message ? <div className="alert alert-success">{message}</div> : null}
 
-      {caixas.length > 0 ? (
+      {arrayVendas.length > 0 ? (
         <div className="border p-2  shadow rounded w-100">{renderTable()}</div>
       ) : (
         <div className="text-center text-dark alert alert-warning mt-3">

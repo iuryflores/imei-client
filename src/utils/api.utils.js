@@ -300,9 +300,7 @@ class Api {
   };
   checkCaixaAberto = async (selectedDate) => {
     try {
-      const { data } = await this.api.get(
-        `/caixaDiario/aberto/${selectedDate}`
-      );
+      const { data } = await this.api.get(`/caixa/aberto/${selectedDate}`);
       return data;
     } catch (error) {
       throw error.response.data.msg;
