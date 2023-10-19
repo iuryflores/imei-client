@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 import InputMask from "react-input-mask";
 
-const AddCompra = ({ message, setMessage, error, setError, userId }) => {
+const AddCompra = ({ message, setMessage, userId }) => {
+  const [error, setError] = useState(null);
   //formulario de registro da compra
   const [customerData, setCustomerData] = useState({
     description: "",
@@ -118,7 +119,7 @@ const AddCompra = ({ message, setMessage, error, setError, userId }) => {
     setTimeout(() => {
       setError(null);
     }, 10000);
-  },[]);
+  }, []);
 
   return (
     <div className="container mt-3">

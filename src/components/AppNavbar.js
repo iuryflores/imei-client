@@ -99,7 +99,11 @@ const AppNavbar = ({ isAdmin, setError, userId }) => {
                 </NavDropdown.Item>
               </NavDropdown>
             ) : null}
-            <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
+            <Nav.Link
+              as={Link}
+              to="/estoque/"
+              active={isActive("estoque") || isActive("compras")}
+            >
               Estoque
             </Nav.Link>
 

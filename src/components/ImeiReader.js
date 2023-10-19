@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const ImeiReader = ({ onImeiAdd }) => {
   const [imei, setImei] = useState("");
@@ -14,10 +14,13 @@ const ImeiReader = ({ onImeiAdd }) => {
     return () => clearTimeout(timer);
   }, [imei, onImeiAdd]);
 
+  const inputRef = useRef(null);
+
   const handleImeiChange = (event) => {
     setImei(event.target.value);
+    console.log(inputRef.current)
+    inputRef.current.focus();
   };
-
 
   return (
     <div className="d-flex flex-column form-group">
@@ -28,6 +31,7 @@ const ImeiReader = ({ onImeiAdd }) => {
         value={imei}
         onChange={handleImeiChange}
         placeholder="Insira o IMEI"
+        ref={inputRef}
       />
     </div>
   );

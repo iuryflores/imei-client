@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
+import { Link } from "react-router-dom";
 
 const Produtos = ({
   message,
@@ -115,6 +116,10 @@ const Produtos = ({
             <span className="mx-3"> | </span>
             <span>Total: R$ {formatarValor(valorEstoque)}</span>
           </div>
+
+          <Link className="btn btn-success" to={"/compras/cadastrando/"}>
+            Cadastrar compra
+          </Link>
         </div>
       </div>
       <hr />

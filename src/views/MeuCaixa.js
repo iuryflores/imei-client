@@ -84,7 +84,7 @@ const MeuCaixa = ({
   useEffect(() => {
     const getCaixa = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
         if (!userData.caixa_id) {
           setError("Esse usuário não tem caixa definido!");
         }
@@ -95,7 +95,6 @@ const MeuCaixa = ({
           setCaixas(getCaixaDia);
           setLoading(false);
         }
-
       } catch (error) {
         console.log(error);
       }
@@ -103,7 +102,7 @@ const MeuCaixa = ({
     if (userData) {
       getCaixa();
     }
-    setLoading(false)
+    setLoading(false);
   }, [selectedDate, userData]);
 
   const renderTable = () => {
@@ -220,9 +219,11 @@ const MeuCaixa = ({
             </span>
           </div>
           <div className="d-flex align-items-center">
-            <Link className="btn btn-success" to={"/vendas/cadastrando/"}>
-              Vender
-            </Link>
+            {caixaDiario && (
+              <Link className="btn btn-success" to={"/vendas/cadastrando/"}>
+                Vender
+              </Link>
+            )}
           </div>
         </div>
       </div>
