@@ -31,6 +31,7 @@ const MeuCaixa = ({
   const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
 
   const [caixaDiario, setCaixaDiario] = useState(null);
+
   function getCurrentFormattedDate() {
     const today = new Date();
     const year = today.getFullYear();
@@ -43,8 +44,6 @@ const MeuCaixa = ({
 
     return `${year}-${month}-${day}`;
   }
-
-  console.log(caixas);
 
   useEffect(() => {
     const totalValue = sumLancamentos();
@@ -79,19 +78,11 @@ const MeuCaixa = ({
     }
   };
 
-  console.log(caixaDiario);
-
   useEffect(() => {
     const getCaixa = async () => {
       try {
-        setLoading(true);
-        if (!userData.caixa_id) {
-          setError("Esse usuário não tem caixa definido!");
-        }
-
-        if (selectedDate && userData.caixa_id) {
-          const caixa_id = userData.caixa_id;
-          const getCaixaDia = await api.getCaixaDia(selectedDate, caixa_id);
+        if (selectedDate) {
+          const getCaixaDia = await api.getCaixaDia(selectedDate);
           setCaixas(getCaixaDia);
           setLoading(false);
         }
@@ -103,7 +94,9 @@ const MeuCaixa = ({
       getCaixa();
     }
     setLoading(false);
-  }, [selectedDate, userData]);
+  }, [selectedDate, userData, caixaDiario]);
+
+  console.log(caixaDiario);
 
   const renderTable = () => {
     if (loading === false) {

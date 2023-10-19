@@ -34,7 +34,7 @@ function App() {
 
   const navigate = useNavigate();
 
-  const [caixaDiario, setCaixaDiario] = useState(null);
+  // const [caixaDiario, setCaixaDiario] = useState(null);
 
   const handleLogin = (username) => {
     setLoggedIn(true);
@@ -124,44 +124,44 @@ function App() {
   }, [message, setMessage, error, setError]);
 
   //CAIXA
-  const [caixas, setCaixas] = useState([]);
+  // const [caixas, setCaixas] = useState([]);
 
-  const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
+  // const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
 
-  function getCurrentFormattedDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    let day = today.getDate();
+  // function getCurrentFormattedDate() {
+  //   const today = new Date();
+  //   const year = today.getFullYear();
+  //   let month = today.getMonth() + 1;
+  //   let day = today.getDate();
 
-    // Pad the month and day with leading zeroes if needed
-    month = month < 10 ? `0${month}` : month;
-    day = day < 10 ? `0${day}` : day;
+  //   // Pad the month and day with leading zeroes if needed
+  //   month = month < 10 ? `0${month}` : month;
+  //   day = day < 10 ? `0${day}` : day;
 
-    return `${year}-${month}-${day}`;
-  }
+  //   return `${year}-${month}-${day}`;
+  // }
 
-  useEffect(() => {
-    const getCaixa = async () => {
-      try {
-        if (!userData.caixa_id) {
-          setError("Esse usuário não tem caixa definido!");
-        }
+  // useEffect(() => {
+  //   const getCaixa = async () => {
+  //     try {
+  //       if (!userData.caixa_id) {
+  //         setError("Esse usuário não tem caixa definido!");
+  //       }
 
-        if (selectedDate && userData.caixa_id) {
-          const caixa_id = userData.caixa_id;
-          const getCaixaDia = await api.getCaixaDia(selectedDate, caixa_id);
-          setCaixas(getCaixaDia);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    if (userData) {
-      getCaixa();
-    }
-  }, [selectedDate, userData]);
+  //       if (selectedDate && userData.caixa_id) {
+  //         const caixa_id = userData.caixa_id;
+  //         const getCaixaDia = await api.getCaixaDia(selectedDate, caixa_id);
+  //         setCaixas(getCaixaDia);
+  //         setLoading(false);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   if (userData) {
+  //     getCaixa();
+  //   }
+  // }, [selectedDate, userData]);
 
   return (
     <div>
@@ -247,7 +247,7 @@ function App() {
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
                   userData={userData}
-                  caixaDiario={caixaDiario}
+                  // caixaDiario={caixaDiario}
                 />
               }
             />
@@ -339,11 +339,11 @@ function App() {
                   formatarDataEHora={formatarDataEHora}
                   userData={userData}
                   formatarValor={formatarValor}
-                  caixaDiario={caixaDiario}
-                  setCaixaDiario={setCaixaDiario}
-                  caixas={caixas}
-                  selectedDate={selectedDate}
-                  setSelectedDate={setSelectedDate}
+                  // caixaDiario={caixaDiario}
+                  // setCaixaDiario={setCaixaDiario}
+                  // caixas={caixas}
+                  // selectedDate={selectedDate}
+                  // setSelectedDate={setSelectedDate}
                 />
               }
             />

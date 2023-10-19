@@ -104,7 +104,7 @@ const AddCompra = ({ message, setMessage, userId }) => {
           setPrice("");
           setPriceDb("");
           setMessage("Compra cadastrada com sucesso!");
-          navigate("/compras/");
+          navigate("/produtos/");
           setTimeout(() => {
             setMessage("");
           }, 5000);

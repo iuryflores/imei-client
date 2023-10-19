@@ -256,10 +256,10 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  getCaixaDia = async (selectedDate, caixa_id) => {
+  getCaixaDia = async (selectedDate) => {
     try {
       const { data } = await this.api.get(
-        `/lancamentos/meu-caixa/${selectedDate}/${caixa_id}`
+        `/lancamentos/meu-caixa/${selectedDate}/`
       );
       return data;
     } catch (error) {
