@@ -163,19 +163,6 @@ function App() {
     }
   }, [selectedDate, userData]);
 
-  //VERIFICA SE EXISTE CAIXA ABERTO
-  useEffect(() => {
-    const checkCaixaAberto = async () => {
-      try {
-        const caixaAberto = await api.checkCaixaAberto(selectedDate);
-        setCaixaDiario(caixaAberto);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    checkCaixaAberto();
-  }, [selectedDate]);
-
   return (
     <div>
       {loggedIn ? (

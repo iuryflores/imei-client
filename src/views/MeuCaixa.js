@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
+import { Link } from "react-router-dom";
 
 const MeuCaixa = ({
   message,
@@ -13,11 +14,6 @@ const MeuCaixa = ({
   userData,
   formatarDataEHora,
   formatarValor,
-  caixaDiario,
-  setCaixaDiario,
-  caixas,
-  selectedDate,
-  setSelectedDate,
 }) => {
   const sumLancamentos = () => {
     return caixas
@@ -28,6 +24,87 @@ const MeuCaixa = ({
   };
 
   const [valorTotal, setValorTotal] = useState(0);
+
+  //CAIXA
+  const [caixas, setCaixas] = useState([]);
+
+  const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
+
+  const [caixaDiario, setCaixaDiario] = useState(null);
+  function getCurrentFormattedDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+
+    // Pad the month and day with leading zeroes if needed
+    month = month < 10 ? `0${month}` : month;
+    day = day < 10 ? `0${day}` : day;
+
+    return `${year}-${month}-${day}`;
+  }
+
+  console.log(caixas);
+
+  useEffect(() => {
+    const totalValue = sumLancamentos();
+    setValorTotal(parseFloat(totalValue));
+  }, [caixas]);
+
+  const [arrayVendas, setArrayVendas] = useState([]);
+
+  //VERIFICA SE EXISTE CAIXA ABERTO
+  useEffect(() => {
+    const checkCaixaAberto = async () => {
+      try {
+        setLoading(true);
+        const caixaAberto = await api.checkCaixaAberto(selectedDate);
+        setCaixaDiario(caixaAberto);
+        setArrayVendas(caixaAberto.vendas);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    checkCaixaAberto();
+  }, [selectedDate]);
+
+  //ABRE O CAIXA
+  const handleAbrirCaixa = async () => {
+    try {
+      const abrirCaixa = await api.abrirCaixa({ userId, selectedDate });
+      setCaixaDiario(abrirCaixa);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log(caixaDiario);
+
+  useEffect(() => {
+    const getCaixa = async () => {
+      try {
+        setLoading(true)
+        if (!userData.caixa_id) {
+          setError("Esse usuário não tem caixa definido!");
+        }
+
+        if (selectedDate && userData.caixa_id) {
+          const caixa_id = userData.caixa_id;
+          const getCaixaDia = await api.getCaixaDia(selectedDate, caixa_id);
+          setCaixas(getCaixaDia);
+          setLoading(false);
+        }
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (userData) {
+      getCaixa();
+    }
+    setLoading(false)
+  }, [selectedDate, userData]);
 
   const renderTable = () => {
     if (loading === false) {
@@ -115,40 +192,6 @@ const MeuCaixa = ({
     }
   };
 
-  useEffect(() => {
-    const totalValue = sumLancamentos();
-    setValorTotal(parseFloat(totalValue));
-  }, [caixas]);
-
-  const [arrayVendas, setArrayVendas] = useState([]);
-
-  //VERIFICA SE EXISTE CAIXA ABERTO
-  useEffect(() => {
-    const checkCaixaAberto = async () => {
-      try {
-        setLoading(true);
-        const caixaAberto = await api.checkCaixaAberto(selectedDate);
-        setCaixaDiario(caixaAberto);
-        setArrayVendas(caixaAberto.vendas);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    checkCaixaAberto();
-  }, [selectedDate]);
-
-  //ABRE O CAIXA
-  const handleAbrirCaixa = async () => {
-    try {
-      const abrirCaixa = await api.abrirCaixa({ userId, selectedDate });
-      setCaixaDiario(abrirCaixa);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  console.log(caixaDiario);
   return (
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
@@ -175,6 +218,11 @@ const MeuCaixa = ({
               Saldo Atual:{" "}
               <b>R$ {formatarValor(valorTotal) || <span>0,00</span>}</b>
             </span>
+          </div>
+          <div className="d-flex align-items-center">
+            <Link className="btn btn-success" to={"/vendas/cadastrando/"}>
+              Vender
+            </Link>
           </div>
         </div>
       </div>

@@ -309,7 +309,7 @@ class Api {
   abrirCaixa = async (userId, selectedDate) => {
     try {
       const { data } = await this.api.post(
-        `/caixaDiario/abrir/`,
+        `/caixa/abrir/`,
         userId,
         selectedDate
       );
