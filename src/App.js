@@ -23,6 +23,7 @@ import ViewUser from "./views/ViewUser";
 import AddCaixa from "./views/AddCaixa";
 import ViewCaixa from "./views/ViewCaixa";
 import MeuCaixa from "./views/MeuCaixa";
+import TodosCaixas from "./views/TodosCaixas";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -400,6 +401,23 @@ function App() {
               path="/caixas/"
               element={
                 <Caixas
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                />
+              }
+            />
+            <Route
+              path="/todos-caixas/"
+              element={
+                <TodosCaixas
                   message={message}
                   setMessage={setMessage}
                   loading={loading}

@@ -256,6 +256,14 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  getCaixasAbertos = async () => {
+    try {
+      const { data } = await this.api.get(`/caixa/todos-abertos/`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
   getCaixas = async () => {
     try {
       const { data } = await this.api.get(`/caixas/`);

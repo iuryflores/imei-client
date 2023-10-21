@@ -114,7 +114,7 @@ const AppNavbar = ({ isAdmin, setError, userId }) => {
                   id="admin-dropdown"
                   active={
                     isActive("estatisticas") ||
-                    isActive("caixas") ||
+                    isActive("todos-caixas") ||
                     isActive("usuarios") ||
                     isActive("auditoria")
                   }
@@ -136,8 +136,8 @@ const AppNavbar = ({ isAdmin, setError, userId }) => {
 
                   <NavDropdown.Item
                     as={Link}
-                    to="/caixas"
-                    active={isActive("caixas")}
+                    to="/todos-caixas"
+                    active={isActive("todos-caixas")}
                   >
                     Caixas
                   </NavDropdown.Item>
