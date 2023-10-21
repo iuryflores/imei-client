@@ -96,7 +96,7 @@ const MeuCaixa = ({
     setLoading(false);
   }, [selectedDate, userData, caixaDiario]);
 
-  console.log(caixaDiario);
+  console.log(caixas);
 
   const renderTable = () => {
     if (loading === false) {

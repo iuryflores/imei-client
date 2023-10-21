@@ -36,6 +36,7 @@ const AddCompra = ({ message, setMessage, userId }) => {
       } else {
         setErrorImei("IMEI já incluso nessa compra!");
       }
+      calculateTotalValue();
     } catch (error) {
       setErrorImei(error);
       console.error(error);
@@ -47,6 +48,7 @@ const AddCompra = ({ message, setMessage, userId }) => {
     const updatedImeiArray = [...imeiArray];
     updatedImeiArray.splice(index, 1);
     setImeiArray(updatedImeiArray);
+    calculateTotalValue();
   };
 
   const navigate = useNavigate();
@@ -59,8 +61,10 @@ const AddCompra = ({ message, setMessage, userId }) => {
     }));
   };
 
-  const [price, setPrice] = useState("");
-  const [priceDb, setPriceDb] = useState("");
+  const [price, setPrice] = useState(0);
+  const [priceDb, setPriceDb] = useState(0);
+
+  const [priceTotal, setPriceTotal] = useState(0);
 
   const handleValorChange = (e) => {
     const inputValor = e.target.value;
@@ -74,13 +78,27 @@ const AddCompra = ({ message, setMessage, userId }) => {
           maximumFractionDigits: 2,
         })
       );
+
+      console.log("valor no handle: ", valorNumerico);
+      calculateTotalValue();
     } else {
       setPrice("");
     }
   };
 
-  console.log(price);
-  console.log(priceDb);
+  console.log("price: ", price);
+  console.log("priceDB: ", priceDb);
+  console.log("Array: ", imeiArray.length);
+
+  const calculateTotalValue = (valorNumerico) => {
+    console.log("valor no calculo: ", valorNumerico);
+    if (!isNaN(valorNumerico)) {
+      const totalValue = valorNumerico * imeiArray.length;
+      setPriceTotal(totalValue);
+    } else {
+      setPriceTotal("Valor inválido"); // Ou defina uma mensagem apropriada
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,6 +108,7 @@ const AddCompra = ({ message, setMessage, userId }) => {
         const newCompra = await api.addImei({
           customerData,
           priceDb,
+          valorFormatado,
           selectedItem,
           imeiArray,
           userId,
@@ -124,15 +143,20 @@ const AddCompra = ({ message, setMessage, userId }) => {
     }, 10000);
   }, []);
 
-  let valorTotal = 0;
+  const formataValor = (valor) => {
+    return valor.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
 
-  for (let index = 0; index < imeiArray.length; index++) {
-    if (imeiArray[index].buy_id) {
-      const element = imeiArray[index].buy_id || null;
-      valorTotal += element.price;
-    }
-  }
-  console.log(valorTotal);
+  console.log("priceTotal: ", priceTotal);
+  console.log("-------------------------");
+
+  let valorFormatado = parseFloat(priceDb * imeiArray.length);
+
+  console.log(valorFormatado);
+
   return (
     <div className="container mt-3">
       <div className="d-flex flex-column">
@@ -234,7 +258,11 @@ const AddCompra = ({ message, setMessage, userId }) => {
                   className="form-control"
                 />
               </div>
-              <div className="">{valorTotal && valorTotal}</div>
+              <div className="alert alert-success">
+                <b>
+                  Valor total: R$ {priceTotal && formataValor(valorFormatado)}
+                </b>
+              </div>
             </div>
           </div>
         </form>

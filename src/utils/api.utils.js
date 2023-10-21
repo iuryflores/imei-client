@@ -124,12 +124,20 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  addImei = async (customerData, selectedItem, priceDb, imeiArray, userId) => {
+  addImei = async (
+    customerData,
+    selectedItem,
+    priceDb,
+    valorFormatado,
+    imeiArray,
+    userId
+  ) => {
     try {
       const { data } = await this.api.post(
         "/compras/new/",
         customerData,
         priceDb,
+        valorFormatado,
         selectedItem,
         imeiArray,
         userId
