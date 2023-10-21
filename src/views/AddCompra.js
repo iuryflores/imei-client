@@ -79,6 +79,9 @@ const AddCompra = ({ message, setMessage, userId }) => {
     }
   };
 
+  console.log(price);
+  console.log(priceDb);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -104,7 +107,7 @@ const AddCompra = ({ message, setMessage, userId }) => {
           setPrice("");
           setPriceDb("");
           setMessage("Compra cadastrada com sucesso!");
-          navigate("/produtos/");
+          navigate("/estoque/");
           setTimeout(() => {
             setMessage("");
           }, 5000);
@@ -121,6 +124,15 @@ const AddCompra = ({ message, setMessage, userId }) => {
     }, 10000);
   }, []);
 
+  let valorTotal = 0;
+
+  for (let index = 0; index < imeiArray.length; index++) {
+    if (imeiArray[index].buy_id) {
+      const element = imeiArray[index].buy_id || null;
+      valorTotal += element.price;
+    }
+  }
+  console.log(valorTotal);
   return (
     <div className="container mt-3">
       <div className="d-flex flex-column">
@@ -222,6 +234,7 @@ const AddCompra = ({ message, setMessage, userId }) => {
                   className="form-control"
                 />
               </div>
+              <div className="">{valorTotal && valorTotal}</div>
             </div>
           </div>
         </form>
