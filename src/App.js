@@ -24,6 +24,7 @@ import AddCaixa from "./views/AddCaixa";
 import ViewCaixa from "./views/ViewCaixa";
 import MeuCaixa from "./views/MeuCaixa";
 import TodosCaixas from "./views/TodosCaixas";
+import FechandoCaixa from "./views/FechandoCaixa";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -426,6 +427,8 @@ function App() {
                   error={error}
                   setError={setError}
                   userId={userId}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
                 />
@@ -460,6 +463,28 @@ function App() {
                   error={error}
                   setError={setError}
                   userId={userId}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                />
+              }
+            />
+
+            <Route
+              path="/caixa/fechando/:caixa_id"
+              element={
+                <FechandoCaixa
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                  openModal={openModal}
+                  closeModal={closeModal}
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
                 />
