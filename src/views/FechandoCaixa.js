@@ -17,6 +17,7 @@ const FechandoCaixa = ({
   userId,
 }) => {
   const [dataVendas, setDataVendas] = useState([]);
+  const [vendas, setVendas] = useState("");
 
   const [error, setError] = useState(null);
 
@@ -28,6 +29,7 @@ const FechandoCaixa = ({
         setLoading(true);
         const data = await api.getVendasByCaixaId(caixa_id);
         setDataVendas(data);
+        setVendas(data.vendas);
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -55,7 +57,7 @@ const FechandoCaixa = ({
   // }
 
   const renderTable = () => {
-    if (dataVendas) {
+    if (dataVendas && vendas) {
       return (
         <table className="table mb-0 table-striped table-hover">
           <thead>
@@ -69,8 +71,7 @@ const FechandoCaixa = ({
             </tr>
           </thead>
           <tbody>
-            {dataVendas.vendas.map((venda, index) => {
-              console.log(venda);
+            {vendas.map((venda, index) => {
               var dataObj = new Date(venda.dateSell);
               var dia = dataObj.getUTCDate();
               var mes = dataObj.getUTCMonth() + 1;
@@ -83,15 +84,8 @@ const FechandoCaixa = ({
                   <td>{dataFormatada}</td>
                   <td>R$ {formatarValor(venda.price)}</td>
                   <td>{formatarDataEHora(venda.updatedAt)}h</td>
-                  <td>{ venda.user_sell.full_name}</td>
-                  <td>
-                    <div
-                      className="btn btn-success"
-                      onClick={() => fecharCaixa(venda._id)}
-                    >
-                      Fechar
-                    </div>
-                  </td>
+                  <td>{venda.user_sell.full_name}</td>
+                  <td></td>
                 </tr>
               );
             })}
@@ -111,6 +105,9 @@ const FechandoCaixa = ({
         <h1>
           <i className="bi bi-cash-coin"></i> Caixas abertos
         </h1>
+        <div className="btn btn-success" onClick={fecharCaixa}>
+          Fechar
+        </div>
       </div>
       <hr />
       {message ? <div className="alert alert-success">{message}</div> : null}

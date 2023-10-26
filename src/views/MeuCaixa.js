@@ -25,6 +25,8 @@ const MeuCaixa = ({
 
   const [valorTotal, setValorTotal] = useState(0);
 
+  const navigate = useNavigate();
+
   //CAIXA
   const [caixas, setCaixas] = useState([]);
 
@@ -67,8 +69,6 @@ const MeuCaixa = ({
     };
     checkCaixaAberto();
   }, [selectedDate]);
-
-  const navigate = useNavigate();
 
   //ABRE O CAIXA
   const handleAbrirCaixa = async () => {
@@ -114,7 +114,6 @@ const MeuCaixa = ({
               <th>Forma de pagamento</th>
               <th>Valor</th>
               <th>Vendedor</th>
-              <th className="text-center">Conciliado</th>
             </tr>
           </thead>
           <tbody>
@@ -141,36 +140,13 @@ const MeuCaixa = ({
                 >
                   <td>{formatarDataEHora(caixa.createdAt)}h</td>
                   <td>
-                    <b>
-                      VEN
-                      {;
-                      })}
-                    </b>{" "}
-                    <small>({caixa.origem_id})</small>
+                    <b>VEN{caixa.origem_id.sell_number}</b>
                   </td>
-                  <td>{}</td>
+                  <td>{caixa.origem_id.cliente_id.full_name}</td>
                   <td>{caixa.tipo}</td>
                   <td>{newForma}</td>
                   <td>R$ {formatarValor(caixa.valor)}</td>
-                  <td>
-                    {arrayVendas.map((venda, index) => {
-                      return venda.user_sell.full_name;
-                    })}
-                  </td>
-                  <td className="text-center">
-                    <i
-                      style={{
-                        backgroundColor: caixa.conciliado ? "green" : " ",
-                        color: caixa.conciliado ? "white" : " #ccc",
-                        border: caixa.conciliado
-                          ? "2px solid"
-                          : "1px solid #ccc",
-                        borderRadius: caixa.conciliado ? "5px" : "",
-                        padding: "2px 5px",
-                      }}
-                      className="bi bi-check-lg"
-                    ></i>
-                  </td>
+                  <td>{caixa.origem_id.user_sell.full_name}</td>
                 </tr>
               );
             })}
@@ -205,7 +181,8 @@ const MeuCaixa = ({
             className="form-control"
             type="date"
             value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)} disabled
+            onChange={(e) => setSelectedDate(e.target.value)}
+            disabled
           />
           <div className="d-flex align-items-center alert alert-info">
             <span>
