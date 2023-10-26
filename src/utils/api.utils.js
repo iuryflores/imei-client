@@ -290,6 +290,22 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  fechandoCaixa = async (caixa_id) => {
+    try {
+      const { data } = await this.api.get(`/caixa/fechando/${caixa_id}`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getVendasByCaixaId = async (caixa_id) => {
+    try {
+      const { data } = await this.api.get(`/caixa/vendas/${caixa_id}`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
   addCaixas = async (caixaData, userId) => {
     try {
       const { data } = await this.api.post(`/caixas/new/`, caixaData, userId);

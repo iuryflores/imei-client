@@ -146,7 +146,7 @@ const AddVenda = ({
     setValorVenda(parseFloat(totalValue));
   }, [imeiArray]);
 
-  const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
+  const [selectedDate] = useState(getCurrentFormattedDate());
 
   function getCurrentFormattedDate() {
     const today = new Date();
