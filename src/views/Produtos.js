@@ -117,7 +117,7 @@ const Produtos = ({
             <span>Total: R$ {formatarValor(valorEstoque)}</span>
           </div>
 
-          <Link className="btn btn-success" to={"/compras/cadastrando/"}>
+          <Link className="btn btn-success" to={"/cadastrando/compras/"}>
             Cadastrar compra
           </Link>
         </div>

@@ -31,6 +31,7 @@ const SearchFornecedor = ({
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
     setSelectedItem(null); // Limpa o item selecionado quando o usuário digita
+    setError(null);
   };
 
   const handleSelectItem = (item) => {

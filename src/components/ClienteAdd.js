@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import api from "../utils/api.utils";
-import { useNavigate } from "react-router";
 import InputMask from "react-input-mask";
 
 export const ClienteAdd = ({
@@ -10,7 +9,8 @@ export const ClienteAdd = ({
   setMessage,
   error,
   setError,
-  userId
+  userId,
+  updateClienteList,
 }) => {
   const [customerData, setCustomerData] = useState({
     name: "",
@@ -20,7 +20,6 @@ export const ClienteAdd = ({
     type: "fisica",
   });
 
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,7 +34,7 @@ export const ClienteAdd = ({
 
     if (customerData) {
       try {
-        await api.addCliente({ customerData , userId});
+        const newCliente = await api.addCliente({ customerData, userId });
         setMessage("Cliente cadastrado(a) com sucesso!");
         // Em seguida, limpo o formulário e fecho o modal.
         setCustomerData({
@@ -46,9 +45,10 @@ export const ClienteAdd = ({
           type: "fisica",
         });
         onClose();
+        updateClienteList(newCliente);
         setTimeout(() => {
-          navigate(0);
-        }, 5000);
+          setMessage("");
+        }, 4000);
       } catch (error) {
         setError(error);
       }

@@ -35,8 +35,6 @@ function App() {
 
   const navigate = useNavigate();
 
-  // const [caixaDiario, setCaixaDiario] = useState(null);
-
   const handleLogin = (username) => {
     setLoggedIn(true);
     navigate("/");
@@ -124,46 +122,6 @@ function App() {
     }, 10000);
   }, [message, setMessage, error, setError]);
 
-  //CAIXA
-  // const [caixas, setCaixas] = useState([]);
-
-  // const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
-
-  // function getCurrentFormattedDate() {
-  //   const today = new Date();
-  //   const year = today.getFullYear();
-  //   let month = today.getMonth() + 1;
-  //   let day = today.getDate();
-
-  //   // Pad the month and day with leading zeroes if needed
-  //   month = month < 10 ? `0${month}` : month;
-  //   day = day < 10 ? `0${day}` : day;
-
-  //   return `${year}-${month}-${day}`;
-  // }
-
-  // useEffect(() => {
-  //   const getCaixa = async () => {
-  //     try {
-  //       if (!userData.caixa_id) {
-  //         setError("Esse usuário não tem caixa definido!");
-  //       }
-
-  //       if (selectedDate && userData.caixa_id) {
-  //         const caixa_id = userData.caixa_id;
-  //         const getCaixaDia = await api.getCaixaDia(selectedDate, caixa_id);
-  //         setCaixas(getCaixaDia);
-  //         setLoading(false);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   if (userData) {
-  //     getCaixa();
-  //   }
-  // }, [selectedDate, userData]);
-
   return (
     <div>
       {loggedIn ? (
@@ -179,20 +137,6 @@ function App() {
       <Routes>
         {loggedIn ? (
           <>
-            {/*  <Route
-              path="/"
-              element={
-                <HomePage
-                  message={message}
-                  setMessage={setMessage}
-                  loading={loading}
-                  setLoading={setLoading}
-                  loadingGif={loadingGif}
-                  userId={userId}
-                />
-              }
-            />*/}
-
             <Route
               path="/compras/"
               element={
@@ -234,7 +178,7 @@ function App() {
               }
             />
             <Route
-              path="/vendas/cadastrando/"
+              path="/cadastrando/vendas/"
               element={
                 <AddVenda
                   message={message}
@@ -248,12 +192,11 @@ function App() {
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
                   userData={userData}
-                  // caixaDiario={caixaDiario}
                 />
               }
             />
             <Route
-              path="/compras/cadastrando/"
+              path="/cadastrando/compras/"
               element={
                 <AddCompra
                   message={message}
@@ -340,11 +283,6 @@ function App() {
                   formatarDataEHora={formatarDataEHora}
                   userData={userData}
                   formatarValor={formatarValor}
-                  // caixaDiario={caixaDiario}
-                  // setCaixaDiario={setCaixaDiario}
-                  // caixas={caixas}
-                  // selectedDate={selectedDate}
-                  // setSelectedDate={setSelectedDate}
                 />
               }
             />

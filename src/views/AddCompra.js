@@ -79,19 +79,13 @@ const AddCompra = ({ message, setMessage, userId }) => {
         })
       );
 
-      console.log("valor no handle: ", valorNumerico);
       calculateTotalValue();
     } else {
       setPrice("");
     }
   };
 
-  console.log("price: ", price);
-  console.log("priceDB: ", priceDb);
-  console.log("Array: ", imeiArray.length);
-
   const calculateTotalValue = (valorNumerico) => {
-    console.log("valor no calculo: ", valorNumerico);
     if (!isNaN(valorNumerico)) {
       const totalValue = valorNumerico * imeiArray.length;
       setPriceTotal(totalValue);
@@ -129,7 +123,7 @@ const AddCompra = ({ message, setMessage, userId }) => {
           navigate("/estoque/");
           setTimeout(() => {
             setMessage("");
-          }, 5000);
+          }, 4000);
         }
       } catch (error) {
         setError(error);
@@ -150,12 +144,7 @@ const AddCompra = ({ message, setMessage, userId }) => {
     });
   };
 
-  console.log("priceTotal: ", priceTotal);
-  console.log("-------------------------");
-
   let valorFormatado = parseFloat(priceDb * imeiArray.length);
-
-  console.log(valorFormatado);
 
   return (
     <div className="container mt-3">

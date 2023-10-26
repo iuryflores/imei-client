@@ -107,7 +107,6 @@ const MeuCaixa = ({
               <th>Data</th>
               <th>Descrição</th>
               <th>Tipo</th>
-              {/* <th>Origem</th> */}
               <th>Forma de pagamento</th>
               <th>Valor</th>
               <th>Vendedor</th>
@@ -203,7 +202,7 @@ const MeuCaixa = ({
             className="form-control"
             type="date"
             value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
+            onChange={(e) => setSelectedDate(e.target.value)} disabled
           />
           <div className="d-flex align-items-center alert alert-info">
             <span>
@@ -213,7 +212,7 @@ const MeuCaixa = ({
           </div>
           <div className="d-flex align-items-center">
             {caixaDiario && (
-              <Link className="btn btn-success" to={"/vendas/cadastrando/"}>
+              <Link className="btn btn-success" to={"/cadastrando/vendas/"}>
                 Vender
               </Link>
             )}

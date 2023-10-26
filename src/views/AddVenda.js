@@ -106,7 +106,7 @@ const AddVenda = ({
 
         setMessage("Venda cadastrada com sucesso!");
 
-        navigate("/vendas/");
+        navigate("/");
         setTimeout(() => {
           setMessage("");
         }, 10000);
