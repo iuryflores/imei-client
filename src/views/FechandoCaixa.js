@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api.utils";
-import { Link } from "react-router-dom";
+import { FecharCaixa } from "../components/FecharCaixa";
+import { useParams } from "react-router-dom";
 
-const TodosCaixas = ({
+const FechandoCaixa = ({
   message,
   setMessage,
   loading,
@@ -15,20 +16,24 @@ const TodosCaixas = ({
   closeModal,
   userId,
 }) => {
-  const [caixas, setCaixas] = useState([]);
+  const [dataVendas, setDataVendas] = useState([]);
+
+  const [error, setError] = useState(null);
+
+  const { caixa_id } = useParams();
 
   useEffect(() => {
-    const getCaixas = async () => {
+    const getVendas = async () => {
       try {
         setLoading(true);
-        const data = await api.getCaixasAbertos();
-        setCaixas(data);
+        const data = await api.getVendasByCaixaId(caixa_id);
+        setDataVendas(data);
         setLoading(false);
       } catch (error) {
         console.log(error);
       }
     };
-    getCaixas();
+    getVendas();
   }, []);
 
   const formatarValor = (valor) => {
@@ -39,8 +44,18 @@ const TodosCaixas = ({
     return valorFormatado;
   };
 
+  const fecharCaixa = (caixaId) => {
+    setShowModal(true);
+    console.log(caixaId);
+  };
+
+  // let valorTotalVendas = 0;
+  // for (let index = 0; index < dataVendas.vendas.length; index++) {
+  //   valorTotalVendas += dataVendas.vendas[index].price;
+  // }
+
   const renderTable = () => {
-    if (caixas.length > 0) {
+    if (dataVendas) {
       return (
         <table className="table mb-0 table-striped table-hover">
           <thead>
@@ -54,40 +69,28 @@ const TodosCaixas = ({
             </tr>
           </thead>
           <tbody>
-            {caixas.map((caixa, index) => {
-              var dataObj = new Date(caixa.data);
+            {dataVendas.vendas.map((venda, index) => {
+              console.log(venda);
+              var dataObj = new Date(venda.dateSell);
               var dia = dataObj.getUTCDate();
               var mes = dataObj.getUTCMonth() + 1;
               var ano = dataObj.getUTCFullYear();
 
               var dataFormatada = dia + "/" + mes + "/" + ano;
 
-              let valorTotalVendas = 0;
-              for (let index = 0; index < caixa.vendas.length; index++) {
-                valorTotalVendas += caixa.vendas[index].price;
-              }
               return (
                 <tr key={index}>
+                  <td>{dataFormatada}</td>
+                  <td>R$ {formatarValor(venda.price)}</td>
+                  <td>{formatarDataEHora(venda.updatedAt)}h</td>
+                  <td>{ venda.user_sell.full_name}</td>
                   <td>
                     <div
-                      className={
-                        caixa.status === true ? "btn btn-info" : "btn btn-dark"
-                      }
-                    >
-                      {caixa.status === true ? "Aberto" : "Fechado"}
-                    </div>
-                  </td>
-                  <td>{dataFormatada}</td>
-                  <td>R$ {formatarValor(valorTotalVendas)}</td>
-                  <td>{formatarDataEHora(caixa.updatedAt)}h</td>
-                  <td>{caixa.userAbertura.full_name}</td>
-                  <td>
-                    <Link
-                      to={`/caixa/fechando/${caixa._id}`}
                       className="btn btn-success"
+                      onClick={() => fecharCaixa(venda._id)}
                     >
                       Fechar
-                    </Link>
+                    </div>
                   </td>
                 </tr>
               );
@@ -118,8 +121,19 @@ const TodosCaixas = ({
           <img style={{ width: "100px" }} src={loadingGif} alt="Loading gif" />
         </div>
       )}
+
+      {/* Modal do caixa */}
+      <FecharCaixa
+        show={showModal}
+        onClose={closeModal}
+        message={message}
+        setMessage={setMessage}
+        error={error}
+        setError={setError}
+        userId={userId}
+      />
     </div>
   );
 };
 
-export default TodosCaixas;
+export default FechandoCaixa;

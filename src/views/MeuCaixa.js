@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const MeuCaixa = ({
   message,
@@ -68,11 +68,14 @@ const MeuCaixa = ({
     checkCaixaAberto();
   }, [selectedDate]);
 
+  const navigate = useNavigate();
+
   //ABRE O CAIXA
   const handleAbrirCaixa = async () => {
     try {
       const abrirCaixa = await api.abrirCaixa({ userId, selectedDate });
       setCaixaDiario(abrirCaixa);
+      navigate(0);
     } catch (error) {
       console.log(error);
     }
@@ -106,8 +109,8 @@ const MeuCaixa = ({
             <tr>
               <th>Data</th>
               <th>Descrição</th>
+              <th>Cliente</th>
               <th>Tipo</th>
-              {/* <th>Origem</th> */}
               <th>Forma de pagamento</th>
               <th>Valor</th>
               <th>Vendedor</th>
@@ -140,14 +143,13 @@ const MeuCaixa = ({
                   <td>
                     <b>
                       VEN
-                      {arrayVendas.map((venda, index) => {
-                        return venda.sell_number;
+                      {;
                       })}
                     </b>{" "}
                     <small>({caixa.origem_id})</small>
                   </td>
+                  <td>{}</td>
                   <td>{caixa.tipo}</td>
-                  {/* <td>{caixa.origem_id}</td> */}
                   <td>{newForma}</td>
                   <td>R$ {formatarValor(caixa.valor)}</td>
                   <td>
