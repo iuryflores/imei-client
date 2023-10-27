@@ -4,7 +4,7 @@ import axios from "axios";
 class Api {
   constructor() {
     this.api = axios.create({
-      baseURL: "http://75.101.195.173:9001",
+      baseURL: "http://imeiapp.iuryflores.com/",
       // baseURL: "http://localhost:9000",
     });
     this.api.interceptors.request.use(
