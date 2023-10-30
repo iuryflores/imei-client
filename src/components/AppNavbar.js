@@ -3,7 +3,7 @@ import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import api from "../utils/api.utils";
 
-const AppNavbar = ({ isAdmin, setError, userId }) => {
+const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
   const { pathname } = useLocation();
   const newLocation = pathname.split("/");
   const isActive = (path) => newLocation[1] === path;
@@ -158,7 +158,12 @@ const AppNavbar = ({ isAdmin, setError, userId }) => {
                 </NavDropdown>
               </>
             ) : null}
-            <Nav.Link as={Link} to="/sair" active={isActive("/sair")}>
+            <Nav.Link
+              as={Link}
+              to=""
+              onClick={onLogout}
+              active={isActive("/sair")}
+            >
               Sair
             </Nav.Link>
           </Nav>
