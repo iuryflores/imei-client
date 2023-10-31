@@ -116,7 +116,8 @@ const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
                     isActive("estatisticas") ||
                     isActive("todos-caixas") ||
                     isActive("usuarios") ||
-                    isActive("auditoria")
+                    isActive("auditoria") ||
+                    isActive("caixa")
                   }
                 >
                   <NavDropdown.Item

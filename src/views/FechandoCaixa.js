@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api.utils";
 import { FecharCaixa } from "../components/FecharCaixa";
-import { useParams } from "react-router-dom";
+import { ViewVenda } from "../components/ViewVenda.js";
+import { Link, useParams } from "react-router-dom";
 
 const FechandoCaixa = ({
   message,
@@ -51,10 +52,34 @@ const FechandoCaixa = ({
     console.log(caixaId);
   };
 
-  // let valorTotalVendas = 0;
-  // for (let index = 0; index < dataVendas.vendas.length; index++) {
-  //   valorTotalVendas += dataVendas.vendas[index].price;
-  // }
+  let valorTotalVendas = 0;
+  for (let index = 0; index < vendas.length; index++) {
+    valorTotalVendas += vendas[index].price;
+  }
+
+  const formatarDataSemHora = (dataParaFormatar) => {
+    let dataObj = new Date(dataParaFormatar);
+    let dia = dataObj.getUTCDate();
+    let mes = dataObj.getUTCMonth() + 1;
+    let ano = dataObj.getUTCFullYear();
+    let dataFormatada = dia + "/" + mes + "/" + ano;
+    return dataFormatada;
+  };
+
+  const [showModalVenda, setShowModalVenda] = useState(false);
+
+  const [vendaView, setVendaView] = useState(null);
+
+  const showVenda = (venda) => {
+    setVendaView(venda);
+    setShowModalVenda(true);
+
+    console.log(venda);
+  };
+
+  const closeVendaModal = () => {
+    setShowModalVenda(false);
+  };
 
   const renderTable = () => {
     if (dataVendas && vendas) {
@@ -62,30 +87,31 @@ const FechandoCaixa = ({
         <table className="table mb-0 table-striped table-hover">
           <thead>
             <tr>
-              <th>Status</th>
-              <th>Data do caixa</th>
-              <th>Valor total do caixa</th>
-              <th>Última alteração</th>
-              <th>Usuário da abertura</th>
-              <th></th>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Vendedor</th>
+              <th className="text-center" style={{ width: "5%" }}>
+                Visualizar
+              </th>
             </tr>
           </thead>
           <tbody>
             {vendas.map((venda, index) => {
-              var dataObj = new Date(venda.dateSell);
-              var dia = dataObj.getUTCDate();
-              var mes = dataObj.getUTCMonth() + 1;
-              var ano = dataObj.getUTCFullYear();
-
-              var dataFormatada = dia + "/" + mes + "/" + ano;
-
               return (
                 <tr key={index}>
-                  <td>{dataFormatada}</td>
+                  <td>{formatarDataSemHora(venda.dateSell)}</td>
+                  <td>
+                    Registrou a <b>VEN{venda.sell_number}</b>
+                  </td>
                   <td>R$ {formatarValor(venda.price)}</td>
-                  <td>{formatarDataEHora(venda.updatedAt)}h</td>
                   <td>{venda.user_sell.full_name}</td>
-                  <td></td>
+                  <td className="text-center">
+                    <i
+                      className="bi bi-eye-fill clickable"
+                      onClick={() => showVenda(venda)}
+                    ></i>
+                  </td>
                 </tr>
               );
             })}
@@ -94,7 +120,9 @@ const FechandoCaixa = ({
       );
     } else {
       return (
-        <div className="text-center text-dark">Nenhum caixa cadastrado!</div>
+        <div className="text-center text-dark">
+          Nenhum lançamento cadastrado!
+        </div>
       );
     }
   };
@@ -102,13 +130,20 @@ const FechandoCaixa = ({
   return (
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
-        <h1>
-          <i className="bi bi-cash-coin"></i> Caixas abertos
-        </h1>
-        <div className="btn btn-success" onClick={fecharCaixa}>
-          Fechar
+        <h3>
+          <i className="bi bi-coin"></i> Caixa do dia{" "}
+          {formatarDataSemHora(dataVendas.data)}
+        </h3>
+        <div className="">
+          <Link className="btn btn-warning mx-3" to="/todos-caixas">
+            Voltar
+          </Link>
+          <div className="btn btn-success" onClick={fecharCaixa}>
+            Fechar caixa
+          </div>
         </div>
       </div>
+
       <hr />
       {message ? <div className="alert alert-success">{message}</div> : null}
       {!loading ? (
@@ -118,7 +153,12 @@ const FechandoCaixa = ({
           <img style={{ width: "100px" }} src={loadingGif} alt="Loading gif" />
         </div>
       )}
-
+      <div className=" d-flex flex-column align-items-end mt-2">
+        <div className="alert alert-info">
+          Valor do Caixa:{" "}
+          <b> R$ {formatarValor(valorTotalVendas) || <span> 0.00</span>}</b>
+        </div>
+      </div>
       {/* Modal do caixa */}
       <FecharCaixa
         show={showModal}
@@ -128,6 +168,20 @@ const FechandoCaixa = ({
         error={error}
         setError={setError}
         userId={userId}
+        valorTotalVendas={valorTotalVendas}
+        formatarValor={formatarValor}
+        dataVendas={dataVendas}
+      />
+      {/* Modal da venda */}
+      <ViewVenda
+        showModalVenda={showModalVenda}
+        closeVendaModal={closeVendaModal}
+        message={message}
+        setMessage={setMessage}
+        error={error}
+        setError={setError}
+        userId={userId}
+        vendaView={vendaView}
       />
     </div>
   );

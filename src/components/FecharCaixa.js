@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import api from "../utils/api.utils";
 import { useNavigate } from "react-router";
+import InputMask from "react-input-mask";
 
 export const FecharCaixa = ({
   show,
@@ -10,47 +11,57 @@ export const FecharCaixa = ({
   error,
   setError,
   userId,
+  valorTotalVendas,
+  dataVendas,
 }) => {
-  const [customerData, setCustomerData] = useState({
-    saldoCaixa: "",
-    saldoVewndas: "",
-  });
-
+  const [saldoCaixa, setSaldoCaixa] = useState(valorTotalVendas);
+  const caixaId = dataVendas._id;
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCustomerData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (customerData) {
+    if (saldoCaixa) {
       try {
-        await api.addCliente({ customerData, userId });
-        setMessage("Cliente cadastrado(a) com sucesso!");
-        // Em seguida, limpo o formulário e fecho o modal.
-        setCustomerData({
-          name: "",
-          email: "",
-          phone: "",
-          document: "",
-          type: "fisica",
-        });
+        await api.fecharCaixa({ saldoCaixaDb, userId, caixaId, ...dataVendas });
+        setMessage("O caixa foi fechado com sucesso!");
+        setSaldoCaixa(0);
         onClose();
-        setTimeout(() => {
-          navigate(0);
-        }, 5000);
+        navigate("/todos-caixas/");
       } catch (error) {
         setError(error);
       }
     }
   };
+  console.log(saldoCaixa);
 
+  const formatarValor = (valor) => {
+    const valorFormatado = valor.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    return valorFormatado;
+  };
+
+  const [saldoCaixaDb, setSaldoCaixaDb] = useState(0);
+
+  const handleValorChange = (e) => {
+    const inputValor = e.target.value;
+    const valorNumerico = parseFloat(inputValor.replace(/[^0-9]/g, "")) / 100;
+    setSaldoCaixaDb(valorNumerico);
+
+    if (!isNaN(valorNumerico)) {
+      setSaldoCaixa(
+        valorNumerico.toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      );
+    } else {
+      setSaldoCaixa("");
+    }
+  };
+  console.log(dataVendas);
   return (
     <div className={`modal modal-lg ${show ? "show" : ""}`}>
       <div
@@ -72,29 +83,22 @@ export const FecharCaixa = ({
           <div className="modal-body">
             <form>
               {error ? <div className="alert alert-danger">{error}</div> : null}
-
+              <div className="alert alert-info">
+                Valor das vendas: <b>R$ {formatarValor(valorTotalVendas)}</b>
+              </div>
               <div className="form-group">
                 <label htmlFor="saldoCaixa">
                   Informe o saldo final do caixa:
                 </label>
-                <input
-                  type="number"
-                  className="form-control"
+                <InputMask
+                  mask=""
+                  maskChar=""
+                  alwaysShowMask={false}
                   id="saldoCaixa"
                   name="saldoCaixa"
-                  value={customerData.saldoCaixa}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">Saldo das vendas:</label>
-                <input
-                  type="number"
+                  value={saldoCaixa}
+                  onChange={handleValorChange}
                   className="form-control"
-                  id="saldoVendas"
-                  name="saldoVendas"
-                  value={customerData.saldoVendas}
-                  onChange={handleChange}
                 />
               </div>
             </form>

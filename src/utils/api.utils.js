@@ -4,8 +4,9 @@ import axios from "axios";
 class Api {
   constructor() {
     this.api = axios.create({
-      baseURL: "http://imeiapp.iuryflores.com/",
-      // baseURL: "http://localhost:9000",
+      // baseURL: "http://imeiapp.iuryflores.com/",
+      baseURL: "http://localhost:9000",
+      // baseURL: "http://35.175.178.173:3001",
     });
     this.api.interceptors.request.use(
       (config) => {
@@ -26,12 +27,22 @@ class Api {
     this.api.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response.status === 401) {
+        //if (error.response.status === 401) {
+        //localStorage.removeItem("token");
+        //  if (window.location.pathname !== "/login") {
+        //  window.location.replace("/login"); // Use window.location.replace para fazer o redirecionamento
+        // }
+        //
+        //
+        // }
+        if (error.response.data.msg.message === "jwt expired") {
           localStorage.removeItem("token");
-          if (window.location.pathname !== "/admin/login") {
-            window.location.replace("/admin/login"); // Use window.location.replace para fazer o redirecionamento
+          localStorage.removeItem("userId");
+          if (window.location.pathname !== "/login") {
+            window.location.replace("/login");
           }
         }
+        console.error(error);
         throw error;
       }
     );
@@ -273,7 +284,7 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  getCaixaDia = async (selectedDate) => {
+  getLancamentos = async (selectedDate) => {
     try {
       const { data } = await this.api.get(
         `/lancamentos/meu-caixa/${selectedDate}/`
@@ -291,9 +302,31 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  getTodosCaixas = async () => {
+    try {
+      const { data } = await this.api.get(`/caixa/todos/`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
   fechandoCaixa = async (caixa_id) => {
     try {
       const { data } = await this.api.get(`/caixa/fechando/${caixa_id}`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  fecharCaixa = async (saldoCaixaDb, userId, caixaId, dataVendas) => {
+    try {
+      const { data } = await this.api.put(
+        `/caixa/fechar/`,
+        saldoCaixaDb,
+        userId,
+        caixaId,
+        dataVendas
+      );
       return data;
     } catch (error) {
       throw error.response.data.msg;
