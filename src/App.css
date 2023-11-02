@@ -4,20 +4,26 @@
   transition: ease-in-out 1s;
 }
 
+.logo {
+  mix-blend-mode: multiply;
+}
+
 table tr td {
   vertical-align: middle;
 }
+
 .table-estoque-venda {
   background-color: rgba(0, 255, 64, 0.111);
   border-radius: 5px;
 }
+
 .App {
   text-align: center;
   background-color: #f1f1f1;
 }
 
 .navbar {
-  background-color: #1d1d1d;
+  background-color: #198754;
   transition: 2s ease-in-out;
 }
 
@@ -38,9 +44,11 @@ table tr td {
 .navbar a {
   color: white;
 }
+
 .navbar .navbar-nav a {
   border-radius: 5px 10px;
 }
+
 .navbar .navbar-nav a:hover {
   border-radius: 5px 10px;
   background-color: rgba(173, 230, 182, 0.5);

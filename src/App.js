@@ -283,7 +283,6 @@ function App() {
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
                   userData={userData}
-                  formatarValor={formatarValor}
                 />
               }
             />
