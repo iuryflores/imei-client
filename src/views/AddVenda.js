@@ -85,34 +85,38 @@ const AddVenda = ({
     e.preventDefault();
 
     if (selectedCliente !== null && imeiArray) {
-      try {
-        const idCaixa = caixaDiario._id;
-        await api.addVenda({
-          sellDate,
-          selectedCliente, //clienteID
-          imeiArray,
-          valorVenda,
-          userId,
-          userData,
-          dataPagamento,
-          formaPagamento,
-          idCaixa,
-        });
-        // Em seguida, limpo o formulário e fecho o modal.
-        setSellDate("");
-        setSelectedCliente(null);
-        setImeiArray([]);
-        setValorVenda("");
+      if (formaPagamento !== "") {
+        try {
+          const idCaixa = caixaDiario._id;
+          await api.addVenda({
+            sellDate,
+            selectedCliente, //clienteID
+            imeiArray,
+            valorVenda,
+            userId,
+            userData,
+            dataPagamento,
+            formaPagamento,
+            idCaixa,
+          });
+          // Em seguida, limpo o formulário e fecho o modal.
+          setSellDate("");
+          setSelectedCliente(null);
+          setImeiArray([]);
+          setValorVenda("");
 
-        setMessage("Venda cadastrada com sucesso!");
+          setMessage("Venda cadastrada com sucesso!");
 
-        navigate("/");
-        setTimeout(() => {
-          setMessage("");
-        }, 10000);
-      } catch (error) {
-        console.log(error);
-        setError(error);
+          navigate("/");
+          setTimeout(() => {
+            setMessage("");
+          }, 4000);
+        } catch (error) {
+          console.log(error);
+          setError(error);
+        }
+      } else {
+        setError("Forma de pagamento é obrigatória!")
       }
     } else {
       setError("Necessário informar o cliente e ao menos 01 IMEI");

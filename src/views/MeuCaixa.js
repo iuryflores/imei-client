@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import api from "../utils/api.utils";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -13,22 +13,13 @@ const MeuCaixa = ({
   userId,
   userData,
   formatarDataEHora,
+  formatarData,
   formatarValor,
 }) => {
-  const sumLancamentos = () => {
-    return caixas
-      .reduce((total, caixa) => {
-        return total + caixa.valor;
-      }, 0)
-      .toFixed(2);
-  };
-
-  const [valorTotal, setValorTotal] = useState(0);
-
   const navigate = useNavigate();
 
   //CAIXA
-  const [caixas, setCaixas] = useState([]);
+  const [lancamentos, setLancamentos] = useState([]);
 
   const [selectedDate, setSelectedDate] = useState(getCurrentFormattedDate());
 
@@ -37,20 +28,10 @@ const MeuCaixa = ({
   function getCurrentFormattedDate() {
     const today = new Date();
     const year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    let day = today.getDate();
-
-    // Pad the month and day with leading zeroes if needed
-    month = month < 10 ? `0${month}` : month;
-    day = day < 10 ? `0${day}` : day;
-
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   }
-
-  useEffect(() => {
-    const totalValue = sumLancamentos();
-    setValorTotal(parseFloat(totalValue));
-  }, [caixas]);
 
   const [arrayVendas, setArrayVendas] = useState([]);
 
@@ -82,92 +63,86 @@ const MeuCaixa = ({
   };
 
   useEffect(() => {
-    const getCaixa = async () => {
+    const getLancamentos = async () => {
       try {
         if (selectedDate) {
-          const getCaixaDia = await api.getCaixaDia(selectedDate);
-          setCaixas(getCaixaDia);
-          setLoading(false);
+          const lancamentosData = await api.getLancamentos(selectedDate);
+          setLancamentos(lancamentosData);
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     if (userData) {
-      getCaixa();
+      getLancamentos();
     }
     setLoading(false);
   }, [selectedDate, userData, caixaDiario]);
 
-  console.log(caixas);
+  const sumLancamentos = () => {
+    return lancamentos
+      .reduce((total, caixa) => {
+        return total + caixa.valor;
+      }, 0)
+      .toFixed(2);
+  };
+
+  const valorTotal = useMemo(() => sumLancamentos(), [lancamentos]);
+
+  console.log("lançamentos: ", lancamentos);
+
+  const formaPagamentoMap = {
+    pix: "Pix",
+    dinheiro: "Dinheiro",
+    cartao_debito: "Débito",
+    cartao_credito: "Crédito",
+  };
 
   const renderTable = () => {
-    if (loading === false) {
-      return (
-        <table className="table mb-0 table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Descrição</th>
-              <th>Cliente</th>
-              <th>Tipo</th>
-              <th>Forma de pagamento</th>
-              <th>Valor</th>
-              <th>Vendedor</th>
-            </tr>
-          </thead>
-          <tbody>
-            {caixas.map((caixa, index) => {
-              let newForma;
-              switch (caixa.forma_pagamento) {
-                case "pix":
-                  newForma = "Pix";
-                  break;
-                case "cartao_debito":
-                  newForma = "Débito";
-                  break;
-                case "cartao_credito":
-                  newForma = "Crédito";
-                  break;
-
-                default:
-                  break;
-              }
-              return (
-                <tr
-                  key={index}
-                  className={caixa.tipo === "ENTRADA" ? "table-light" : " "}
-                >
-                  <td>{formatarDataEHora(caixa.createdAt)}h</td>
-                  <td>
-                    <b>VEN{caixa.origem_id.sell_number}</b>
-                  </td>
-                  <td>{caixa.origem_id.cliente_id.full_name}</td>
-                  <td>{caixa.tipo}</td>
-                  <td>{newForma}</td>
-                  <td>R$ {formatarValor(caixa.valor)}</td>
-                  <td>{caixa.origem_id.user_sell.full_name}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      );
-    } else {
-      return (
-        <div className="d-flex justify-content-center">
-          <img style={{ width: "100px" }} src={loadingGif} alt="Loading gif" />
-        </div>
-      );
-    }
+    return (
+      <table className="table mb-0 table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Descrição</th>
+            <th>Cliente</th>
+            <th>Forma de pagamento</th>
+            <th>Valor</th>
+            <th>Vendedor</th>
+          </tr>
+        </thead>
+        <tbody>
+          {lancamentos.map((caixa, index) => {
+            return (
+              <tr
+                key={index}
+                className={caixa.tipo === "ENTRADA" ? "table-light" : " "}
+              >
+                <td>{formatarDataEHora(caixa.createdAt)}h</td>
+                <td>
+                  Registrou <b>VEN{caixa.origem_id.sell_number}</b>
+                </td>
+                <td>{caixa.origem_id.cliente_id.full_name}</td>
+                <td>{formaPagamentoMap[caixa.forma_pagamento]}</td>
+                <td>R$ {formatarValor(caixa.valor)}</td>
+                <td>{caixa.origem_id.user_sell.full_name}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    );
   };
 
   return (
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
-        <h1>
-          <i className="bi bi-cash-coin"></i> Caixa
-        </h1>
+        <h3>
+          <i className="bi bi-cash-coin"></i> Caixa do dia{" "}
+          {formatarData(selectedDate)}
+        </h3>
         {!caixaDiario && (
           <div className="d-flex flex-column align-items-center">
             <h5>Não existe nenhum caixa aberto para o dia de hoje.</h5>
@@ -183,6 +158,7 @@ const MeuCaixa = ({
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
             disabled
+            hidden
           />
           <div className="d-flex align-items-center alert alert-info">
             <span>
