@@ -3,6 +3,8 @@ import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import api from "../utils/api.utils";
 
+import logoIury from "../imgs/iury.png";
+
 const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
   const { pathname } = useLocation();
   const newLocation = pathname.split("/");
@@ -24,15 +26,16 @@ const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
   return (
     <>
       <Navbar className="px-3 " expand="lg">
-        <Navbar.Brand as={Link} to="/">
-          Gyn Distribuidora
+        <Navbar.Brand as={Link} to="/" className=" d-flex align-items-center mx-3">
+          <img className="mx-3 logo" src={logoIury} alt="Logo Iury" />
+          <b>Gyn Distribuidora</b>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse
           id="basic-navbar-nav"
           className="justify-content-between"
         >
-          <Nav className="mr-auto">
+          <Nav className="mr-auto px-3">
             <Nav.Link as={Link} to="/" active={isActive("")}>
               Caixa
             </Nav.Link>

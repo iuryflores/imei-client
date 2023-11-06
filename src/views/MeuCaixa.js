@@ -14,9 +14,18 @@ const MeuCaixa = ({
   userData,
   formatarDataEHora,
   formatarData,
-  formatarValor,
 }) => {
   const navigate = useNavigate();
+
+  const formatarValor = (valor) => {
+    if (valor) {
+      const valorFormatado = valor.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return valorFormatado;
+    }
+  };
 
   //CAIXA
   const [lancamentos, setLancamentos] = useState([]);
@@ -86,7 +95,10 @@ const MeuCaixa = ({
       .reduce((total, caixa) => {
         return total + caixa.valor;
       }, 0)
-      .toFixed(2);
+      .toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
   };
 
   const valorTotal = useMemo(() => sumLancamentos(), [lancamentos]);
