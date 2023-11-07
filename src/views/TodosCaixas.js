@@ -97,7 +97,7 @@ const TodosCaixas = ({
                   </tr>
                 );
               } else {
-                return;
+                return null;
               }
             })}
           </tbody>
@@ -158,7 +158,7 @@ const TodosCaixas = ({
                   </tr>
                 );
               } else {
-                return;
+                return null;
               }
             })}
           </tbody>

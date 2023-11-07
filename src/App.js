@@ -179,7 +179,7 @@ function App() {
               }
             />
             <Route
-              path="/cadastrando/vendas/"
+              path="/vendas/cadastrando"
               element={
                 <AddVenda
                   message={message}
@@ -197,7 +197,7 @@ function App() {
               }
             />
             <Route
-              path="/cadastrando/compras/"
+              path="/compras/cadastrando"
               element={
                 <AddCompra
                   message={message}
@@ -283,6 +283,7 @@ function App() {
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
                   userData={userData}
+                  formatarValor={formatarValor}
                 />
               }
             />
