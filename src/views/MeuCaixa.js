@@ -41,7 +41,6 @@ const MeuCaixa = ({
     const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   }
-
   const [arrayVendas, setArrayVendas] = useState([]);
 
   //VERIFICA SE EXISTE CAIXA ABERTO
@@ -103,8 +102,6 @@ const MeuCaixa = ({
 
   const valorTotal = useMemo(() => sumLancamentos(), [lancamentos]);
 
-  console.log("lançamentos: ", lancamentos);
-
   const formaPagamentoMap = {
     pix: "Pix",
     dinheiro: "Dinheiro",
@@ -152,8 +149,7 @@ const MeuCaixa = ({
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
         <h3>
-          <i className="bi bi-cash-coin"></i> Caixa do dia{" "}
-          {formatarData(selectedDate)}
+          <i className="bi bi-cash-coin"></i> Caixa do dia
         </h3>
         {!caixaDiario && (
           <div className="d-flex flex-column align-items-center">
