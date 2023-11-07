@@ -25,6 +25,7 @@ import ViewCaixa from "./views/ViewCaixa";
 import MeuCaixa from "./views/MeuCaixa";
 import TodosCaixas from "./views/TodosCaixas";
 import FechandoCaixa from "./views/FechandoCaixa";
+import { Footer } from "./components/Footer.js";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -460,6 +461,7 @@ function App() {
           </>
         )}
       </Routes>
+      {loggedIn ? <Footer /> : null}
     </div>
   );
 }

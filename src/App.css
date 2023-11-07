@@ -19,7 +19,7 @@ table tr td {
 
 .login-container form {
   background-color: rgba(193, 223, 209, 0.24);
- 
+
 }
 
 .App {
@@ -185,6 +185,57 @@ label {
 
 .espacamento-03 {
   margin-top: 3rem;
+}
+
+footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  background-color: #bfd4cb;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  font-size: 0.8rem;
+  padding: 5px;
+
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+footer a {
+  text-decoration: none;
+  color: initial;
+}
+
+footer img {
+  width: 35px;
+}
+
+.logo img {
+  width: 40px;
+}
+
+.espacamento-100 {
+  color: white !important;
+  border: 0 !important;
+  margin-bottom: 100px;
+}
+
+@media (max-width: 900px) {
+  footer .logo {
+    display: none;
+  }
+
+  footer {
+    display: none;
+  }
+
+  footer {
+    padding: 10px 0;
+  }
 }
 
 /* Estilos responsivos */

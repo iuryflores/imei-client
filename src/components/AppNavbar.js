@@ -23,10 +23,15 @@ const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
     };
     getUser(userId);
   }, []);
+
   return (
     <>
       <Navbar className="px-3 " expand="lg">
-        <Navbar.Brand as={Link} to="/" className=" d-flex align-items-center mx-3">
+        <Navbar.Brand
+          as={Link}
+          to="/"
+          className=" d-flex align-items-center mx-3"
+        >
           <img className="mx-3 logo" src={logoIury} alt="Logo Iury" />
           <b>Gyn Distribuidora</b>
         </Navbar.Brand>
@@ -89,7 +94,7 @@ const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
                 <NavDropdown.Item
                   as={Link}
                   to="/compras"
-                  active={isActive("compras")}
+                  active={isActive("compras/cadastrando")}
                 >
                   Compra
                 </NavDropdown.Item>
@@ -102,11 +107,7 @@ const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
                 </NavDropdown.Item>
               </NavDropdown>
             ) : null}
-            <Nav.Link
-              as={Link}
-              to="/estoque/"
-              active={isActive("estoque") || isActive("compras")}
-            >
+            <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
               Estoque
             </Nav.Link>
 
