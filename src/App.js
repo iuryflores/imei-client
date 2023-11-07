@@ -125,7 +125,7 @@ function App() {
   }, [message, setMessage, error, setError]);
 
   return (
-    <div>
+    <div className="sys-back">
       {loggedIn ? (
         <AppNavbar
           onLogout={logout}

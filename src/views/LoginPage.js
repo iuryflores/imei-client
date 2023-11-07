@@ -69,7 +69,7 @@ export const LoginPage = ({
   }, [setError, setMessage]);
 
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100">
+    <div className="login-back d-flex justify-content-center align-items-center vh-100">
       <div className="col-md-12 login-container">
         {signupMode ? (
           <form onSubmit={handleSignupSubmit} className="p-3 container-wrap">
