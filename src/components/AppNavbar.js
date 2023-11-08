@@ -44,6 +44,7 @@ const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
             <Nav.Link as={Link} to="/" active={isActive("")}>
               Caixa
             </Nav.Link>
+
             {/* <Nav.Link as={Link} to="/compras" active={isActive("compras")}>
               Compras
             </Nav.Link>
@@ -107,8 +108,14 @@ const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
                 </NavDropdown.Item>
               </NavDropdown>
             ) : null}
+            <Nav.Link as={Link} to="/produtos/" active={isActive("produtos")}>
+              Produtos
+            </Nav.Link>
             <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
               Estoque
+            </Nav.Link>
+            <Nav.Link as={Link} to="/imeis/" active={isActive("imeis")}>
+              IMEIs{" "}
             </Nav.Link>
 
             {isAdmin === true ? (

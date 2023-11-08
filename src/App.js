@@ -15,7 +15,7 @@ import { Compras } from "./views/Compras";
 import { Vendas } from "./views/Vendas";
 import { Auditoria } from "./views/Auditoria";
 import AddVenda from "./views/AddVenda";
-import Produtos from "./views/Produtos";
+// import Produtos from "./views/Produtos.js";
 import Caixas from "./views/Caixas";
 import AddCompra from "./views/AddCompra";
 import User from "./views/User";
@@ -26,6 +26,8 @@ import MeuCaixa from "./views/MeuCaixa";
 import TodosCaixas from "./views/TodosCaixas";
 import FechandoCaixa from "./views/FechandoCaixa";
 import { Footer } from "./components/Footer.js";
+import Estoque from "./views/Estoque.js";
+import AddProduto from "./views/AddProduto.js";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -232,11 +234,28 @@ function App() {
                 />
               }
             />
-
+            <Route
+              path="/produtos/cadastrando"
+              element={
+                <AddProduto
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                  openModal={openModal}
+                  closeModal={closeModal}
+                />
+              }
+            />
             <Route
               path="/estoque/"
               element={
-                <Produtos
+                <Estoque
                   message={message}
                   setMessage={setMessage}
                   loading={loading}

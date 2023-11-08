@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import { Link } from "react-router-dom";
 
-const Produtos = ({
+const Estoque = ({
   message,
   setMessage,
   error,
@@ -15,20 +15,20 @@ const Produtos = ({
   showModal,
   closeModal,
 }) => {
-  const [produtos, setProdutos] = useState([]);
+  const [estoque, setEstoque] = useState([]);
 
   useEffect(() => {
-    const getProdutos = async () => {
+    const getEstoque = async () => {
       try {
         setLoading(true);
-        const produtos = await api.getProdutos();
-        setProdutos(produtos);
+        const estoque = await api.getEstoque();
+        setEstoque(estoque);
         setLoading(false);
       } catch (error) {
         console.error(error);
       }
     };
-    getProdutos();
+    getEstoque();
   }, [setLoading]);
 
   const formatarValor = (valor) => {
@@ -42,16 +42,16 @@ const Produtos = ({
   };
 
   let valorEstoque = 0;
-  for (let index = 0; index < produtos.length; index++) {
-    if (produtos[index].buy_id) {
-      const element = produtos[index].buy_id || null;
+  for (let index = 0; index < estoque.length; index++) {
+    if (estoque[index].buy_id) {
+      const element = estoque[index].buy_id || null;
       valorEstoque += element.price;
     }
   }
 
   const renderTable = () => {
     if (loading === false) {
-      if (produtos.length > 0) {
+      if (estoque.length > 0) {
         return (
           <table className="table mb-0 table-striped table-hover">
             <thead>
@@ -63,7 +63,7 @@ const Produtos = ({
               </tr>
             </thead>
             <tbody>
-              {produtos.map((produto, index) => {
+              {estoque.map((produto, index) => {
                 return (
                   <tr key={index}>
                     <td>
@@ -111,7 +111,7 @@ const Produtos = ({
         <div className="mb-3">
           <div className="d-flex align-items-center alert alert-info">
             <span>
-              Quantidade: <b> {produtos.length}</b>
+              Quantidade: <b> {estoque.length}</b>
             </span>
             <span className="mx-3"> | </span>
             <span>Total: R$ {formatarValor(valorEstoque)}</span>
@@ -129,4 +129,4 @@ const Produtos = ({
   );
 };
 
-export default Produtos;
+export default Estoque;

@@ -213,7 +213,7 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  getProdutos = async () => {
+  getEstoque = async () => {
     try {
       const { data } = await this.api.get("/imei/");
       return data;

@@ -1,132 +1,44 @@
 import React, { useEffect, useState } from "react";
-import SearchFornecedor from "../components/SearchFornecedor";
 import ImeiReader from "../components/ImeiReader";
 import api from "../utils/api.utils";
 import { useNavigate } from "react-router-dom";
 
-import InputMask from "react-input-mask";
+const AddProduto = ({ message, setMessage, userId }) => {
+  const navigate = useNavigate();
 
-const AddCompra = ({ message, setMessage, userId }) => {
   const [error, setError] = useState(null);
+
   //formulario de registro da compra
-  const [customerData, setCustomerData] = useState({
+  const [formData, setFormData] = useState({
     description: "",
     brand: "",
-    buyDate: "",
   });
-  //pick fornecedor
-  const [selectedItem, setSelectedItem] = useState(null);
-
-  //IMEI components
-  const [imeiArray, setImeiArray] = useState([]);
-
-  //HAS IMEI
-  const [hasImei, setHasImei] = useState(true);
-
-  const [errorImei, setErrorImei] = useState(null);
-
-  const handleImeiAdd = async (imei) => {
-    try {
-      await api.buscarImeiDadosCompra(imei);
-
-      // Verifica se o IMEI já existe no imeiArray
-      const isImeiAlreadyAdded = imeiArray.some(
-        (existingImei) => existingImei.number === imei
-      );
-      if (!isImeiAlreadyAdded) {
-        // If the IMEI doesn't exist in imeiArray, add it without porcento and price
-        setImeiArray([...imeiArray, { number: imei }]);
-      } else {
-        setErrorImei("IMEI já incluso nessa compra!");
-      }
-      calculateTotalValue();
-    } catch (error) {
-      setErrorImei(error);
-      console.error(error);
-    }
-  };
-
-  //remove Imei
-  const removeImei = (index) => {
-    const updatedImeiArray = [...imeiArray];
-    updatedImeiArray.splice(index, 1);
-    setImeiArray(updatedImeiArray);
-    calculateTotalValue();
-  };
-
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCustomerData((prevData) => ({
+    setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
 
-  const [price, setPrice] = useState(0);
-  const [priceDb, setPriceDb] = useState(0);
-
-  const [priceTotal, setPriceTotal] = useState(0);
-
-  const handleValorChange = (e) => {
-    const inputValor = e.target.value;
-    const valorNumerico = parseFloat(inputValor.replace(/[^0-9]/g, "")) / 100;
-    setPriceDb(valorNumerico);
-
-    if (!isNaN(valorNumerico)) {
-      setPrice(
-        valorNumerico.toLocaleString("pt-BR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })
-      );
-
-      calculateTotalValue();
-    } else {
-      setPrice("");
-    }
-  };
-
-  const calculateTotalValue = (valorNumerico) => {
-    if (!isNaN(valorNumerico)) {
-      const totalValue = valorNumerico * imeiArray.length;
-      setPriceTotal(totalValue);
-    } else {
-      setPriceTotal("Valor inválido"); // Ou defina uma mensagem apropriada
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (customerData) {
+    if (formData) {
       try {
-        const newCompra = await api.addImei({
-          customerData,
-          priceDb,
-          valorFormatado,
-          selectedItem,
-          imeiArray,
+        const newProduto = await api.addProduto({
+          formData,
           userId,
         });
         if (newCompra) {
           // Em seguida, limpo o formulário e fecho o modal.
-          setCustomerData({
+          setFormData({
             description: "",
             brand: "",
-            buyDate: "",
-            imeiArray: "",
           });
-          setCustomerData("");
-          setSelectedItem("");
-          setPrice("");
-          setPriceDb("");
-          setMessage("Compra cadastrada com sucesso!");
-          navigate("/estoque/");
-          setTimeout(() => {
-            setMessage("");
-          }, 4000);
+          setMessage("Produto cadastrado com sucesso!");
+          navigate("/produtos/");
         }
       } catch (error) {
         setError(error);
@@ -137,15 +49,8 @@ const AddCompra = ({ message, setMessage, userId }) => {
   useEffect(() => {
     setTimeout(() => {
       setError(null);
-    }, 10000);
+    }, 4000);
   }, []);
-
-  const formataValor = (valor) => {
-    return valor.toLocaleString("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  };
 
   let valorFormatado = parseFloat(priceDb * imeiArray.length);
 
@@ -271,4 +176,4 @@ const AddCompra = ({ message, setMessage, userId }) => {
     </div>
   );
 };
-export default AddCompra;
+export default AddProduto;
