@@ -131,13 +131,13 @@ const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
                   >
                     Estatísticas
                   </NavDropdown.Item>
-                  <NavDropdown.Item
+                  {/* <NavDropdown.Item
                     as={Link}
                     to="/conciliacao"
                     active={isActive("conciliacao")}
                   >
                     Conciliação
-                  </NavDropdown.Item>
+                  </NavDropdown.Item> */}
 
                   <NavDropdown.Item
                     as={Link}
