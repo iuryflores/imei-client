@@ -97,7 +97,7 @@ export const Auditoria = ({
           <td>{auditoria.operacao}</td>
           <td>{auditoria.entidade}</td>
           <td>{auditoria.descricao}</td>
-          <td>{auditoria.user_id.full_name}</td>
+          <td>{auditoria.user_id && auditoria.user_id.full_name}</td>
         </tr>
       );
     });

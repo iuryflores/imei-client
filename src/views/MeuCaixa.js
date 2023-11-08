@@ -50,7 +50,9 @@ const MeuCaixa = ({
         setLoading(true);
         const caixaAberto = await api.checkCaixaAberto(selectedDate);
         setCaixaDiario(caixaAberto);
-        setArrayVendas(caixaAberto.vendas);
+        if (caixaAberto) {
+          setArrayVendas(caixaAberto.vendas);
+        }
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -176,7 +178,7 @@ const MeuCaixa = ({
           </div>
           <div className="d-flex align-items-center">
             {caixaDiario && (
-              <Link className="btn btn-success" to={"/cadastrando/vendas/"}>
+              <Link className="btn btn-success" to={"/vendas/cadastrando"}>
                 Vender
               </Link>
             )}
