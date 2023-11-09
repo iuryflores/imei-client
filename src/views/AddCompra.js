@@ -22,9 +22,6 @@ const AddCompra = ({ message, setMessage, userId }) => {
   //IMEI components
   const [imeiArray, setImeiArray] = useState([]);
 
-  //HAS IMEI
-  const [hasImei, setHasImei] = useState(true);
-
   const [errorImei, setErrorImei] = useState(null);
 
   const handleImeiAdd = async (imei, serial) => {

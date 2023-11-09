@@ -6,6 +6,7 @@ const AddProduto = ({ message, setMessage, userId }) => {
   const navigate = useNavigate();
 
   const [error, setError] = useState(null);
+  const [hasImei, setHasImei] = useState("sim");
 
   //formulario de registro da compra
   const [formData, setFormData] = useState({
@@ -21,6 +22,10 @@ const AddProduto = ({ message, setMessage, userId }) => {
     }));
   };
 
+  const handleImei = (e) => {
+    setHasImei(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -28,6 +33,7 @@ const AddProduto = ({ message, setMessage, userId }) => {
       try {
         const newProduto = await api.addProduto({
           formData,
+          hasImei,
           userId,
         });
         if (newProduto) {
@@ -36,7 +42,7 @@ const AddProduto = ({ message, setMessage, userId }) => {
             brand: "",
           });
           setMessage("Produto cadastrado com sucesso!");
-          navigate("/produtos/");
+          navigate("/estoque/");
         }
       } catch (error) {
         setError(error);
@@ -58,8 +64,8 @@ const AddProduto = ({ message, setMessage, userId }) => {
           <i className="bi bi-cash-coin"></i> Cadastrando Produto
         </h5>
 
-        <form className="d-flex flex-column align-items-end">
-          <div className="form-group w-100">
+        <form className="d-flex flex-wrap">
+          <div className="form-group col-12">
             <label htmlFor="description">Descrição:</label>
             <input
               type="text"
@@ -72,7 +78,7 @@ const AddProduto = ({ message, setMessage, userId }) => {
             />
           </div>
 
-          <div className="form-group w-100">
+          <div className="form-group col-12">
             <label htmlFor="brand">Marca:</label>
             <input
               type="text"
@@ -84,6 +90,49 @@ const AddProduto = ({ message, setMessage, userId }) => {
               onChange={handleChange}
             />
           </div>
+          <div className="form-group col-12 col-lg-4 ">
+            <label htmlFor="hasImei">O produto possui IMEI/Serial?</label>
+            <div>
+              <input
+                type="radio"
+                id="hasImei"
+                name="hasImei"
+                value="sim"
+                checked={hasImei === "sim"}
+                onChange={handleImei}
+              ></input>
+              <label htmlFor="sim" className="mx-3">
+                Sim
+              </label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="hasImei"
+                name="hasImei"
+                value="nao"
+                checked={hasImei === "nao"}
+                onChange={handleImei}
+              ></input>
+              <label htmlFor="nao" className="mx-3">
+                Não
+              </label>
+            </div>
+          </div>
+          {hasImei !== "sim" ? (
+            <div className="col-12 col-lg-1">
+              <label htmlFor="brand">Quantidade:</label>
+              <input
+                type="number"
+                className="form-control"
+                id="qtd"
+                name="qtd"
+                value={formData.qtd}
+                onChange={handleChange}
+              />
+            </div>
+          ) : null}
+
           {error && <div className="alert alert-danger">{error}</div>}
         </form>
         <div className="d-flex flex-column align-items-end">

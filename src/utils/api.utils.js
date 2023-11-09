@@ -397,9 +397,14 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  addProduto = async (formData, userId) => {
+  addProduto = async (formData, hasImei, userId) => {
     try {
-      const { data } = await this.api.post(`/produtos/new/`, formData, userId);
+      const { data } = await this.api.post(
+        `/produtos/new/`,
+        formData,
+        hasImei,
+        userId
+      );
       return data;
     } catch (error) {
       throw error.response.data.msg;
