@@ -116,7 +116,7 @@ const AddVenda = ({
           setError(error);
         }
       } else {
-        setError("Forma de pagamento é obrigatória!")
+        setError("Forma de pagamento é obrigatória!");
       }
     } else {
       setError("Necessário informar o cliente e ao menos 01 IMEI");
@@ -149,6 +149,12 @@ const AddVenda = ({
     const totalValue = sumImeis();
     setValorVenda(parseFloat(totalValue));
   }, [imeiArray]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setErrorImei(null);
+    }, 3000);
+  });
 
   const [selectedDate] = useState(getCurrentFormattedDate());
 
@@ -187,20 +193,26 @@ const AddVenda = ({
     setLoading(false);
   }, [selectedDate, userData]);
 
-  const [seeStore, setSeeStore] = useState(false);
+  const [hasImei, setHasImei] = useState("nao");
 
-  const handleSeeStore = () => {
-    setSeeStore(!seeStore);
+  const handleImei = (e) => {
+    setHasImei(e.target.value);
   };
+
+  // const [seeStore, setSeeStore] = useState(false);
+
+  // const handleSeeStore = () => {
+  //   setSeeStore(!seeStore);
+  // };
 
   const [estoque, setEstoque] = useState(null);
 
-  let statusEstoque = "";
-  if (seeStore !== true) {
-    statusEstoque = "Ver";
-  } else {
-    statusEstoque = "Fechar";
-  }
+  // let statusEstoque = "";
+  // if (seeStore !== true) {
+  //   statusEstoque = "Ver";
+  // } else {
+  //   statusEstoque = "Fechar";
+  // }
 
   useEffect(() => {
     const getEstoque = async () => {
@@ -224,31 +236,62 @@ const AddVenda = ({
 
         <div className="d-flex">
           <div className="d-flex flex-column w-100 p-3">
-            <form className="d-flex flex-column align-items-end">
-              <div className="d-flex flex-column align-items-baseline">
-                <div className="form-group">
-                  <label htmlFor="buyDate">Data da venda</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="buyDate"
-                    name="buyDate"
-                    value={sellDate}
-                    onChange={(e) => setSellDate(e.target.value)}
+            <form className="d-flex flex-column ">
+              <div className="d-flex flex-wrap justify-content-between">
+                <div className="form-group col-12 col-lg-9">
+                  <SearchClient
+                    title="Cliente"
+                    selectedItem={selectedCliente}
+                    setSelectedItem={setSelectedCliente}
                   />
                 </div>
-                <div className="btn btn-info" onClick={handleSeeStore}>
-                  {statusEstoque} estoque
+                <div className="d-flex flex-column col-12 col-lg-2">
+                  <div className="form-group">
+                    <label htmlFor="buyDate">Data da venda</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="buyDate"
+                      name="buyDate"
+                      value={sellDate}
+                      onChange={(e) => setSellDate(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="form-group w-100">
-                <SearchClient
-                  title="Cliente"
-                  selectedItem={selectedCliente}
-                  setSelectedItem={setSelectedCliente}
-                />
+              <div className="w-100 d-flex justify-content-between">
+                <div className="form-group">
+                  <label htmlFor="hasImei">
+                    Deseja vender algum produto que não tem IMEI/Serial?
+                  </label>
+                  <div>
+                    <input
+                      type="radio"
+                      id="hasImei"
+                      name="hasImei"
+                      value="sim"
+                      checked={hasImei === "sim"}
+                      onChange={handleImei}
+                    ></input>
+                    <label htmlFor="sim" className="mx-3">
+                      Sim
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="hasImei"
+                      name="hasImei"
+                      value="nao"
+                      checked={hasImei === "nao"}
+                      onChange={handleImei}
+                    ></input>
+                    <label htmlFor="nao" className="mx-3">
+                      Não
+                    </label>
+                  </div>
+                </div>
               </div>
-
               <div className="w-100 d-flex justify-content-between">
                 <div className="w-100">
                   {/* Integre o componente ImeiReader e passe a função de callback */}
@@ -256,6 +299,7 @@ const AddVenda = ({
                   {erroImei && (
                     <div className="alert alert-danger">{erroImei}</div>
                   )}
+
                   <div>
                     <label>IMEIs adicionados a venda:</label>
                     <table className="table table-striped">
@@ -442,7 +486,7 @@ const AddVenda = ({
               </button>
             </div>
           </div>
-          {seeStore && (
+          {/*seeStore && (
             <div className="d-flex flex-column w-50 align-items-center p-3 table-estoque-venda radios-5">
               <div className="text-center">
                 <h5>Estoque</h5>
@@ -465,7 +509,7 @@ const AddVenda = ({
                 </tbody>
               </table>
             </div>
-          )}
+                    )*/}
         </div>
       </div>
     </div>

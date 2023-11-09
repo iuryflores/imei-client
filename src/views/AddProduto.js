@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import { useNavigate } from "react-router-dom";
+import InputMask from "react-input-mask";
 
 const AddProduto = ({ message, setMessage, userId }) => {
   const navigate = useNavigate();
@@ -56,6 +57,45 @@ const AddProduto = ({ message, setMessage, userId }) => {
     }, 4000);
   }, []);
 
+  const [valorCompra, setValorCompra] = useState(null);
+  const [valorVenda, setValorVenda] = useState(null);
+
+  const handleValorChange = (e) => {
+    const inputValor = e.target.value;
+    const valorNumerico = parseFloat(inputValor.replace(/[^0-9]/g, "")) / 100;
+
+    if (!isNaN(valorNumerico)) {
+      setValorCompra(
+        valorNumerico.toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      );
+    } else {
+      setValorCompra("");
+    }
+  };
+
+  const handleValorVendaChange = (e) => {
+    const inputValor = e.target.value;
+
+    const valorNumericoVenda =
+      parseFloat(inputValor.replace(/[^0-9]/g, "")) / 100;
+
+    // setPriceVendaDb(valorNumericoVenda);
+
+    if (!isNaN(valorNumericoVenda)) {
+      setValorVenda(
+        valorNumericoVenda.toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      );
+    } else {
+      setValorVenda("");
+    }
+  };
+
   return (
     <div className="container mt-3">
       <div className="d-flex flex-column">
@@ -64,7 +104,7 @@ const AddProduto = ({ message, setMessage, userId }) => {
           <i className="bi bi-cash-coin"></i> Cadastrando Produto
         </h5>
 
-        <form className="d-flex flex-wrap">
+        <form className="d-flex flex-wrap  justify-content-between">
           <div className="form-group col-12">
             <label htmlFor="description">Descrição:</label>
             <input
@@ -90,7 +130,7 @@ const AddProduto = ({ message, setMessage, userId }) => {
               onChange={handleChange}
             />
           </div>
-          <div className="form-group col-12 col-lg-4 ">
+          <div className="form-group col-12 col-lg-4">
             <label htmlFor="hasImei">O produto possui IMEI/Serial?</label>
             <div>
               <input
@@ -120,17 +160,47 @@ const AddProduto = ({ message, setMessage, userId }) => {
             </div>
           </div>
           {hasImei !== "sim" ? (
-            <div className="col-12 col-lg-1">
-              <label htmlFor="brand">Quantidade:</label>
-              <input
-                type="number"
-                className="form-control"
-                id="qtd"
-                name="qtd"
-                value={formData.qtd}
-                onChange={handleChange}
-              />
-            </div>
+            <>
+              <div className="col-12 col-lg-1">
+                <label htmlFor="brand">Quantidade:</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="qtd"
+                  name="qtd"
+                  value={formData.qtd}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="col-12 col-lg-2">
+                <label htmlFor="brand">Valor de compra:</label>
+                <InputMask
+                  mask=""
+                  maskChar=""
+                  alwaysShowMask={false}
+                  id="valorCompra"
+                  name="valorCompra"
+                  value={valorCompra}
+                  placeholder="0,00"
+                  onChange={handleValorChange}
+                  className="form-control"
+                />
+              </div>
+              <div className="col-12 col-lg-2">
+                <label htmlFor="brand">Valor de venda:</label>
+                <InputMask
+                  mask=""
+                  maskChar=""
+                  alwaysShowMask={false}
+                  id="valorVenda"
+                  name="valorVenda"
+                  value={valorVenda}
+                  placeholder="0,00"
+                  onChange={handleValorVendaChange}
+                  className="form-control"
+                />
+              </div>
+            </>
           ) : null}
 
           {error && <div className="alert alert-danger">{error}</div>}

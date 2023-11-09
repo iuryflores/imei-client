@@ -73,7 +73,7 @@ const SearchClient = ({ title, selectedItem, setSelectedItem }) => {
         </>
       ) : null}
       {selectedItem ? (
-        <div className="d-flex align-items-center">
+        <div className="d-flex flex-column">
           <label>Cliente: </label>
           <input
             className="form-control"
@@ -83,15 +83,17 @@ const SearchClient = ({ title, selectedItem, setSelectedItem }) => {
             style={{ border: "none", background: "transparent", width: "auto" }}
             hidden
           />
-          <span className="mx-3">
-            {selectedItem.full_name} ({selectedItem.document})
-          </span>
-          <div
-            className="btn btn-info"
-            style={{ width: "auto" }}
-            onClick={cleanCliente}
-          >
-            <i className="bi bi-pencil-square"></i>
+          <div className="d-flex align-items-center btn btn-primary">
+            <span className="mx-3">
+              {selectedItem.full_name} ({selectedItem.document})
+            </span>
+            <div
+              className="btn btn-info"
+              style={{ width: "auto" }}
+              onClick={cleanCliente}
+            >
+              <i className="bi bi-pencil-square"></i>
+            </div>
           </div>
         </div>
       ) : null}
