@@ -48,7 +48,7 @@ const Estoque = ({
       valorEstoque += element.price;
     }
   }
-
+  console.log(estoque);
   const renderTable = () => {
     if (loading === false) {
       if (estoque.length > 0) {
@@ -60,6 +60,7 @@ const Estoque = ({
                 <th>Nº da compra</th>
                 <th>IMEI's</th>
                 <th>Valor (compra)</th>
+                <th>Valor (venda)</th>
               </tr>
             </thead>
             <tbody>
@@ -78,10 +79,12 @@ const Estoque = ({
                     </td>
                     <td>COM{produto.buy_id.buy_number || ""}</td>
                     <td>
-                      {produto.buy_id.description} (IMEI: {produto.number})
+                      {produto.buy_id.produto_id &&
+                        produto.buy_id.produto_id.description}{" "}
+                      (IMEI: {produto.number})
                     </td>
                     <td>R$ {formatarValor(produto.buy_id.price)}</td>
-                    <td></td>
+                    <td>R$ {formatarValor(produto.buy_id.sellPrice)}</td>
                   </tr>
                 );
               })}
@@ -107,7 +110,10 @@ const Estoque = ({
   return (
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
-        <h1>Estoque</h1>
+        <h3>
+          {" "}
+          <i className="bi bi-phone-vibrate mx-3"></i>Dispositivos em estoque
+        </h3>
         <div className="mb-3">
           <div className="d-flex align-items-center alert alert-info">
             <span>

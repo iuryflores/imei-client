@@ -140,6 +140,8 @@ class Api {
   addImei = async (
     customerData,
     selectedItem,
+    selectedProduto,
+    priceVendaDb,
     priceDb,
     valorFormatado,
     imeiArray,
@@ -152,6 +154,8 @@ class Api {
         priceDb,
         valorFormatado,
         selectedItem,
+        selectedProduto,
+        priceVendaDb,
         imeiArray,
         userId
       );
@@ -396,6 +400,14 @@ class Api {
   addProduto = async (formData, userId) => {
     try {
       const { data } = await this.api.post(`/produtos/new/`, formData, userId);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  buscaProduto = async (term) => {
+    try {
+      const { data } = await this.api.get(`/produtos/busca/${term}`);
       return data;
     } catch (error) {
       throw error.response.data.msg;

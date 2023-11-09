@@ -38,6 +38,7 @@ const Produtos = ({
                 <th>Data do cadastro</th>
                 <th>Descrição</th>
                 <th>Marca</th>
+                <th>Quantidade</th>
               </tr>
             </thead>
             <tbody>
@@ -55,6 +56,7 @@ const Produtos = ({
                     </td>
                     <td>{produto.description}</td>
                     <td>{produto.brand}</td>
+                    <td>{produto.qtd}</td>
                   </tr>
                 );
               })}
@@ -80,7 +82,9 @@ const Produtos = ({
   return (
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
-        <h1>Produtos</h1>
+        <h3>
+          <i className="bi bi-phone-vibrate mx-3"></i>Estoque
+        </h3>
         <div className="mb-3">
           <Link className="btn btn-success" to={"/produtos/cadastrando"}>
             Cadastrar Produto

@@ -108,14 +108,12 @@ const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
                 </NavDropdown.Item>
               </NavDropdown>
             ) : null}
-            <Nav.Link as={Link} to="/produtos/" active={isActive("produtos")}>
-              Produtos
-            </Nav.Link>
+
             <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
               Estoque
             </Nav.Link>
-            <Nav.Link as={Link} to="/imeis/" active={isActive("imeis")}>
-              IMEIs{" "}
+            <Nav.Link as={Link} to="/dispositivos/" active={isActive("dispositivos")}>
+              Dispositivos
             </Nav.Link>
 
             {isAdmin === true ? (

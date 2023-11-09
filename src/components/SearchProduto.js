@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api.utils";
 
-const SearchFornecedor = ({
+const SearchProduto = ({
   title,
-  selectedItem,
-  setSelectedItem,
+  selectedProduto,
+  setSelectedProduto,
   setError,
   error,
 }) => {
@@ -14,7 +14,7 @@ const SearchFornecedor = ({
   useEffect(() => {
     const fetchSuggestions = async () => {
       try {
-        const data = await api.buscaFornecedor(searchTerm);
+        const data = await api.buscaProduto(searchTerm);
         setResults(data);
       } catch (error) {
         setError(error);
@@ -30,33 +30,33 @@ const SearchFornecedor = ({
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
-    setSelectedItem(null); // Limpa o item selecionado quando o usuário digita
+    setSelectedProduto(null); // Limpa o item selecionado quando o usuário digita
     setError(null);
   };
 
   const handleSelectItem = (item) => {
     setError(null);
-    setSelectedItem(item);
-    setShowFornecedor(false);
+    setSelectedProduto(item);
+    setShowProduto(false);
     setSearchTerm(""); // Limpa o termo de pesquisa quando um item é selecionado
   };
 
-  const [showFornecedor, setShowFornecedor] = useState(true);
+  const [showProduto, setShowProduto] = useState(true);
 
-  const cleanFornecedor = () => {
-    setShowFornecedor(true);
-    setSelectedItem(null);
+  const cleanProduto = () => {
+    setShowProduto(true);
+    setSelectedProduto(null);
   };
 
   return (
     <div>
-      {showFornecedor ? (
+      {showProduto ? (
         <>
-          <label>Pesquisar {title}</label>
+          <label>Produto</label>
           <input
             type="text"
             className="form-control"
-            placeholder={`Digite o ${title.toLowerCase()}`}
+            placeholder={`Digite o produto`}
             value={searchTerm}
             onChange={handleInputChange}
           />
@@ -68,37 +68,32 @@ const SearchFornecedor = ({
                   onClick={() => handleSelectItem(result)}
                   style={{ cursor: "pointer" }}
                 >
-                  {result.type === "juridica" ? (
-                    <i className="bi bi-building-fill mx-2"></i>
-                  ) : (
-                    <i className="bi bi-person-fill mx-2"></i>
-                  )}
-                  {result.full_name} ({result.document})
+                  {result.description} ({result.brand})
                 </li>
               ))}
             </ul>
           ) : null}
         </>
       ) : null}
-      {selectedItem ? (
+      {selectedProduto ? (
         <div className="d-flex flex-column">
-          <label>Fornecedor: </label>
+          <label>Produto: </label>
           <input
             className="form-control"
             type="text"
-            value={selectedItem.full_name}
+            value={selectedProduto.description}
             readOnly
             style={{ border: "none", background: "transparent", width: "auto" }}
             hidden
           />
           <div className="d-flex align-items-center btn btn-primary">
             <span className="mx-3">
-              {selectedItem.full_name} ({selectedItem.document})
+              {selectedProduto.description} ({selectedProduto.brand})
             </span>
             <div
               className="btn btn-warning"
               style={{ width: "auto" }}
-              onClick={cleanFornecedor}
+              onClick={cleanProduto}
             >
               <i className="bi bi-pencil-square"></i>
             </div>
@@ -109,4 +104,4 @@ const SearchFornecedor = ({
   );
 };
 
-export default SearchFornecedor;
+export default SearchProduto;

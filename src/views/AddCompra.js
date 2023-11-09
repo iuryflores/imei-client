@@ -5,6 +5,7 @@ import api from "../utils/api.utils";
 import { useNavigate } from "react-router-dom";
 
 import InputMask from "react-input-mask";
+import SearchProduto from "../components/SearchProduto";
 
 const AddCompra = ({ message, setMessage, userId }) => {
   const [error, setError] = useState(null);
@@ -16,6 +17,7 @@ const AddCompra = ({ message, setMessage, userId }) => {
   });
   //pick fornecedor
   const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedProduto, setSelectedProduto] = useState(null);
 
   //IMEI components
   const [imeiArray, setImeiArray] = useState([]);
@@ -25,7 +27,7 @@ const AddCompra = ({ message, setMessage, userId }) => {
 
   const [errorImei, setErrorImei] = useState(null);
 
-  const handleImeiAdd = async (imei) => {
+  const handleImeiAdd = async (imei, serial) => {
     try {
       await api.buscarImeiDadosCompra(imei);
 
@@ -35,7 +37,7 @@ const AddCompra = ({ message, setMessage, userId }) => {
       );
       if (!isImeiAlreadyAdded) {
         // If the IMEI doesn't exist in imeiArray, add it without porcento and price
-        setImeiArray([...imeiArray, { number: imei }]);
+        setImeiArray([...imeiArray, { number: imei, serial: serial }]);
       } else {
         setErrorImei("IMEI já incluso nessa compra!");
       }
@@ -67,12 +69,17 @@ const AddCompra = ({ message, setMessage, userId }) => {
   const [price, setPrice] = useState(0);
   const [priceDb, setPriceDb] = useState(0);
 
+  const [priceVenda, setPriceVenda] = useState(0);
+  const [priceVendaDb, setPriceVendaDb] = useState(0);
+
   const [priceTotal, setPriceTotal] = useState(0);
 
   const handleValorChange = (e) => {
     const inputValor = e.target.value;
     const valorNumerico = parseFloat(inputValor.replace(/[^0-9]/g, "")) / 100;
+
     setPriceDb(valorNumerico);
+    setPriceVendaDb(valorNumerico);
 
     if (!isNaN(valorNumerico)) {
       setPrice(
@@ -83,6 +90,26 @@ const AddCompra = ({ message, setMessage, userId }) => {
       );
 
       calculateTotalValue();
+    } else {
+      setPrice("");
+    }
+  };
+
+  const handleValorVendaChange = (e) => {
+    const inputValor = e.target.value;
+
+    const valorNumericoVenda =
+      parseFloat(inputValor.replace(/[^0-9]/g, "")) / 100;
+
+    setPriceVendaDb(valorNumericoVenda);
+
+    if (!isNaN(valorNumericoVenda)) {
+      setPriceVenda(
+        valorNumericoVenda.toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      );
     } else {
       setPrice("");
     }
@@ -105,8 +132,10 @@ const AddCompra = ({ message, setMessage, userId }) => {
         const newCompra = await api.addImei({
           customerData,
           priceDb,
+          priceVendaDb,
           valorFormatado,
           selectedItem,
+          selectedProduto,
           imeiArray,
           userId,
         });
@@ -156,58 +185,53 @@ const AddCompra = ({ message, setMessage, userId }) => {
         <h5 className="mt-3">
           <i className="bi bi-cash-coin"></i> Registrando Compra
         </h5>
-
+        {error ? (
+          <div className="alert alert-danger text-center">
+            <b>{error}</b>
+          </div>
+        ) : null}
         <form className="d-flex flex-column align-items-end">
-          <div className="d-flex align-items-baseline">
-            <div className="form-group">
-              <label htmlFor="buyDate">Data da compra</label>
-              <input
-                type="date"
-                className="form-control"
-                id="buyDate"
-                name="buyDate"
-                value={customerData.buyDate}
-                onChange={handleChange}
-              />
+          <div className="w-100 d-flex justify-content-between flex-wrap">
+            <div className=" col-12 col-lg-2">
+              <div className="form-group">
+                <label htmlFor="buyDate">Data da compra</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  id="buyDate"
+                  name="buyDate"
+                  value={customerData.buyDate}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            <div className=" col-12 col-lg-9">
+              <div className="form-group">
+                <SearchFornecedor
+                  title="Fornecedor"
+                  selectedItem={selectedItem}
+                  setSelectedItem={setSelectedItem}
+                  setError={setError}
+                  error={error}
+                />
+              </div>
             </div>
           </div>
-          <div className="form-group w-100">
-            <SearchFornecedor
-              title="Fornecedor"
-              selectedItem={selectedItem}
-              setSelectedItem={setSelectedItem}
-              setError={setError}
-              error={error}
-            />
+          <div className="w-100 d-flex justify-content-between flex-wrap">
+            <div className=" col-12 col-lg-12">
+              <div className="form-group">
+                <SearchProduto
+                  title="Produto"
+                  selectedProduto={selectedProduto}
+                  setSelectedProduto={setSelectedProduto}
+                  setError={setError}
+                  error={error}
+                />
+              </div>
+            </div>
           </div>
-
-          <div className="form-group w-100">
-            <label htmlFor="description">Descrição:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="description"
-              name="description"
-              placeholder="Ex. iPhone 12 Pro Max 256GB"
-              value={customerData.description}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="form-group w-100">
-            <label htmlFor="brand">Marca:</label>
-            <input
-              type="text"
-              className="form-control"
-              id="brand"
-              name="brand"
-              placeholder="Ex. Apple"
-              value={customerData.brand}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="w-100 d-flex justify-content-between">
-            <div className="w-50">
+          <div className="w-100 d-flex justify-content-between flex-wrap">
+            <div className="col-12 col-md-8">
               {/* Integre o componente ImeiReader e passe a função de callback */}
               <ImeiReader onImeiAdd={handleImeiAdd} />
               {errorImei && (
@@ -227,17 +251,17 @@ const AddCompra = ({ message, setMessage, userId }) => {
                         <i className="bi bi-trash"></i>
                       </div>
                       <div className="lista-imeis w-100">
-                        IMEI {index + 1}: {imei.number}
+                        <b> IMEI {index + 1}:</b> {imei.number}{" "}
+                        {imei.serial ? <> - (Serial: {imei.serial})</> : null}
                       </div>
                     </li>
                   ))}
                 </ul>
               </div>
             </div>
-            <div className="d-flex flex-column">
+            <div className="col-12 col-md-3">
               <div className="form-group">
-                <label htmlFor="price">Valor (individual):</label>
-
+                <label htmlFor="price">Valor de compra (individual):</label>
                 <InputMask
                   mask=""
                   maskChar=""
@@ -247,6 +271,20 @@ const AddCompra = ({ message, setMessage, userId }) => {
                   value={price}
                   placeholder="0,00"
                   onChange={handleValorChange}
+                  className="form-control"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="price">Valor de venda (individual):</label>
+                <InputMask
+                  mask=""
+                  maskChar=""
+                  alwaysShowMask={false}
+                  id="priceVenda"
+                  name="priceVenda"
+                  value={priceVenda}
+                  placeholder="0,00"
+                  onChange={handleValorVendaChange}
                   className="form-control"
                 />
               </div>

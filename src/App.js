@@ -254,7 +254,7 @@ function App() {
               }
             />
             <Route
-              path="/estoque/"
+              path="/dispositivos/"
               element={
                 <Estoque
                   message={message}
@@ -272,7 +272,7 @@ function App() {
               }
             />
             <Route
-              path="/produtos/"
+              path="/estoque/"
               element={
                 <Produtos
                   message={message}
