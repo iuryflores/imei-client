@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ImeiReader from "../components/ImeiReader";
 import api from "../utils/api.utils";
 import { useNavigate } from "react-router-dom";
 
@@ -31,8 +30,7 @@ const AddProduto = ({ message, setMessage, userId }) => {
           formData,
           userId,
         });
-        if (newCompra) {
-          // Em seguida, limpo o formulário e fecho o modal.
+        if (newProduto) {
           setFormData({
             description: "",
             brand: "",
@@ -52,40 +50,15 @@ const AddProduto = ({ message, setMessage, userId }) => {
     }, 4000);
   }, []);
 
-  let valorFormatado = parseFloat(priceDb * imeiArray.length);
-
   return (
     <div className="container mt-3">
       <div className="d-flex flex-column">
         <hr className="espacamento-02" />
         <h5 className="mt-3">
-          <i className="bi bi-cash-coin"></i> Registrando Compra
+          <i className="bi bi-cash-coin"></i> Cadastrando Produto
         </h5>
 
         <form className="d-flex flex-column align-items-end">
-          <div className="d-flex align-items-baseline">
-            <div className="form-group">
-              <label htmlFor="buyDate">Data da compra</label>
-              <input
-                type="date"
-                className="form-control"
-                id="buyDate"
-                name="buyDate"
-                value={customerData.buyDate}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="form-group w-100">
-            <SearchFornecedor
-              title="Fornecedor"
-              selectedItem={selectedItem}
-              setSelectedItem={setSelectedItem}
-              setError={setError}
-              error={error}
-            />
-          </div>
-
           <div className="form-group w-100">
             <label htmlFor="description">Descrição:</label>
             <input
@@ -94,7 +67,7 @@ const AddProduto = ({ message, setMessage, userId }) => {
               id="description"
               name="description"
               placeholder="Ex. iPhone 12 Pro Max 256GB"
-              value={customerData.description}
+              value={formData.description}
               onChange={handleChange}
             />
           </div>
@@ -107,61 +80,11 @@ const AddProduto = ({ message, setMessage, userId }) => {
               id="brand"
               name="brand"
               placeholder="Ex. Apple"
-              value={customerData.brand}
+              value={formData.brand}
               onChange={handleChange}
             />
           </div>
-          <div className="w-100 d-flex justify-content-between">
-            <div className="w-50">
-              {/* Integre o componente ImeiReader e passe a função de callback */}
-              <ImeiReader onImeiAdd={handleImeiAdd} />
-              {errorImei && (
-                <div className="alert alert-danger">{errorImei}</div>
-              )}
-
-              <div>
-                <label>IMEIs adicionados:</label>
-                <ul className="p-0">
-                  {imeiArray.map((imei, index) => (
-                    <li className="d-flex align-items-center" key={index}>
-                      <div
-                        className="btn btn-danger"
-                        style={{ width: "auto" }}
-                        onClick={() => removeImei(index)}
-                      >
-                        <i className="bi bi-trash"></i>
-                      </div>
-                      <div className="lista-imeis w-100">
-                        IMEI {index + 1}: {imei.number}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="d-flex flex-column">
-              <div className="form-group">
-                <label htmlFor="price">Valor (individual):</label>
-
-                <InputMask
-                  mask=""
-                  maskChar=""
-                  alwaysShowMask={false}
-                  id="price"
-                  name="price"
-                  value={price}
-                  placeholder="0,00"
-                  onChange={handleValorChange}
-                  className="form-control"
-                />
-              </div>
-              <div className="alert alert-success">
-                <b>
-                  Valor total: R$ {priceTotal && formataValor(valorFormatado)}
-                </b>
-              </div>
-            </div>
-          </div>
+          {error && <div className="alert alert-danger">{error}</div>}
         </form>
         <div className="d-flex flex-column align-items-end">
           <button

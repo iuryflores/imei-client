@@ -5,9 +5,9 @@ class Api {
   constructor() {
     this.api = axios.create({
       // baseURL: "http://imeiapp.iuryflores.com/",
-      // baseURL: "http://localhost:9000",
+      baseURL: "http://localhost:9000",
       // baseURL: "http://35.175.178.173:3001",
-      baseURL: "https://imeiapi.iuryflores.dev.br/",
+      // baseURL: "https://imeiapi.iuryflores.dev.br/",
     });
     this.api.interceptors.request.use(
       (config) => {
@@ -380,6 +380,22 @@ class Api {
         userId,
         selectedDate
       );
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getProdutos = async () => {
+    try {
+      const { data } = await this.api.get(`/produtos/`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  addProduto = async (formData, userId) => {
+    try {
+      const { data } = await this.api.post(`/produtos/new/`, formData, userId);
       return data;
     } catch (error) {
       throw error.response.data.msg;

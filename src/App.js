@@ -28,6 +28,7 @@ import FechandoCaixa from "./views/FechandoCaixa";
 import { Footer } from "./components/Footer.js";
 import Estoque from "./views/Estoque.js";
 import AddProduto from "./views/AddProduto.js";
+import Produtos from "./views/Produtos.js";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -267,6 +268,20 @@ function App() {
                   setShowModal={setShowModal}
                   openModal={openModal}
                   closeModal={closeModal}
+                />
+              }
+            />
+            <Route
+              path="/produtos/"
+              element={
+                <Produtos
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
                 />
               }
             />
