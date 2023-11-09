@@ -82,7 +82,7 @@ const Produtos = ({
       <div className="d-flex align-items-baseline justify-content-between">
         <h1>Produtos</h1>
         <div className="mb-3">
-          <Link className="btn btn-success" to={"/compras/cadastrando"}>
+          <Link className="btn btn-success" to={"/produtos/cadastrando"}>
             Cadastrar Produto
           </Link>
         </div>
