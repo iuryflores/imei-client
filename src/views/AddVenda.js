@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import SearchClient from "../components/SearchClient";
 import ImeiReader from "../components/ImeiReader";
+import SearchProdutoVenda from "../components/SearchProdutoVenda";
 import { useNavigate } from "react-router-dom";
 
 const AddVenda = ({
@@ -22,8 +23,13 @@ const AddVenda = ({
   //pick Cliente
   const [selectedCliente, setSelectedCliente] = useState(null);
 
+  //select produto sem imei
+  const [selectedProduto, setSelectedProduto] = useState(null);
+
   //IMEI components
   const [imeiArray, setImeiArray] = useState([]);
+
+  const [semImeiArray, setSemImeiArray] = useState([]);
 
   const [valorVenda, setValorVenda] = useState(0);
 
@@ -64,11 +70,28 @@ const AddVenda = ({
     }
   };
 
+  //add sem imei
+  const handleSemImeiAdd = async (produto) => {
+    try {
+      setSemImeiArray([...semImeiArray]);
+    } catch (error) {
+      setErrorImei(error);
+      console.error(error);
+    }
+  };
+
   //remove Imei
   const removeImei = (index) => {
     const updatedImeiArray = [...imeiArray];
     updatedImeiArray.splice(index, 1);
     setImeiArray(updatedImeiArray);
+  };
+
+  //remove Sem Imei
+  const removeSemImei = (index) => {
+    const updatedSemImeiArray = [...semImeiArray];
+    updatedSemImeiArray.splice(index, 1);
+    setSemImeiArray(updatedSemImeiArray);
   };
 
   const formatarValor = (valor) => {
@@ -84,7 +107,7 @@ const AddVenda = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (selectedCliente !== null && imeiArray) {
+    if (selectedCliente !== null) {
       if (formaPagamento !== "") {
         try {
           const idCaixa = caixaDiario._id;
@@ -92,6 +115,7 @@ const AddVenda = ({
             sellDate,
             selectedCliente, //clienteID
             imeiArray,
+            semImeiArray,
             valorVenda,
             userId,
             userData,
@@ -259,39 +283,7 @@ const AddVenda = ({
                   </div>
                 </div>
               </div>
-              <div className="w-100 d-flex justify-content-between">
-                <div className="form-group">
-                  <label htmlFor="hasImei">
-                    Deseja vender algum produto que não tem IMEI/Serial?
-                  </label>
-                  <div>
-                    <input
-                      type="radio"
-                      id="hasImei"
-                      name="hasImei"
-                      value="sim"
-                      checked={hasImei === "sim"}
-                      onChange={handleImei}
-                    ></input>
-                    <label htmlFor="sim" className="mx-3">
-                      Sim
-                    </label>
-                  </div>
-                  <div>
-                    <input
-                      type="radio"
-                      id="hasImei"
-                      name="hasImei"
-                      value="nao"
-                      checked={hasImei === "nao"}
-                      onChange={handleImei}
-                    ></input>
-                    <label htmlFor="nao" className="mx-3">
-                      Não
-                    </label>
-                  </div>
-                </div>
-              </div>
+
               <div className="w-100 d-flex justify-content-between">
                 <div className="w-100">
                   {/* Integre o componente ImeiReader e passe a função de callback */}
@@ -300,7 +292,7 @@ const AddVenda = ({
                     <div className="alert alert-danger">{erroImei}</div>
                   )}
 
-                  <div>
+                  <div className="border p-2 rounded bg-light mb-3">
                     <label>IMEIs adicionados a venda:</label>
                     <table className="table table-striped">
                       <thead>
@@ -435,6 +427,50 @@ const AddVenda = ({
                     </table>
                   </div>
                 </div>
+              </div>
+              <hr />
+              <div className="w-100 d-flex justify-content-between">
+                <div className="form-group">
+                  <label htmlFor="hasImei">Deseja incluir um acessório?</label>
+                  <div>
+                    <input
+                      type="radio"
+                      id="hasImei"
+                      name="hasImei"
+                      value="sim"
+                      checked={hasImei === "sim"}
+                      onChange={handleImei}
+                    ></input>
+                    <label htmlFor="sim" className="mx-3">
+                      Sim
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="hasImei"
+                      name="hasImei"
+                      value="nao"
+                      checked={hasImei === "nao"}
+                      onChange={handleImei}
+                    ></input>
+                    <label htmlFor="nao" className="mx-3">
+                      Não
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="w-100 d-flex justify-content-between">
+                {hasImei === "sim" ? (
+                  <>
+                    <SearchProdutoVenda
+                      selectedProduto={selectedProduto}
+                      setSelectedProduto={setSelectedProduto}
+                      setError={setError}
+                      error={error}
+                    />
+                  </>
+                ) : null}
               </div>
               <div className="w-100 d-flex justify-content-between">
                 <div className="form-group col-md-2">

@@ -35,12 +35,16 @@ const AddProduto = ({ message, setMessage, userId }) => {
         const newProduto = await api.addProduto({
           formData,
           hasImei,
+          valorCompraDb,
+          valorVendaDb,
           userId,
         });
         if (newProduto) {
           setFormData({
             description: "",
             brand: "",
+            valorCompra: "",
+            valorVenda: "",
           });
           setMessage("Produto cadastrado com sucesso!");
           navigate("/estoque/");
@@ -64,6 +68,8 @@ const AddProduto = ({ message, setMessage, userId }) => {
     const inputValor = e.target.value;
     const valorNumerico = parseFloat(inputValor.replace(/[^0-9]/g, "")) / 100;
 
+    setValorCompraDb(valorNumerico);
+
     if (!isNaN(valorNumerico)) {
       setValorCompra(
         valorNumerico.toLocaleString("pt-BR", {
@@ -76,13 +82,16 @@ const AddProduto = ({ message, setMessage, userId }) => {
     }
   };
 
+  const [valorVendaDb, setValorVendaDb] = useState(0);
+  const [valorCompraDb, setValorCompraDb] = useState(0);
+
   const handleValorVendaChange = (e) => {
     const inputValor = e.target.value;
 
     const valorNumericoVenda =
       parseFloat(inputValor.replace(/[^0-9]/g, "")) / 100;
 
-    // setPriceVendaDb(valorNumericoVenda);
+    setValorVendaDb(valorNumericoVenda);
 
     if (!isNaN(valorNumericoVenda)) {
       setValorVenda(
