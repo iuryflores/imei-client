@@ -60,7 +60,7 @@ const SearchProdutoVenda = ({ setError }) => {
 
   return (
     <div className="border rounded bg-light p-2 w-100">
-      <label>Buscar Acessório:</label>
+      <label>Buscar produtos sem IMEI/Serial:</label>
       <input
         type="text"
         className="form-control"
@@ -84,7 +84,7 @@ const SearchProdutoVenda = ({ setError }) => {
       {selectedProducts.length > 0 && (
         <div className="">
           <span>
-            <b>Acessórios adicionados</b>
+            <b>Produtos adicionados:</b>
           </span>
           <table className="table table-striped">
             <thead>

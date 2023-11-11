@@ -249,7 +249,7 @@ const AddVenda = ({
     };
     getEstoque();
   }, []);
-
+  console.log(imeiArray);
   return (
     <div className="container mt-3">
       <div className="d-flex flex-column mb-3">
@@ -316,12 +316,12 @@ const AddVenda = ({
                           <th style={{ width: "5%" }}></th>
                           <th style={{ width: "20%" }}>IMEI</th>
                           <th style={{ width: "35%" }}>Descrição</th>
-                          <th style={{ width: "10%" }}>Custo</th>
+                          <th style={{ width: "10%" }}>Preço</th>
                           <th style={{ width: "10%", textAlign: "center" }}>
                             %
                           </th>
                           <th style={{ width: "10%", textAlign: "center" }}>
-                            Valor
+                            Valor de Venda
                           </th>
                         </tr>
                       </thead>
@@ -339,7 +339,10 @@ const AddVenda = ({
                                 </div>
                               </td>
                               <td>{imei.number && imei.number}</td>
-                              <td>{imei.buy_id && imei.buy_id.description}</td>
+                              <td>
+                                {imei.buy_id &&
+                                  imei.buy_id.produto_id.description}
+                              </td>
                               <td>
                                 R${" "}
                                 {imei.buy_id &&
@@ -431,7 +434,9 @@ const AddVenda = ({
               <hr />
               <div className="w-100 d-flex justify-content-between">
                 <div className="form-group">
-                  <label htmlFor="hasImei">Deseja incluir um acessório?</label>
+                  <label htmlFor="hasImei">
+                    Deseja incluir algum produto que não tem IMEI/Serial?
+                  </label>
                   <div>
                     <input
                       type="radio"
