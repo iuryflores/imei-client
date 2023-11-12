@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api.utils";
 
-const SearchProdutoVenda = ({ setError }) => {
+const SearchProdutoVenda = ({ setError, onSellingPriceChange,selectedProducts,setSelectedProducts }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
-  const [selectedProducts, setSelectedProducts] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [sellingPrice, setSellingPrice] = useState("");
 
@@ -12,12 +11,19 @@ const SearchProdutoVenda = ({ setError }) => {
     const updatedProducts = [...selectedProducts];
     updatedProducts[index].quantity = newQuantity;
     setSelectedProducts(updatedProducts);
+    if (onSellingPriceChange) {
+      onSellingPriceChange(updatedProducts);
+    }
   };
 
   const updateSellingPrice = (index, newSellingPrice) => {
     const updatedProducts = [...selectedProducts];
     updatedProducts[index].sellingPrice = newSellingPrice;
     setSelectedProducts(updatedProducts);
+
+    if (onSellingPriceChange) {
+      onSellingPriceChange(updatedProducts);
+    }
   };
 
   useEffect(() => {
