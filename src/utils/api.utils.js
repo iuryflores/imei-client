@@ -190,29 +190,31 @@ class Api {
   };
   addVenda = async (
     sellDate,
-            selectedCliente, 
-            imeiArray,
-            selectedProducts,
-            valorTotal,
-            userId,
-            userData,
-            dataPagamento,
-            formaPagamento,
-            idCaixa,
+    selectedCliente,
+    imeiArray,
+    selectedProducts,
+    qtdSelectedProducts,
+    valorTotal,
+    userId,
+    userData,
+    dataPagamento,
+    formaPagamento,
+    idCaixa
   ) => {
     try {
       const { data } = await this.api.post(
         "/vendas/new/",
         sellDate,
-            selectedCliente, 
-            imeiArray,
-            selectedProducts,
-            valorTotal,
-            userId,
-            userData,
-            dataPagamento,
-            formaPagamento,
-            idCaixa,
+        selectedCliente,
+        imeiArray,
+        selectedProducts,
+        qtdSelectedProducts,
+        valorTotal,
+        userId,
+        userData,
+        dataPagamento,
+        formaPagamento,
+        idCaixa
       );
       return data;
     } catch (error) {

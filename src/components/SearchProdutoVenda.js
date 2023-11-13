@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api.utils";
 
-const SearchProdutoVenda = ({ setError, onSellingPriceChange,selectedProducts,setSelectedProducts }) => {
+const SearchProdutoVenda = ({
+  setError,
+  onSellingPriceChange,
+  selectedProducts,
+  setSelectedProducts,
+  formatarValor,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [quantity, setQuantity] = useState(1);
@@ -9,10 +15,17 @@ const SearchProdutoVenda = ({ setError, onSellingPriceChange,selectedProducts,se
 
   const updateQuantity = (index, newQuantity) => {
     const updatedProducts = [...selectedProducts];
-    updatedProducts[index].quantity = newQuantity;
-    setSelectedProducts(updatedProducts);
-    if (onSellingPriceChange) {
-      onSellingPriceChange(updatedProducts);
+    newQuantity = parseInt(newQuantity);
+    console.log(updatedProducts, newQuantity);
+    if (newQuantity > 0 && newQuantity <= updatedProducts[index].qtd) {
+      setError(null);
+      updatedProducts[index].quantity = newQuantity;
+      setSelectedProducts(updatedProducts);
+      if (onSellingPriceChange) {
+        onSellingPriceChange(updatedProducts);
+      }
+    } else {
+      setError("Você excedeu a quantidade disponível em estoque.");
     }
   };
 
@@ -22,7 +35,7 @@ const SearchProdutoVenda = ({ setError, onSellingPriceChange,selectedProducts,se
     setSelectedProducts(updatedProducts);
 
     if (onSellingPriceChange) {
-      onSellingPriceChange(updatedProducts);
+      onSellingPriceChange(updatedProducts, quantity);
     }
   };
 
@@ -92,14 +105,20 @@ const SearchProdutoVenda = ({ setError, onSellingPriceChange,selectedProducts,se
           <span>
             <b>Produtos adicionados:</b>
           </span>
-          <table className="table table-striped">
+          <table className="table table-striped table-outros">
             <thead>
               <tr>
-                <th></th>
-                <th>Descrição</th>
-                <th>Quantidade</th>
-                <th>Preço de custo</th>
-                <th>Preço de venda</th>
+                <th style={{ width: "5%" }}></th>
+                <th style={{ width: "45%" }}>Descrição</th>
+                <th className="text-center" style={{ width: "10%" }}>
+                  Quantidade
+                </th>
+                <th className="text-center" style={{ width: "20%" }}>
+                  Preço
+                </th>
+                <th className="text-center" style={{ width: "20%" }}>
+                  Preço de venda
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -116,24 +135,30 @@ const SearchProdutoVenda = ({ setError, onSellingPriceChange,selectedProducts,se
                   <td>
                     {product.description} ({product.brand})
                   </td>
-                  <td>
+                  <td className="text-center">
                     <input
-                      className="form-control w-25"
+                      className="form-control text-center"
                       type="number"
                       value={product.quantity}
                       onChange={(e) => updateQuantity(index, e.target.value)}
                     />
                   </td>
-                  <td>{product.price}</td>
-                  <td>
-                    <input
-                      className="form-control"
-                      type="text"
-                      value={product.sellingPrice}
-                      onChange={(e) =>
-                        updateSellingPrice(index, e.target.value)
-                      }
-                    />
+                  <td className="text-center">
+                    R$ {formatarValor(product.valorVendaDb)}
+                  </td>
+                  <td className="text-center">
+                    <div class="input-group">
+                      <span class="input-group-text">R$</span>
+                      <input
+                        className="form-control"
+                        type="text"
+                        value={product.sellingPrice}
+                        onChange={(e) =>
+                          updateSellingPrice(index, e.target.value)
+                        }
+                      />{" "}
+                      <span class="input-group-text">,00</span>
+                    </div>
                   </td>
                 </tr>
               ))}

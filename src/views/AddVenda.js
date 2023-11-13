@@ -23,13 +23,10 @@ const AddVenda = ({
   //pick Cliente
   const [selectedCliente, setSelectedCliente] = useState(null);
 
-  //select produto sem imei
-  const [selectedProduto, setSelectedProduto] = useState(null);
-
   //IMEI components
   const [imeiArray, setImeiArray] = useState([]);
 
-  const [semImeiArray, setSemImeiArray] = useState([]);
+  // const [semImeiArray, setSemImeiArray] = useState([]);
 
   const [valorVenda, setValorVenda] = useState(0);
   const [valorOutros, setValorOutros] = useState(0);
@@ -42,9 +39,7 @@ const AddVenda = ({
   const [formaPagamento, setFormaPagamento] = useState("");
 
   const [selectedProducts, setSelectedProducts] = useState([]);
-
-  
-
+  const [qtdSelectedProducts, setQtdSelectedProducts] = useState(0);
 
   const handleImeiAdd = async (imei) => {
     try {
@@ -77,15 +72,15 @@ const AddVenda = ({
     }
   };
 
-  //add sem imei
-  const handleSemImeiAdd = async (produto) => {
-    try {
-      setSemImeiArray([...semImeiArray]);
-    } catch (error) {
-      setErrorImei(error);
-      console.error(error);
-    }
-  };
+  // //add sem imei
+  // const handleSemImeiAdd = async (produto) => {
+  //   try {
+  //     setSemImeiArray([...semImeiArray]);
+  //   } catch (error) {
+  //     setErrorImei(error);
+  //     console.error(error);
+  //   }
+  // };
 
   //remove Imei
   const removeImei = (index) => {
@@ -123,6 +118,7 @@ const AddVenda = ({
             selectedCliente, //clienteID
             imeiArray,
             selectedProducts,
+            qtdSelectedProducts,
             valorTotal,
             userId,
             userData,
@@ -238,40 +234,40 @@ const AddVenda = ({
   //   setSeeStore(!seeStore);
   // };
 
-  const [estoque, setEstoque] = useState(null);
+  // const [estoque, setEstoque] = useState(null);
 
-  // let statusEstoque = "";
-  // if (seeStore !== true) {
-  //   statusEstoque = "Ver";
-  // } else {
-  //   statusEstoque = "Fechar";
-  // }
+  // // let statusEstoque = "";
+  // // if (seeStore !== true) {
+  // //   statusEstoque = "Ver";
+  // // } else {
+  // //   statusEstoque = "Fechar";
+  // // }
 
-  useEffect(() => {
-    const getEstoque = async () => {
-      try {
-        const allEstoque = await api.getProdutos();
-        setEstoque(allEstoque);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getEstoque();
-  }, []);
+  // useEffect(() => {
+  //   const getEstoque = async () => {
+  //     try {
+  //       const allEstoque = await api.getProdutos();
+  //       setEstoque(allEstoque);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getEstoque();
+  // }, []);
 
   //ATUALIZA VALOR DOS OUTROS PRODUTOS
-  const handleSellingPriceChange = (updatedProducts) => {
+  const handleSellingPriceChange = (updatedProducts, quantity) => {
     // Calcular o valor total com base nos preços de venda atualizados
     const totalValue = calculateTotalValue(updatedProducts);
 
     // Atualizar os estados
     setValorOutros(totalValue);
+    setQtdSelectedProducts(quantity);
   };
 
   //CALCULA O VALOR DOS OUTROS PRODUTOS PELA QUANTIDADE
   const calculateTotalValue = (products) => {
     return products.reduce((total, product) => {
-      console.log(total);
       return (
         total +
         (product.sellingPrice
@@ -280,10 +276,6 @@ const AddVenda = ({
       );
     }, 0);
   };
-  console.log("ValorTotal", valorTotal);
-  console.log("ValorVenda", valorVenda);
-  console.log("ValorOutros", valorOutros);
-  console.log("selected", selectedProducts);
 
   return (
     <div className="container mt-3">
@@ -336,7 +328,7 @@ const AddVenda = ({
                           <th style={{ width: "35%" }}>Descrição</th>
                           <th style={{ width: "10%" }}>Preço</th>
                           <th style={{ width: "20%", textAlign: "center" }}>
-                            Valor de Venda
+                            Preço de Venda
                           </th>
                         </tr>
                       </thead>
@@ -364,21 +356,24 @@ const AddVenda = ({
                                   formatarValor(imei.buy_id.price)}
                               </td>
                               <td className="text-center bg-light">
-                                R${" "}
-                                <input
-                                  className="form-control"
-                                  type="text"
-                                  value={imei.price}
-                                  onChange={(e) => {
-                                    const updatedImeiArray = [...imeiArray];
+                                <div className="input-group mb-3">
+                                  <span className="input-group-text">R$</span>
+                                  <input
+                                    className="form-control"
+                                    type="text"
+                                    value={imei.price}
+                                    onChange={(e) => {
+                                      const updatedImeiArray = [...imeiArray];
 
-                                    // Convert the value to a number and update the "price"
-                                    updatedImeiArray[index].price =
-                                      parseFloat(e.target.value) || 0;
+                                      // Convert the value to a number and update the "price"
+                                      updatedImeiArray[index].price =
+                                        parseFloat(e.target.value) || 0;
 
-                                    setImeiArray(updatedImeiArray);
-                                  }}
-                                />
+                                      setImeiArray(updatedImeiArray);
+                                    }}
+                                  />
+                                  <span className="input-group-text">,00</span>
+                                </div>
                               </td>
                             </tr>
                           ))}
@@ -425,13 +420,12 @@ const AddVenda = ({
                 {hasImei === "sim" ? (
                   <>
                     <SearchProdutoVenda
-                      selectedProduto={selectedProduto}
-                      setSelectedProduto={setSelectedProduto}
                       setError={setError}
                       error={error}
                       onSellingPriceChange={handleSellingPriceChange}
                       selectedProducts={selectedProducts}
                       setSelectedProducts={setSelectedProducts}
+                      formatarValor={formatarValor}
                     />
                   </>
                 ) : null}
@@ -469,7 +463,7 @@ const AddVenda = ({
                   </select>
                 </div>
               </div>
-              <div className="text-center valorVenda rounded mb-3">
+              <div className="text-center valorVenda rounded mb-3 p-3">
                 <div>Valor total da venda</div>
                 <div>R$ {valorTotal && formatarValor(valorTotal)}</div>
               </div>
