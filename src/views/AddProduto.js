@@ -30,7 +30,7 @@ const AddProduto = ({ message, setMessage, userId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData) {
+    if (formData.description && formData.brand) {
       try {
         const newProduto = await api.addProduto({
           formData,
@@ -50,8 +50,16 @@ const AddProduto = ({ message, setMessage, userId }) => {
           navigate("/estoque/");
         }
       } catch (error) {
-        setError(error);
+        const newError = error.trim().split(" ");
+
+        if (newError[0] === "E11000") {
+          setError("Essa descrição já foi cadastrada!");
+        } else {
+          setError(error);
+        }
       }
+    } else {
+      setError("É necessário informar Descrição e Marca.");
     }
   };
 
@@ -211,9 +219,12 @@ const AddProduto = ({ message, setMessage, userId }) => {
               </div>
             </>
           ) : null}
-
-          {error && <div className="alert alert-danger">{error}</div>}
         </form>
+        {error && (
+          <div className="alert alert-danger text-center">
+            <strong>{error}</strong>
+          </div>
+        )}
         <div className="d-flex flex-column align-items-end">
           <button
             type="button"
