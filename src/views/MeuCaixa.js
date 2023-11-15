@@ -69,6 +69,11 @@ const MeuCaixa = ({
       navigate(0);
     } catch (error) {
       console.log(error);
+      if (error === "Sua sessão expirou, é necessário fazer login novamente.") {
+        navigate("/login/");
+      } else {
+        setError(error);
+      }
     }
   };
 

@@ -14,6 +14,7 @@ import { Fornecedores } from "./views/Fornecedores";
 import { Compras } from "./views/Compras";
 import { Vendas } from "./views/Vendas";
 import { Auditoria } from "./views/Auditoria";
+import Logout from "./views/Logout.js";
 import AddVenda from "./views/AddVenda";
 // import Produtos from "./views/Produtos.js";
 import Caixas from "./views/Caixas";
@@ -126,7 +127,7 @@ function App() {
       setMessage(null);
     }, 10000);
   }, [message, setMessage, error, setError]);
-
+  console.log(loggedIn);
   return (
     <div className="sys-back">
       {loggedIn ? (
@@ -142,6 +143,17 @@ function App() {
       <Routes>
         {loggedIn ? (
           <>
+            <Route
+              path="/logout/"
+              element={
+                <Logout
+                  message={message}
+                  setMessage={setMessage}
+                  error={error}
+                  setError={setError}
+                />
+              }
+            />
             <Route
               path="/compras/"
               element={
@@ -485,6 +497,17 @@ function App() {
                 <LoginPage
                   handleLogin={handleLogin}
                   handleSignup={handleSignup}
+                  message={message}
+                  setMessage={setMessage}
+                  error={error}
+                  setError={setError}
+                />
+              }
+            />
+            <Route
+              path="/logout/"
+              element={
+                <Logout
                   message={message}
                   setMessage={setMessage}
                   error={error}

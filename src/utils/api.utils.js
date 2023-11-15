@@ -39,8 +39,13 @@ class Api {
         if (error.response.data.msg.message === "jwt expired") {
           localStorage.removeItem("token");
           localStorage.removeItem("userId");
-          if (window.location.pathname !== "/login") {
-            window.location.replace("/login");
+          if (window.location.pathname !== "/logout") {
+            window.location.replace("/logout");
+          }
+        }
+        if (error.response.data.msg.message === "invalid signature") {
+          if (window.location.pathname !== "/logout") {
+            window.location.replace("/logout");
           }
         }
         console.error(error);
