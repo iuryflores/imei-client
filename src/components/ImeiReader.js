@@ -6,6 +6,7 @@ const ImeiReader = ({ onImeiAdd }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      console.log(imei);
       if (imei) {
         onImeiAdd(imei, serial);
         setImei("");
