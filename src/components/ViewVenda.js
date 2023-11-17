@@ -26,7 +26,27 @@ export const ViewVenda = ({ showModalVenda, closeVendaModal, vendaView }) => {
           </div>
           <div className="modal-body">
             <div>
-              Cliente: <b>{vendaView && vendaView.cliente_id}</b>
+              <p>
+                Cliente: <b>{vendaView && vendaView.cliente_id.full_name}</b>
+              </p>
+              <p>
+                Vendedor: <b>{vendaView && vendaView.user_sell.full_name}</b>
+              </p>
+              <p>
+                Produtos:{" "}
+                <b>
+                  {vendaView &&
+                    vendaView.imei_id.map((produto, index) => {
+                      return (
+                        <>
+                          {produto.buy_id.produto_id.description} - (
+                          {produto.number})
+                        </>
+                      );
+                    })}
+                </b>
+              </p>
+              Cliente: <b>{vendaView && vendaView.cliente_id.full_name}</b>
             </div>
           </div>
         </div>
