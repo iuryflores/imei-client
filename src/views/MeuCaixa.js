@@ -34,6 +34,8 @@ const MeuCaixa = ({
 
   const [caixaDiario, setCaixaDiario] = useState(null);
 
+  const [caixa_id, setCaixa_id] = useState("");
+
   function getCurrentFormattedDate() {
     const today = new Date();
     const year = today.getFullYear();
@@ -42,7 +44,6 @@ const MeuCaixa = ({
     return `${year}-${month}-${day}`;
   }
   const [arrayVendas, setArrayVendas] = useState([]);
-
   //VERIFICA SE EXISTE CAIXA ABERTO
   useEffect(() => {
     const checkCaixaAberto = async () => {
@@ -50,6 +51,9 @@ const MeuCaixa = ({
         setLoading(true);
         const caixaAberto = await api.checkCaixaAberto(selectedDate);
         setCaixaDiario(caixaAberto);
+        setCaixa_id(caixaAberto._id);
+        console.log(caixaAberto);
+
         if (caixaAberto) {
           setArrayVendas(caixaAberto.vendas);
         }
@@ -76,14 +80,21 @@ const MeuCaixa = ({
       }
     }
   };
-
+  //DEVOLVER
+  const handleDevolver = async (vendaID) => {
+    console.log(vendaID);
+    try {
+      await api.devolverVenda({ vendaID, userData });
+      navigate(0);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     const getLancamentos = async () => {
       try {
-        if (selectedDate) {
-          const lancamentosData = await api.getLancamentos(selectedDate);
-          setLancamentos(lancamentosData);
-        }
+        const lancamentosData = await api.getLancamentosCaixa(caixa_id);
+        setLancamentos(lancamentosData);
       } catch (error) {
         console.log(error);
       } finally {
@@ -94,10 +105,11 @@ const MeuCaixa = ({
       getLancamentos();
     }
     setLoading(false);
-  }, [selectedDate, userData, caixaDiario]);
+  }, [caixa_id, userData, caixaDiario]);
 
   const sumLancamentos = () => {
     return lancamentos
+      .filter((caixa) => caixa.status !== "DEVOLVIDO")
       .reduce((total, caixa) => {
         return total + caixa.valor;
       }, 0)
@@ -122,11 +134,12 @@ const MeuCaixa = ({
         <thead>
           <tr>
             <th>Data</th>
-            <th>Descrição</th>
+            <th>Venda</th>
             <th>Cliente</th>
             <th>Forma de pagamento</th>
             <th>Valor</th>
             <th>Vendedor</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -134,16 +147,44 @@ const MeuCaixa = ({
             return (
               <tr
                 key={index}
-                className={caixa.tipo === "ENTRADA" ? "table-light" : " "}
+                className={
+                  caixa.status === "ATIVO"
+                    ? "table-light"
+                    : caixa.status === "DEVOLVIDO"
+                    ? "table-danger"
+                    : " "
+                }
               >
                 <td>{formatarDataEHora(caixa.createdAt)}h</td>
                 <td>
-                  Registrou <b>VEN{caixa.origem_id.sell_number}</b>
+                  <b>VEN{caixa.origem_id.sell_number}</b>
                 </td>
                 <td>{caixa.origem_id.cliente_id.full_name}</td>
                 <td>{formaPagamentoMap[caixa.forma_pagamento]}</td>
                 <td>R$ {formatarValor(caixa.valor)}</td>
                 <td>{caixa.origem_id.user_sell.full_name}</td>
+                <td>
+                  {caixa.status !== "DEVOLVIDO" ? (
+                    <>
+                      <div
+                        className="btn btn-success"
+                        onClick={() => handleDevolver(caixa._id)}
+                        title="Ver"
+                      >
+                        <i className="bi bi-eye-fill"></i>
+                      </div>
+                      <div
+                        className="btn btn-warning mx-2"
+                        onClick={() => handleDevolver(caixa._id)}
+                        title="Devolver"
+                      >
+                        <i className="bi bi-arrow-return-left"></i>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="btn btn-danger disabled">Devolvido</div>
+                  )}
+                </td>
               </tr>
             );
           })}
@@ -177,7 +218,7 @@ const MeuCaixa = ({
           />
           <div className="d-flex align-items-center alert alert-info">
             <span>
-              Saldo Atual:{" "}
+              Valor Atual:{" "}
               <b>R$ {formatarValor(valorTotal) || <span>0,00</span>}</b>
             </span>
           </div>
@@ -193,7 +234,7 @@ const MeuCaixa = ({
       <hr />
       {message ? <div className="alert alert-success">{message}</div> : null}
 
-      {arrayVendas.length > 0 ? (
+      {lancamentos.length > 0 ? (
         <div className="border p-2  shadow rounded w-100">{renderTable()}</div>
       ) : (
         <div className="text-center text-dark alert alert-warning mt-3">

@@ -254,6 +254,14 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  devolverVenda = async (vendaID, userId) => {
+    try {
+      const { data } = await this.api.put("/vendas/devolver/", vendaID, userId);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
   getUserNav = async (userId) => {
     try {
       const { data } = await this.api.get(`/user/${userId}`);
@@ -306,6 +314,16 @@ class Api {
     try {
       const { data } = await this.api.get(
         `/lancamentos/meu-caixa/${selectedDate}/`
+      );
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getLancamentosCaixa = async (caixa_id) => {
+    try {
+      const { data } = await this.api.get(
+        `/lancamentos/meu-caixa/${caixa_id}/`
       );
       return data;
     } catch (error) {

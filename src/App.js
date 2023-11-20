@@ -127,7 +127,6 @@ function App() {
       setMessage(null);
     }, 10000);
   }, [message, setMessage, error, setError]);
-  console.log(loggedIn);
   return (
     <div className="sys-back">
       {loggedIn ? (
