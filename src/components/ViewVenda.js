@@ -3,7 +3,6 @@ import React /*, { useState } */ from "react";
 // import { useNavigate } from "react-router";
 
 export const ViewVenda = ({ showModalVenda, closeVendaModal, vendaView }) => {
-  console.log(vendaView);
   return (
     <div className={`modal modal-lg ${showModalVenda ? "show" : ""}`}>
       <div

@@ -4,6 +4,7 @@ import ImeiReader from "../components/ImeiReader";
 import SearchClient from "../components/SearchClient";
 import SearchProdutoVenda from "../components/SearchProdutoVenda";
 import { useNavigate } from "react-router-dom";
+import { NumericFormat } from "react-number-format";
 
 const AddVenda = ({ setMessage, error, setError, userData, setLoading }) => {
   //formulario de registro da venda
@@ -246,7 +247,7 @@ const AddVenda = ({ setMessage, error, setError, userData, setLoading }) => {
       );
     }, 0);
   };
-
+  console.log(imeiArray);
   return (
     <div className="container mt-3">
       <div className="d-flex flex-column mb-3">
@@ -328,7 +329,7 @@ const AddVenda = ({ setMessage, error, setError, userData, setLoading }) => {
                               <td className="text-center bg-light">
                                 <div className="input-group mb-3">
                                   <span className="input-group-text">R$</span>
-                                  <input
+                                  {/* <input
                                     className="form-control"
                                     type="text"
                                     value={imei.price}
@@ -339,6 +340,22 @@ const AddVenda = ({ setMessage, error, setError, userData, setLoading }) => {
                                       updatedImeiArray[index].price =
                                         parseFloat(e.target.value) || 0;
 
+                                      setImeiArray(updatedImeiArray);
+                                    }}
+                                  /> */}
+                                  <NumericFormat
+                                    className="form-control"
+                                    value={imei.price}
+                                    thousandSeparator="."
+                                    decimalSeparator=","
+                                    allowNegative={false}
+                                    onValueChange={(values) => {
+                                      const updatedImeiArray = [...imeiArray];
+                                      updatedImeiArray[index].price =
+                                        parseFloat(values.value) || 0;
+                                      console.log(
+                                        updatedImeiArray[index].price
+                                      );
                                       setImeiArray(updatedImeiArray);
                                     }}
                                   />

@@ -50,11 +50,10 @@ const MeuCaixa = ({
       try {
         setLoading(true);
         const caixaAberto = await api.checkCaixaAberto(selectedDate);
-        setCaixaDiario(caixaAberto);
-        setCaixa_id(caixaAberto._id);
-        console.log(caixaAberto);
 
         if (caixaAberto) {
+          setCaixaDiario(caixaAberto);
+          setCaixa_id(caixaAberto._id);
           setArrayVendas(caixaAberto.vendas);
         }
         setLoading(false);

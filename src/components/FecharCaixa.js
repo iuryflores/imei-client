@@ -33,7 +33,6 @@ export const FecharCaixa = ({
       }
     }
   };
-  console.log(saldoCaixa);
 
   const formatarValor = (valor) => {
     const valorFormatado = valor.toLocaleString("pt-BR", {
@@ -61,7 +60,7 @@ export const FecharCaixa = ({
       setSaldoCaixa("");
     }
   };
-  console.log(dataVendas);
+
   return (
     <div className={`modal modal-lg ${show ? "show" : ""}`}>
       <div

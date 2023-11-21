@@ -38,7 +38,7 @@ const FechandoCaixa = ({
     };
     getVendas();
   }, []);
-
+ 
   const formatarValor = (valor) => {
     const valorFormatado = valor.toLocaleString("pt-BR", {
       minimumFractionDigits: 2,
@@ -49,7 +49,6 @@ const FechandoCaixa = ({
 
   const fecharCaixa = (caixaId) => {
     setShowModal(true);
-    console.log(caixaId);
   };
 
   let valorTotalVendas = 0;
@@ -73,8 +72,6 @@ const FechandoCaixa = ({
   const showVenda = (venda) => {
     setVendaView(venda);
     setShowModalVenda(true);
-
-    console.log(venda);
   };
 
   const closeVendaModal = () => {
@@ -82,7 +79,7 @@ const FechandoCaixa = ({
   };
 
   const renderTable = () => {
-    if (dataVendas && vendas) {
+    if (dataVendas && vendas.length > 0) {
       return (
         <table className="table mb-0 table-striped table-hover">
           <thead>
