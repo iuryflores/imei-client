@@ -120,7 +120,8 @@ function App() {
       setIsAdmin(userData.admin === true);
     }
   }, [userData]);
-
+  console.log("UserData: ", userData);
+  console.log("isAdmin: ", isAdmin);
   useEffect(() => {
     setTimeout(() => {
       setError(null);
@@ -134,6 +135,7 @@ function App() {
           onLogout={logout}
           isAdmin={isAdmin}
           userData={userData}
+          setUserData={setUserData}
           setError={setError}
           userId={userId}
         />
