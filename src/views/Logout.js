@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
-  const userToken = localStorage.getItem("token");
-
-  const [setLoggedIn] = useState(!!userToken);
-
   const navigate = useNavigate();
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    setLoggedIn(false);
-    navigate("/login");
-  };
+  useEffect(() => {
+    const logout = () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      navigate("/login");
+    };
 
-  logout();
+    logout();
+  }, [navigate]);
 
   return <div>Logout</div>;
 };
