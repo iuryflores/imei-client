@@ -4,19 +4,9 @@ import ImeiReader from "../components/ImeiReader";
 import SearchClient from "../components/SearchClient";
 import SearchProdutoVenda from "../components/SearchProdutoVenda";
 import { useNavigate } from "react-router-dom";
+import { NumericFormat } from "react-number-format";
 
-const AddVenda = ({
-  message,
-  setMessage,
-  error,
-  setError,
-  userId,
-  updateVendaList,
-  newVenda,
-  userData,
-  loadin,
-  setLoading,
-}) => {
+const AddVenda = ({ setMessage, error, setError, userData, setLoading }) => {
   //formulario de registro da venda
   const [sellDate, setSellDate] = useState("");
 
@@ -25,8 +15,6 @@ const AddVenda = ({
 
   //IMEI components
   const [imeiArray, setImeiArray] = useState([]);
-
-  // const [semImeiArray, setSemImeiArray] = useState([]);
 
   const [valorVenda, setValorVenda] = useState(0);
   const [valorOutros, setValorOutros] = useState(0);
@@ -39,12 +27,11 @@ const AddVenda = ({
   const [formaPagamento, setFormaPagamento] = useState("");
 
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [qtdSelectedProducts, setQtdSelectedProducts] = useState(0);
 
   const handleImeiAdd = async (imei) => {
     try {
       const getImei = await api.buscarImeiDados(imei);
-
+      console.log(getImei);
       if (getImei) {
         setErrorImei(null);
         // Verifica se o IMEI já existe no imeiArray
@@ -72,29 +59,12 @@ const AddVenda = ({
     }
   };
 
-  // //add sem imei
-  // const handleSemImeiAdd = async (produto) => {
-  //   try {
-  //     setSemImeiArray([...semImeiArray]);
-  //   } catch (error) {
-  //     setErrorImei(error);
-  //     console.error(error);
-  //   }
-  // };
-
   //remove Imei
   const removeImei = (index) => {
     const updatedImeiArray = [...imeiArray];
     updatedImeiArray.splice(index, 1);
     setImeiArray(updatedImeiArray);
   };
-
-  // //remove Sem Imei
-  // const removeSemImei = (index) => {
-  //   const updatedSemImeiArray = [...semImeiArray];
-  //   updatedSemImeiArray.splice(index, 1);
-  //   setSemImeiArray(updatedSemImeiArray);
-  // };
 
   const formatarValor = (valor) => {
     const valorFormatado = valor.toLocaleString("pt-BR", {
@@ -106,6 +76,10 @@ const AddVenda = ({
 
   const navigate = useNavigate();
 
+  let cliente_ID;
+  if (selectedCliente) {
+    cliente_ID = selectedCliente._id;
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -115,12 +89,10 @@ const AddVenda = ({
           const idCaixa = caixaDiario._id;
           await api.addVenda({
             sellDate,
-            selectedCliente, //clienteID
+            cliente_ID,
             imeiArray,
             selectedProducts,
-            qtdSelectedProducts,
             valorTotal,
-            userId,
             userData,
             dataPagamento,
             formaPagamento,
@@ -262,7 +234,6 @@ const AddVenda = ({
 
     // Atualizar os estados
     setValorOutros(totalValue);
-    setQtdSelectedProducts(quantity);
   };
 
   //CALCULA O VALOR DOS OUTROS PRODUTOS PELA QUANTIDADE
@@ -276,7 +247,7 @@ const AddVenda = ({
       );
     }, 0);
   };
-
+  console.log(imeiArray);
   return (
     <div className="container mt-3">
       <div className="d-flex flex-column mb-3">
@@ -358,7 +329,7 @@ const AddVenda = ({
                               <td className="text-center bg-light">
                                 <div className="input-group mb-3">
                                   <span className="input-group-text">R$</span>
-                                  <input
+                                  {/* <input
                                     className="form-control"
                                     type="text"
                                     value={imei.price}
@@ -369,6 +340,22 @@ const AddVenda = ({
                                       updatedImeiArray[index].price =
                                         parseFloat(e.target.value) || 0;
 
+                                      setImeiArray(updatedImeiArray);
+                                    }}
+                                  /> */}
+                                  <NumericFormat
+                                    className="form-control"
+                                    value={imei.price}
+                                    thousandSeparator="."
+                                    decimalSeparator=","
+                                    allowNegative={false}
+                                    onValueChange={(values) => {
+                                      const updatedImeiArray = [...imeiArray];
+                                      updatedImeiArray[index].price =
+                                        parseFloat(values.value) || 0;
+                                      console.log(
+                                        updatedImeiArray[index].price
+                                      );
                                       setImeiArray(updatedImeiArray);
                                     }}
                                   />

@@ -17,6 +17,9 @@ const Estoque = ({
 }) => {
   const [estoque, setEstoque] = useState([]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredEstoque, setFilteredEstoque] = useState([]);
+
   useEffect(() => {
     const getEstoque = async () => {
       try {
@@ -48,10 +51,24 @@ const Estoque = ({
       valorEstoque += element.price;
     }
   }
-  console.log(estoque);
+  const handleSearchChange = (event) => {
+    const term = event.target.value;
+    setSearchTerm(term);
+
+    // Filtrar o estoque com base no termo de pesquisa
+    const filteredResults = estoque.filter((produto) =>
+      produto.buy_id.produto_id.description
+        .toLowerCase()
+        .includes(term.toLowerCase())
+    );
+
+    setFilteredEstoque(filteredResults);
+  };
   const renderTable = () => {
+    const estoqueToRender = searchTerm ? filteredEstoque : estoque;
+
     if (loading === false) {
-      if (estoque.length > 0) {
+      if (estoqueToRender.length > 0) {
         return (
           <table className="table mb-0 table-striped table-hover">
             <thead>
@@ -64,7 +81,7 @@ const Estoque = ({
               </tr>
             </thead>
             <tbody>
-              {estoque.map((produto, index) => {
+              {estoqueToRender.map((produto, index) => {
                 return (
                   <tr key={index}>
                     <td>
@@ -111,7 +128,6 @@ const Estoque = ({
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
         <h3>
-          {" "}
           <i className="bi bi-phone-vibrate mx-3"></i>Dispositivos em estoque
         </h3>
         <div className="mb-3">
@@ -128,6 +144,17 @@ const Estoque = ({
           </Link>
         </div>
       </div>
+      <div className="mb-3">
+        <input
+        className="form-control"
+          type="text"
+          placeholder="Pesquisar produto"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      </div>
+
+      <hr />
       <hr />
       {message ? <div className="alert alert-success">{message}</div> : null}
       <div className="border p-2  shadow rounded w-100">{renderTable()}</div>
