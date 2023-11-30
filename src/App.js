@@ -480,19 +480,6 @@ function App() {
         ) : (
           <>
             <Route
-              path="*"
-              element={
-                <LoginPage
-                  handleLogin={handleLogin}
-                  handleSignup={handleSignup}
-                  message={message}
-                  setMessage={setMessage}
-                  error={error}
-                  setError={setError}
-                />
-              }
-            />
-            <Route
               path="/login"
               element={
                 <LoginPage
