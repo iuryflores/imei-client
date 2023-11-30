@@ -5,9 +5,9 @@ class Api {
   constructor() {
     this.api = axios.create({
       // baseURL: "http://imeiapp.iuryflores.com/",
-      // baseURL: "http://localhost:9000",
+      baseURL: "http://localhost:9000",
       // baseURL: "http://35.175.178.173:3001",
-      baseURL: "https://imeiapi.iuryflores.dev.br/",
+      // baseURL: "https://imeiapi.iuryflores.dev.br/",
     });
     this.api.interceptors.request.use(
       (config) => {
@@ -28,14 +28,13 @@ class Api {
     this.api.interceptors.response.use(
       (response) => response,
       (error) => {
-        //if (error.response.status === 401) {
-        //localStorage.removeItem("token");
-        //  if (window.location.pathname !== "/login") {
-        //  window.location.replace("/login"); // Use window.location.replace para fazer o redirecionamento
-        // }
-        //
-        //
-        // }
+        if (error.response.status === 401) {
+          localStorage.removeItem("token");
+          if (window.location.pathname !== "/login") {
+            window.location.replace("/login"); // Use window.location.replace para fazer o redirecionamento
+          }
+        }
+
         if (error.response.data.msg.message === "jwt expired") {
           localStorage.removeItem("token");
           localStorage.removeItem("userId");
