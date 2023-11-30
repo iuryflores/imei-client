@@ -50,7 +50,7 @@ const MeuCaixa = ({
       try {
         setLoading(true);
         const caixaAberto = await api.checkCaixaAberto(selectedDate);
-
+        console.log(caixaAberto);
         if (caixaAberto) {
           setCaixaDiario(caixaAberto);
           setCaixa_id(caixaAberto._id);
@@ -82,13 +82,16 @@ const MeuCaixa = ({
   const handleDevolver = async (vendaID) => {
     try {
       setLoading(true);
-      await api.devolverVenda({ vendaID, userData });
+      const devolvido = await api.devolverVenda({ vendaID, userData });
       setLoading(false);
-      navigate(0);
+      if (devolvido) {
+        navigate(0);
+      }
     } catch (error) {
       console.log(error);
     }
   };
+  console.log("caixa_id: ", caixa_id);
   useEffect(() => {
     const getLancamentos = async () => {
       try {
