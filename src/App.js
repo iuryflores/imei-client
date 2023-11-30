@@ -120,8 +120,8 @@ function App() {
       setIsAdmin(userData.admin === true);
     }
   }, [userData]);
-  console.log("UserData: ", userData);
-  console.log("isAdmin: ", isAdmin);
+  // console.log("UserData: ", userData);
+  // console.log("isAdmin: ", isAdmin);
   useEffect(() => {
     setTimeout(() => {
       setError(null);

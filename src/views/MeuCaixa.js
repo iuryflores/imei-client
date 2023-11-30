@@ -43,7 +43,7 @@ const MeuCaixa = ({
     const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   }
-  const [arrayVendas, setArrayVendas] = useState([]);
+  // const [arrayVendas, setArrayVendas] = useState([]);
   //VERIFICA SE EXISTE CAIXA ABERTO
   useEffect(() => {
     const checkCaixaAberto = async () => {
@@ -54,7 +54,6 @@ const MeuCaixa = ({
         if (caixaAberto) {
           setCaixaDiario(caixaAberto);
           setCaixa_id(caixaAberto._id);
-          setArrayVendas(caixaAberto.vendas);
         }
         setLoading(false);
       } catch (error) {
