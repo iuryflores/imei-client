@@ -80,9 +80,10 @@ const MeuCaixa = ({
   };
   //DEVOLVER
   const handleDevolver = async (vendaID) => {
-    console.log(vendaID);
     try {
+      setLoading(true);
       await api.devolverVenda({ vendaID, userData });
+      setLoading(false);
       navigate(0);
     } catch (error) {
       console.log(error);
