@@ -17,6 +17,9 @@ table tr td {
   border-radius: 5px;
 }
 
+.table-outros tr td {
+  vertical-align: middle;
+}
 
 
 .login-back {

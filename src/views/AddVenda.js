@@ -1,23 +1,14 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
-import SearchClient from "../components/SearchClient";
 import ImeiReader from "../components/ImeiReader";
+import SearchClient from "../components/SearchClient";
+import SearchProdutoVenda from "../components/SearchProdutoVenda";
 import { useNavigate } from "react-router-dom";
+import { NumericFormat } from "react-number-format";
 
-const AddVenda = ({
-  message,
-  setMessage,
-  error,
-  setError,
-  userId,
-  updateVendaList,
-  newVenda,
-  userData,
-  loadin,
-  setLoading,
-}) => {
+const AddVenda = ({ setMessage, error, setError, userData, setLoading }) => {
   //formulario de registro da venda
-  const [sellDate, setSellDate] = useState();
+  const [sellDate, setSellDate] = useState("");
 
   //pick Cliente
   const [selectedCliente, setSelectedCliente] = useState(null);
@@ -26,16 +17,21 @@ const AddVenda = ({
   const [imeiArray, setImeiArray] = useState([]);
 
   const [valorVenda, setValorVenda] = useState(0);
+  const [valorOutros, setValorOutros] = useState(0);
+
+  const [valorTotal, setValorTotal] = useState(0);
 
   const [erroImei, setErrorImei] = useState(null);
 
   const [dataPagamento, setDataPagamento] = useState("");
   const [formaPagamento, setFormaPagamento] = useState("");
 
+  const [selectedProducts, setSelectedProducts] = useState([]);
+
   const handleImeiAdd = async (imei) => {
     try {
       const getImei = await api.buscarImeiDados(imei);
-
+      console.log(getImei);
       if (getImei) {
         setErrorImei(null);
         // Verifica se o IMEI já existe no imeiArray
@@ -47,8 +43,7 @@ const AddVenda = ({
             ...imeiArray,
             {
               ...getImei,
-              porcento: "",
-              price: calculatePriceFromPorcento(getImei),
+              price: 0,
             },
           ]);
           // Se não existe, adiciona o IMEI ao imeiArray
@@ -81,19 +76,23 @@ const AddVenda = ({
 
   const navigate = useNavigate();
 
+  let cliente_ID;
+  if (selectedCliente) {
+    cliente_ID = selectedCliente._id;
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (selectedCliente !== null && imeiArray) {
+    if (selectedCliente !== null) {
       if (formaPagamento !== "") {
         try {
           const idCaixa = caixaDiario._id;
           await api.addVenda({
             sellDate,
-            selectedCliente, //clienteID
+            cliente_ID,
             imeiArray,
-            valorVenda,
-            userId,
+            selectedProducts,
+            valorTotal,
             userData,
             dataPagamento,
             formaPagamento,
@@ -104,9 +103,7 @@ const AddVenda = ({
           setSelectedCliente(null);
           setImeiArray([]);
           setValorVenda("");
-
           setMessage("Venda cadastrada com sucesso!");
-
           navigate("/");
           setTimeout(() => {
             setMessage("");
@@ -116,31 +113,25 @@ const AddVenda = ({
           setError(error);
         }
       } else {
-        setError("Forma de pagamento é obrigatória!")
+        setError("Forma de pagamento é obrigatória!");
       }
     } else {
       setError("Necessário informar o cliente e ao menos 01 IMEI");
     }
   };
 
-  const calculatePriceFromPorcento = (imei) => {
-    if (imei && imei.buy_id) {
-      const porcento = parseFloat(imei.porcento || 0);
-      const newPrice = (imei.buy_id.price * porcento) / 100 + imei.buy_id.price;
-      return newPrice;
-    }
-  };
+  // const calculatePriceFromPorcento = (imei) => {
+  //   if (imei && imei.buy_id) {
+  //     const porcento = parseFloat(imei.porcento || 0);
+  //     const newPrice = (imei.buy_id.price * porcento) / 100 + imei.buy_id.price;
+  //     return newPrice;
+  //   }
+  // };
 
   const sumImeis = () => {
     return imeiArray
       .reduce((total, imei) => {
-        return (
-          total +
-          (imei.buy_id
-            ? (imei.buy_id.price * parseFloat(imei.porcento || 0)) / 100 +
-              imei.buy_id.price
-            : 0)
-        );
+        return total + (imei.buy_id ? imei.price : 0);
       }, 0)
       .toFixed(2);
   };
@@ -149,6 +140,22 @@ const AddVenda = ({
     const totalValue = sumImeis();
     setValorVenda(parseFloat(totalValue));
   }, [imeiArray]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setErrorImei(null);
+    }, 3000);
+  });
+
+  const handleTotalValueUpdate = () => {
+    const totalValue = parseFloat(valorVenda) + parseFloat(valorOutros);
+    setValorTotal(totalValue);
+  };
+
+  // Efeito para observar mudanças em valorOutros e valorVenda
+  useEffect(() => {
+    handleTotalValueUpdate();
+  }, [valorOutros, valorVenda]);
 
   const [selectedDate] = useState(getCurrentFormattedDate());
 
@@ -187,33 +194,60 @@ const AddVenda = ({
     setLoading(false);
   }, [selectedDate, userData]);
 
-  const [seeStore, setSeeStore] = useState(false);
+  const [hasImei, setHasImei] = useState("nao");
 
-  const handleSeeStore = () => {
-    setSeeStore(!seeStore);
+  const handleImei = (e) => {
+    setHasImei(e.target.value);
   };
 
-  const [estoque, setEstoque] = useState(null);
+  // const [seeStore, setSeeStore] = useState(false);
 
-  let statusEstoque = "";
-  if (seeStore !== true) {
-    statusEstoque = "Ver";
-  } else {
-    statusEstoque = "Fechar";
-  }
+  // const handleSeeStore = () => {
+  //   setSeeStore(!seeStore);
+  // };
 
-  useEffect(() => {
-    const getEstoque = async () => {
-      try {
-        const allEstoque = await api.getProdutos();
-        setEstoque(allEstoque);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getEstoque();
-  }, []);
+  // const [estoque, setEstoque] = useState(null);
 
+  // // let statusEstoque = "";
+  // // if (seeStore !== true) {
+  // //   statusEstoque = "Ver";
+  // // } else {
+  // //   statusEstoque = "Fechar";
+  // // }
+
+  // useEffect(() => {
+  //   const getEstoque = async () => {
+  //     try {
+  //       const allEstoque = await api.getProdutos();
+  //       setEstoque(allEstoque);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getEstoque();
+  // }, []);
+
+  //ATUALIZA VALOR DOS OUTROS PRODUTOS
+  const handleSellingPriceChange = (updatedProducts, quantity) => {
+    // Calcular o valor total com base nos preços de venda atualizados
+    const totalValue = calculateTotalValue(updatedProducts);
+
+    // Atualizar os estados
+    setValorOutros(totalValue);
+  };
+
+  //CALCULA O VALOR DOS OUTROS PRODUTOS PELA QUANTIDADE
+  const calculateTotalValue = (products) => {
+    return products.reduce((total, product) => {
+      return (
+        total +
+        (product.sellingPrice
+          ? parseFloat(product.sellingPrice) * product.quantity
+          : 0)
+      );
+    }, 0);
+  };
+  console.log(imeiArray);
   return (
     <div className="container mt-3">
       <div className="d-flex flex-column mb-3">
@@ -224,68 +258,48 @@ const AddVenda = ({
 
         <div className="d-flex">
           <div className="d-flex flex-column w-100 p-3">
-            <form className="d-flex flex-column align-items-end">
-              <div className="d-flex flex-column align-items-baseline">
-                <div className="form-group">
-                  <label htmlFor="buyDate">Data da venda</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    id="buyDate"
-                    name="buyDate"
-                    value={sellDate}
-                    onChange={(e) => setSellDate(e.target.value)}
+            <form className="d-flex flex-column ">
+              <div className="d-flex flex-wrap justify-content-between">
+                <div className="form-group col-12 col-lg-9">
+                  <SearchClient
+                    title="Cliente"
+                    selectedItem={selectedCliente}
+                    setSelectedItem={setSelectedCliente}
                   />
                 </div>
-                <div className="btn btn-info" onClick={handleSeeStore}>
-                  {statusEstoque} estoque
+                <div className="d-flex flex-column col-12 col-lg-2">
+                  <div className="form-group">
+                    <label htmlFor="buyDate">Data da venda</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      id="buyDate"
+                      name="buyDate"
+                      value={sellDate}
+                      onChange={(e) => setSellDate(e.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="form-group w-100">
-                <SearchClient
-                  title="Cliente"
-                  selectedItem={selectedCliente}
-                  setSelectedItem={setSelectedCliente}
-                />
               </div>
 
               <div className="w-100 d-flex justify-content-between">
                 <div className="w-100">
-                  {/* Integre o componente ImeiReader e passe a função de callback */}
                   <ImeiReader onImeiAdd={handleImeiAdd} />
                   {erroImei && (
                     <div className="alert alert-danger">{erroImei}</div>
                   )}
-                  <div>
+
+                  <div className="border p-2 rounded bg-light mb-3">
                     <label>IMEIs adicionados a venda:</label>
                     <table className="table table-striped">
                       <thead>
                         <tr>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th
-                            className="text-center text-light"
-                            style={{
-                              backgroundColor: "grey",
-                              borderRadius: "5px 5px 0 0",
-                            }}
-                            colSpan={2}
-                          >
-                            Lucro/Prejuízo
-                          </th>
-                        </tr>
-                        <tr>
                           <th style={{ width: "5%" }}></th>
                           <th style={{ width: "20%" }}>IMEI</th>
                           <th style={{ width: "35%" }}>Descrição</th>
-                          <th style={{ width: "10%" }}>Custo</th>
-                          <th style={{ width: "10%", textAlign: "center" }}>
-                            %
-                          </th>
-                          <th style={{ width: "10%", textAlign: "center" }}>
-                            Valor
+                          <th style={{ width: "10%" }}>Preço</th>
+                          <th style={{ width: "20%", textAlign: "center" }}>
+                            Preço de Venda
                           </th>
                         </tr>
                       </thead>
@@ -303,94 +317,105 @@ const AddVenda = ({
                                 </div>
                               </td>
                               <td>{imei.number && imei.number}</td>
-                              <td>{imei.buy_id && imei.buy_id.description}</td>
+                              <td>
+                                {imei.buy_id &&
+                                  imei.buy_id.produto_id.description}
+                              </td>
                               <td>
                                 R${" "}
                                 {imei.buy_id &&
                                   formatarValor(imei.buy_id.price)}
                               </td>
-                              <td>
-                                <input
-                                  className="form-control"
-                                  type="text"
-                                  value={imei.porcento}
-                                  onChange={(e) => {
-                                    const newPorcento =
-                                      parseFloat(e.target.value) || 0;
-
-                                    const updatedImeiArray = [...imeiArray];
-                                    updatedImeiArray[index].porcento =
-                                      newPorcento;
-
-                                    // Calculate and update the "price" based on the new "porcento"
-                                    if (imei.buy_id) {
-                                      const calculatedPrice =
-                                        (imei.buy_id.price * newPorcento) /
-                                          100 +
-                                        imei.buy_id.price;
-                                      updatedImeiArray[index].price =
-                                        parseFloat(calculatedPrice.toFixed(2));
-                                    }
-
-                                    setImeiArray(updatedImeiArray);
-                                  }}
-                                  placeholder="%"
-                                />
-                              </td>
                               <td className="text-center bg-light">
-                                R${" "}
-                                <input
-                                  className="form-control"
-                                  type="text"
-                                  value={parseFloat(
-                                    calculatePriceFromPorcento(imei)
-                                  )}
-                                  onChange={(e) => {
-                                    const updatedImeiArray = [...imeiArray];
+                                <div className="input-group mb-3">
+                                  <span className="input-group-text">R$</span>
+                                  {/* <input
+                                    className="form-control"
+                                    type="text"
+                                    value={imei.price}
+                                    onChange={(e) => {
+                                      const updatedImeiArray = [...imeiArray];
 
-                                    // Convert the value to a number and update the "price"
-                                    updatedImeiArray[index].price = parseFloat(
-                                      e.target.value
-                                    );
+                                      // Convert the value to a number and update the "price"
+                                      updatedImeiArray[index].price =
+                                        parseFloat(e.target.value) || 0;
 
-                                    setImeiArray(updatedImeiArray);
-                                  }}
-                                  hidden
-                                />
-                                {imei &&
-                                  imei.buy_id &&
-                                  formatarValor(
-                                    (imei.buy_id.price *
-                                      parseFloat(imei.porcento || 0)) /
-                                      100 +
-                                      imei.buy_id.price
-                                  )}
+                                      setImeiArray(updatedImeiArray);
+                                    }}
+                                  /> */}
+                                  <NumericFormat
+                                    className="form-control"
+                                    value={imei.price}
+                                    thousandSeparator="."
+                                    decimalSeparator=","
+                                    allowNegative={false}
+                                    onValueChange={(values) => {
+                                      const updatedImeiArray = [...imeiArray];
+                                      updatedImeiArray[index].price =
+                                        parseFloat(values.value) || 0;
+                                      console.log(
+                                        updatedImeiArray[index].price
+                                      );
+                                      setImeiArray(updatedImeiArray);
+                                    }}
+                                  />
+                                  <span className="input-group-text">,00</span>
+                                </div>
                               </td>
                             </tr>
                           ))}
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td colSpan="2" className="text-center valorVenda">
-                            Valor total da venda
-                          </td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-
-                          <td colSpan={2} className="valorVenda2">
-                            R$ {valorVenda && formatarValor(valorVenda)}
-                          </td>
-                        </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
+              </div>
+              <hr />
+              <div className="w-100 d-flex justify-content-between">
+                <div className="form-group">
+                  <label htmlFor="hasImei">
+                    Deseja incluir algum produto que não tem IMEI/Serial?
+                  </label>
+                  <div>
+                    <input
+                      type="radio"
+                      id="hasImei"
+                      name="hasImei"
+                      value="sim"
+                      checked={hasImei === "sim"}
+                      onChange={handleImei}
+                    ></input>
+                    <label htmlFor="sim" className="mx-3">
+                      Sim
+                    </label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      id="hasImei"
+                      name="hasImei"
+                      value="nao"
+                      checked={hasImei === "nao"}
+                      onChange={handleImei}
+                    ></input>
+                    <label htmlFor="nao" className="mx-3">
+                      Não
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="w-100 d-flex justify-content-between">
+                {hasImei === "sim" ? (
+                  <>
+                    <SearchProdutoVenda
+                      setError={setError}
+                      error={error}
+                      onSellingPriceChange={handleSellingPriceChange}
+                      selectedProducts={selectedProducts}
+                      setSelectedProducts={setSelectedProducts}
+                      formatarValor={formatarValor}
+                    />
+                  </>
+                ) : null}
               </div>
               <div className="w-100 d-flex justify-content-between">
                 <div className="form-group col-md-2">
@@ -425,6 +450,10 @@ const AddVenda = ({
                   </select>
                 </div>
               </div>
+              <div className="text-center valorVenda rounded mb-3 p-3">
+                <div>Valor total da venda</div>
+                <div>R$ {valorTotal && formatarValor(valorTotal)}</div>
+              </div>
             </form>
             {error ? (
               <div className="alert alert-danger text-center">
@@ -442,7 +471,7 @@ const AddVenda = ({
               </button>
             </div>
           </div>
-          {seeStore && (
+          {/*seeStore && (
             <div className="d-flex flex-column w-50 align-items-center p-3 table-estoque-venda radios-5">
               <div className="text-center">
                 <h5>Estoque</h5>
@@ -465,7 +494,7 @@ const AddVenda = ({
                 </tbody>
               </table>
             </div>
-          )}
+                    )*/}
         </div>
       </div>
     </div>

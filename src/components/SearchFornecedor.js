@@ -35,6 +35,7 @@ const SearchFornecedor = ({
   };
 
   const handleSelectItem = (item) => {
+    setError(null);
     setSelectedItem(item);
     setShowFornecedor(false);
     setSearchTerm(""); // Limpa o termo de pesquisa quando um item é selecionado
@@ -80,7 +81,7 @@ const SearchFornecedor = ({
         </>
       ) : null}
       {selectedItem ? (
-        <div className="d-flex align-items-center">
+        <div className="d-flex flex-column">
           <label>Fornecedor: </label>
           <input
             className="form-control"
@@ -90,21 +91,18 @@ const SearchFornecedor = ({
             style={{ border: "none", background: "transparent", width: "auto" }}
             hidden
           />
-          <span className="mx-3">
-            {selectedItem.full_name} ({selectedItem.document})
-          </span>
-          <div
-            className="btn btn-info"
-            style={{ width: "auto" }}
-            onClick={cleanFornecedor}
-          >
-            <i className="bi bi-pencil-square"></i>
+          <div className="d-flex align-items-center btn btn-primary">
+            <span className="mx-3">
+              {selectedItem.full_name} ({selectedItem.document})
+            </span>
+            <div
+              className="btn btn-warning"
+              style={{ width: "auto" }}
+              onClick={cleanFornecedor}
+            >
+              <i className="bi bi-pencil-square"></i>
+            </div>
           </div>
-        </div>
-      ) : null}
-      {error ? (
-        <div className="alert alert-danger text-center">
-          <b>{error}</b>
         </div>
       ) : null}
     </div>

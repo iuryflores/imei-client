@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api.utils";
 
-const SearchClient = ({ title, selectedItem, setSelectedItem }) => {
+const SearchProduto = ({
+  title,
+  selectedProduto,
+  setSelectedProduto,
+  setError,
+  error,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
 
   useEffect(() => {
     const fetchSuggestions = async () => {
       try {
-        const data = await api.buscaCliente(searchTerm);
+        const data = await api.buscaProduto(searchTerm);
         setResults(data);
       } catch (error) {
-        console.error(`Erro ao buscar ${title}:`, error);
+        setError(error);
       }
     };
 
@@ -24,31 +30,33 @@ const SearchClient = ({ title, selectedItem, setSelectedItem }) => {
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
-    setSelectedItem(null); // Limpa o item selecionado quando o usuário digita
+    setSelectedProduto(null); // Limpa o item selecionado quando o usuário digita
+    setError(null);
   };
 
   const handleSelectItem = (item) => {
-    setSelectedItem(item);
-    setShowCliente(false);
+    setError(null);
+    setSelectedProduto(item);
+    setShowProduto(false);
     setSearchTerm(""); // Limpa o termo de pesquisa quando um item é selecionado
   };
 
-  const [showCliente, setShowCliente] = useState(true);
+  const [showProduto, setShowProduto] = useState(true);
 
-  const cleanCliente = () => {
-    setShowCliente(true);
-    setSelectedItem(null);
+  const cleanProduto = () => {
+    setShowProduto(true);
+    setSelectedProduto(null);
   };
 
   return (
     <div>
-      {showCliente ? (
+      {showProduto ? (
         <>
-          <label>Pesquisar {title}</label>
+          <label>Produto</label>
           <input
             type="text"
             className="form-control"
-            placeholder={`Digite o ${title.toLowerCase()}`}
+            placeholder={`Digite o produto`}
             value={searchTerm}
             onChange={handleInputChange}
           />
@@ -60,37 +68,32 @@ const SearchClient = ({ title, selectedItem, setSelectedItem }) => {
                   onClick={() => handleSelectItem(result)}
                   style={{ cursor: "pointer" }}
                 >
-                  {result.type === "juridica" ? (
-                    <i className="bi bi-building-fill mx-2"></i>
-                  ) : (
-                    <i className="bi bi-person-fill mx-2"></i>
-                  )}
-                  {result.full_name} ({result.document})
+                  {result.description} ({result.brand})
                 </li>
               ))}
             </ul>
           ) : null}
         </>
       ) : null}
-      {selectedItem ? (
+      {selectedProduto ? (
         <div className="d-flex flex-column">
-          <label>Cliente: </label>
+          <label>Produto: </label>
           <input
             className="form-control"
             type="text"
-            value={selectedItem.full_name}
+            value={selectedProduto.description}
             readOnly
             style={{ border: "none", background: "transparent", width: "auto" }}
             hidden
           />
           <div className="d-flex align-items-center btn btn-primary">
             <span className="mx-3">
-              {selectedItem.full_name} ({selectedItem.document})
+              {selectedProduto.description} ({selectedProduto.brand})
             </span>
             <div
-              className="btn btn-info"
+              className="btn btn-warning"
               style={{ width: "auto" }}
-              onClick={cleanCliente}
+              onClick={cleanProduto}
             >
               <i className="bi bi-pencil-square"></i>
             </div>
@@ -101,4 +104,4 @@ const SearchClient = ({ title, selectedItem, setSelectedItem }) => {
   );
 };
 
-export default SearchClient;
+export default SearchProduto;

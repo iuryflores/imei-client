@@ -14,8 +14,9 @@ import { Fornecedores } from "./views/Fornecedores";
 import { Compras } from "./views/Compras";
 import { Vendas } from "./views/Vendas";
 import { Auditoria } from "./views/Auditoria";
+import Logout from "./views/Logout.js";
 import AddVenda from "./views/AddVenda";
-import Produtos from "./views/Produtos";
+// import Produtos from "./views/Produtos.js";
 import Caixas from "./views/Caixas";
 import AddCompra from "./views/AddCompra";
 import User from "./views/User";
@@ -26,6 +27,9 @@ import MeuCaixa from "./views/MeuCaixa";
 import TodosCaixas from "./views/TodosCaixas";
 import FechandoCaixa from "./views/FechandoCaixa";
 import { Footer } from "./components/Footer.js";
+import Estoque from "./views/Estoque.js";
+import AddProduto from "./views/AddProduto.js";
+import Produtos from "./views/Produtos.js";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -116,14 +120,14 @@ function App() {
       setIsAdmin(userData.admin === true);
     }
   }, [userData]);
-
+  // console.log("UserData: ", userData);
+  // console.log("isAdmin: ", isAdmin);
   useEffect(() => {
     setTimeout(() => {
       setError(null);
       setMessage(null);
     }, 10000);
   }, [message, setMessage, error, setError]);
-
   return (
     <div className="sys-back">
       {loggedIn ? (
@@ -131,6 +135,7 @@ function App() {
           onLogout={logout}
           isAdmin={isAdmin}
           userData={userData}
+          setUserData={setUserData}
           setError={setError}
           userId={userId}
         />
@@ -139,6 +144,17 @@ function App() {
       <Routes>
         {loggedIn ? (
           <>
+            <Route
+              path="/logout/"
+              element={
+                <Logout
+                  message={message}
+                  setMessage={setMessage}
+                  error={error}
+                  setError={setError}
+                />
+              }
+            />
             <Route
               path="/compras/"
               element={
@@ -232,11 +248,10 @@ function App() {
                 />
               }
             />
-
             <Route
-              path="/estoque/"
+              path="/produtos/cadastrando"
               element={
-                <Produtos
+                <AddProduto
                   message={message}
                   setMessage={setMessage}
                   loading={loading}
@@ -248,6 +263,38 @@ function App() {
                   setShowModal={setShowModal}
                   openModal={openModal}
                   closeModal={closeModal}
+                />
+              }
+            />
+            <Route
+              path="/dispositivos/"
+              element={
+                <Estoque
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
+                  openModal={openModal}
+                  closeModal={closeModal}
+                />
+              }
+            />
+            <Route
+              path="/estoque/"
+              element={
+                <Produtos
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
                 />
               }
             />
@@ -451,6 +498,17 @@ function App() {
                 <LoginPage
                   handleLogin={handleLogin}
                   handleSignup={handleSignup}
+                  message={message}
+                  setMessage={setMessage}
+                  error={error}
+                  setError={setError}
+                />
+              }
+            />
+            <Route
+              path="/logout/"
+              element={
+                <Logout
                   message={message}
                   setMessage={setMessage}
                   error={error}

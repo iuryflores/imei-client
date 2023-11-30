@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import api from "../utils/api.utils";
 
 import logoIury from "../imgs/iury.png";
 
-const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
+const AppNavbar = ({
+  isAdmin,
+  setError,
+  userData,
+  setUserData,
+  userId,
+  onLogout,
+}) => {
   const { pathname } = useLocation();
   const newLocation = pathname.split("/");
   const isActive = (path) => newLocation[1] === path;
-
-  const [userData, setUserData] = useState("");
 
   useEffect(() => {
     const getUser = async (userId) => {
@@ -44,6 +49,7 @@ const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
             <Nav.Link as={Link} to="/" active={isActive("")}>
               Caixa
             </Nav.Link>
+
             {/* <Nav.Link as={Link} to="/compras" active={isActive("compras")}>
               Compras
             </Nav.Link>
@@ -107,8 +113,16 @@ const AppNavbar = ({ isAdmin, setError, userId, onLogout }) => {
                 </NavDropdown.Item>
               </NavDropdown>
             ) : null}
+
             <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
               Estoque
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/dispositivos/"
+              active={isActive("dispositivos")}
+            >
+              Dispositivos
             </Nav.Link>
 
             {isAdmin === true ? (

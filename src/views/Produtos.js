@@ -11,9 +11,6 @@ const Produtos = ({
   setLoading,
   loadingGif,
   userId,
-  openModal,
-  showModal,
-  closeModal,
 }) => {
   const [produtos, setProdutos] = useState([]);
 
@@ -31,24 +28,6 @@ const Produtos = ({
     getProdutos();
   }, [setLoading]);
 
-  const formatarValor = (valor) => {
-    if (valor) {
-      const valorFormatado = valor.toLocaleString("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-      return valorFormatado;
-    }
-  };
-
-  let valorEstoque = 0;
-  for (let index = 0; index < produtos.length; index++) {
-    if (produtos[index].buy_id) {
-      const element = produtos[index].buy_id || null;
-      valorEstoque += element.price;
-    }
-  }
-
   const renderTable = () => {
     if (loading === false) {
       if (produtos.length > 0) {
@@ -56,10 +35,10 @@ const Produtos = ({
           <table className="table mb-0 table-striped table-hover">
             <thead>
               <tr>
-                <th>Data (compra)</th>
-                <th>Nº da compra</th>
-                <th>IMEI's</th>
-                <th>Valor (compra)</th>
+                <th>Data do cadastro</th>
+                <th>Descrição</th>
+                <th>Marca</th>
+                <th>Quantidade</th>
               </tr>
             </thead>
             <tbody>
@@ -67,21 +46,17 @@ const Produtos = ({
                 return (
                   <tr key={index}>
                     <td>
-                      {new Date(produto.buy_id.dateBuy).toLocaleDateString(
-                        "pt-br",
-                        {
-                          day: "numeric",
-                          month: "numeric",
-                          year: "numeric",
-                        }
-                      )}
+                      {new Date(produto.createdAt).toLocaleDateString("pt-br", {
+                        day: "numeric",
+                        month: "numeric",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </td>
-                    <td>COM{produto.buy_id.buy_number || ""}</td>
-                    <td>
-                      {produto.buy_id.description} (IMEI: {produto.number})
-                    </td>
-                    <td>R$ {formatarValor(produto.buy_id.price)}</td>
-                    <td></td>
+                    <td>{produto.description}</td>
+                    <td>{produto.brand}</td>
+                    <td>{produto.qtd}</td>
                   </tr>
                 );
               })}
@@ -91,7 +66,7 @@ const Produtos = ({
       } else {
         return (
           <div className="text-center text-dark alert alert-warning mt-3">
-            Nenhum produto em estoque!
+            Nenhum produto em produtos!
           </div>
         );
       }
@@ -107,18 +82,12 @@ const Produtos = ({
   return (
     <div className="p-3 m-3  d-flex flex-column">
       <div className="d-flex align-items-baseline justify-content-between">
-        <h1>Estoque</h1>
+        <h3>
+          <i className="bi bi-phone-vibrate mx-3"></i>Estoque
+        </h3>
         <div className="mb-3">
-          <div className="d-flex align-items-center alert alert-info">
-            <span>
-              Quantidade: <b> {produtos.length}</b>
-            </span>
-            <span className="mx-3"> | </span>
-            <span>Total: R$ {formatarValor(valorEstoque)}</span>
-          </div>
-
-          <Link className="btn btn-success" to={"/compras/cadastrando"}>
-            Cadastrar compra
+          <Link className="btn btn-success" to={"/produtos/cadastrando"}>
+            Cadastrar Produto
           </Link>
         </div>
       </div>

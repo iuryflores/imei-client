@@ -39,7 +39,16 @@ class Api {
           localStorage.removeItem("token");
           localStorage.removeItem("userId");
           if (window.location.pathname !== "/login") {
-            window.location.replace("/login");
+            window.location.replace("/logout");
+          }
+        }
+        if (
+          error.response.data.msg.message === "invalid signature" ||
+          error.response.data.msg ===
+            "Sua sessão expirou, é necessário fazer login novamente."
+        ) {
+          if (window.location.pathname !== "/login") {
+            window.location.replace("/logout");
           }
         }
         console.error(error);
@@ -139,6 +148,8 @@ class Api {
   addImei = async (
     customerData,
     selectedItem,
+    selectedProduto,
+    priceVendaDb,
     priceDb,
     valorFormatado,
     imeiArray,
@@ -151,6 +162,8 @@ class Api {
         priceDb,
         valorFormatado,
         selectedItem,
+        selectedProduto,
+        priceVendaDb,
         imeiArray,
         userId
       );
@@ -187,7 +200,9 @@ class Api {
     sellDate,
     selectedCliente,
     imeiArray,
-    valorVenda,
+    selectedProducts,
+    qtdSelectedProducts,
+    valorTotal,
     userId,
     userData,
     dataPagamento,
@@ -200,7 +215,9 @@ class Api {
         sellDate,
         selectedCliente,
         imeiArray,
-        valorVenda,
+        selectedProducts,
+        qtdSelectedProducts,
+        valorTotal,
         userId,
         userData,
         dataPagamento,
@@ -212,7 +229,7 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  getProdutos = async () => {
+  getEstoque = async () => {
     try {
       const { data } = await this.api.get("/imei/");
       return data;
@@ -231,6 +248,14 @@ class Api {
   deleteCompra = async (compraData) => {
     try {
       const { data } = await this.api.put("/compras/delete/", compraData);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  devolverVenda = async (vendaID, userId) => {
+    try {
+      const { data } = await this.api.put("/vendas/devolver/", vendaID, userId);
       return data;
     } catch (error) {
       throw error.response.data.msg;
@@ -288,6 +313,16 @@ class Api {
     try {
       const { data } = await this.api.get(
         `/lancamentos/meu-caixa/${selectedDate}/`
+      );
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getLancamentosCaixa = async (caixa_id) => {
+    try {
+      const { data } = await this.api.get(
+        `/lancamentos/meu-caixa/${caixa_id}/`
       );
       return data;
     } catch (error) {
@@ -379,6 +414,37 @@ class Api {
         userId,
         selectedDate
       );
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  getProdutos = async () => {
+    try {
+      const { data } = await this.api.get(`/produtos/`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  addProduto = async (formData, hasImei, valorCompra, valorVenda, userId) => {
+    try {
+      const { data } = await this.api.post(
+        `/produtos/new/`,
+        formData,
+        hasImei,
+        valorCompra,
+        valorVenda,
+        userId
+      );
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
+  buscaProduto = async (term) => {
+    try {
+      const { data } = await this.api.get(`/produtos/busca/${term}`);
       return data;
     } catch (error) {
       throw error.response.data.msg;
