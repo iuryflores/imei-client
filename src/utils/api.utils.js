@@ -450,6 +450,14 @@ class Api {
       throw error.response.data.msg;
     }
   };
+  deleteProduto = async (produtoID) => {
+    try {
+      const { data } = await this.api.delete(`/produtos/delete/${produtoID}`);
+      return data;
+    } catch (error) {
+      throw error.response.data.msg;
+    }
+  };
 }
 
 export default new Api();

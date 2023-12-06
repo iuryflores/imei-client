@@ -263,6 +263,7 @@ function App() {
                   setShowModal={setShowModal}
                   openModal={openModal}
                   closeModal={closeModal}
+                  userData={userData}
                 />
               }
             />
@@ -295,6 +296,7 @@ function App() {
                   loadingGif={loadingGif}
                   error={error}
                   setError={setError}
+                  userData={userData}
                 />
               }
             />
