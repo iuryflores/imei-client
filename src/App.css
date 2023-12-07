@@ -163,7 +163,7 @@ body {
   border-radius: 4px;
 }
 
-/* Estilos para botão */
+/* Estilos para botão
 .btn {
   display: block;
   width: 100%;
@@ -175,7 +175,7 @@ body {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
+} */
 
 .lista-busca {
   border: 1px solid lightblue;
