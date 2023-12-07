@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import api from "../utils/api.utils";
-import { useNavigate } from "react-router";
 
 export const ModalEditProduto = ({
   show,
@@ -12,7 +11,6 @@ export const ModalEditProduto = ({
 }) => {
   const [description, setDescription] = useState(selectedProduto.description);
 
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     const produtoID = selectedProduto._id;
