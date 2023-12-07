@@ -227,6 +227,9 @@ function App() {
                   userId={userId}
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
+                  openModal={openModal}
+                  closeModal={closeModal}
+                  showModal={showModal}
                 />
               }
             />

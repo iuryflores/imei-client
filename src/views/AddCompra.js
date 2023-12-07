@@ -7,7 +7,15 @@ import { useNavigate } from "react-router-dom";
 import InputMask from "react-input-mask";
 import SearchProduto from "../components/SearchProduto";
 
-const AddCompra = ({ message, setMessage, userId }) => {
+const AddCompra = ({
+  message,
+  setMessage,
+  userId,
+  openModal,
+  showModal,
+  closeModal,
+  userData,
+}) => {
   const [error, setError] = useState(null);
   //formulario de registro da compra
   const [customerData, setCustomerData] = useState({
@@ -223,6 +231,10 @@ const AddCompra = ({ message, setMessage, userId }) => {
                   setSelectedProduto={setSelectedProduto}
                   setError={setError}
                   error={error}
+                  openModal={openModal}
+                  showModal={showModal}
+                  closeModal={closeModal}
+                  userData={userData}
                 />
               </div>
             </div>
