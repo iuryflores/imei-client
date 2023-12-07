@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api.utils";
+import { ModalEditProduto } from "./ModalEditProduto";
 
 const SearchProduto = ({
   title,
@@ -7,10 +8,24 @@ const SearchProduto = ({
   setSelectedProduto,
   setError,
   error,
+  openModal,
+  showModal,
+  closeModal,
+  userData,
 }) => {
+  const updateProductName = (productId, newName) => {
+    setResults((prevResults) =>
+      prevResults.map((result) =>
+        result._id === productId
+          ? { ...result, description: newName }
+          : result
+      )
+    );
+  };
+
+
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
-
   useEffect(() => {
     const fetchSuggestions = async () => {
       try {
@@ -26,7 +41,7 @@ const SearchProduto = ({
     } else {
       setResults([]);
     }
-  }, [searchTerm, title]);
+  }, [searchTerm, title, selectedProduto]);
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -40,6 +55,8 @@ const SearchProduto = ({
     setShowProduto(false);
     setSearchTerm(""); // Limpa o termo de pesquisa quando um item é selecionado
   };
+
+ 
 
   const [showProduto, setShowProduto] = useState(true);
 
@@ -93,11 +110,29 @@ const SearchProduto = ({
             <div
               className="btn btn-warning"
               style={{ width: "auto" }}
-              onClick={cleanProduto}
+              onClick={openModal}
             >
               <i className="bi bi-pencil-square"></i>
             </div>
+            <div
+              className="btn btn-danger mx-2"
+              style={{ width: "auto" }}
+              onClick={cleanProduto}
+            >
+              <i className="bi bi-x-circle"></i>
+            </div>
           </div>
+          {/* Modal de edit produto */}
+          <ModalEditProduto
+            show={showModal}
+            onClose={closeModal}
+            error={error}
+            setError={setError}
+            userData={userData}
+            selectedProduto={selectedProduto}
+            setSelectedProduto={setSelectedProduto}
+            updateProductName={updateProductName}
+          />
         </div>
       ) : null}
     </div>

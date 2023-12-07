@@ -227,6 +227,9 @@ function App() {
                   userId={userId}
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
+                  openModal={openModal}
+                  closeModal={closeModal}
+                  showModal={showModal}
                 />
               }
             />
@@ -263,6 +266,7 @@ function App() {
                   setShowModal={setShowModal}
                   openModal={openModal}
                   closeModal={closeModal}
+                  userData={userData}
                 />
               }
             />
@@ -295,6 +299,7 @@ function App() {
                   loadingGif={loadingGif}
                   error={error}
                   setError={setError}
+                  userData={userData}
                 />
               }
             />
