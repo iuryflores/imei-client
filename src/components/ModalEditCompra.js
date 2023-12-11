@@ -47,7 +47,7 @@ export const ModalEditCompra = ({ show, onClose, compraID }) => {
         <div className="modal-content shadow">
           <div className="modal-header">
             <h5 className="modal-title">
-              Editando compra COM{compra.buy_number}
+              Adicionando valor à compra <b>COM{compra.buy_number}</b>
             </h5>
             <div>
               <div
