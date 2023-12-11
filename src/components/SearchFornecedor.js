@@ -96,11 +96,11 @@ const SearchFornecedor = ({
               {selectedItem.full_name} ({selectedItem.document})
             </span>
             <div
-              className="btn btn-warning"
+              className="btn btn-danger"
               style={{ width: "auto" }}
               onClick={cleanFornecedor}
             >
-              <i className="bi bi-pencil-square"></i>
+              <i className="bi bi-x-circle"></i>
             </div>
           </div>
         </div>

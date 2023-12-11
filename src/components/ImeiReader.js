@@ -31,7 +31,7 @@ const ImeiReader = ({ onImeiAdd }) => {
         <label>Outro Serial:</label>
         <input
           className="form-control"
-          type="number"
+          type="text"
           value={serial}
           onChange={(e) => setSerial(e.target.value)}
           placeholder=""
