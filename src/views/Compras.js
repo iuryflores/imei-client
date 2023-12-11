@@ -118,6 +118,15 @@ export const Compras = ({
     openModal(true);
   };
 
+  const recarregarListaCompras = async () => {
+    try {
+      const lista = await api.getAllCompras();
+      setCompras(lista);
+    } catch (error) {
+      console.error("Erro ao carregar a lista de compras", error);
+    }
+  };
+
   const renderTable = () => {
     if (loading === false) {
       if (compras.length > 0) {
@@ -247,6 +256,8 @@ export const Compras = ({
         setError={setError}
         userData={userData}
         compraID={compraID}
+        setMessage={setMessage}
+        onEditSuccess={recarregarListaCompras}
       />
       {/* Modal de edit produto */}
       <ModalDelete

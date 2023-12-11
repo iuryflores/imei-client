@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import InputMask from "react-input-mask";
 
-export const ModalEditCompra = ({ show, onClose, compraID }) => {
+export const ModalEditCompra = ({
+  show,
+  onClose,
+  compraID,
+  setMessage,
+  onEditSuccess,
+}) => {
   const [compra, setCompra] = useState("");
 
   const [price, setPrice] = useState(0);
@@ -39,14 +45,17 @@ export const ModalEditCompra = ({ show, onClose, compraID }) => {
 
   const handleSubmit = async (e) => {
     const { _id } = compra;
-    e.preventDefault();
+
     try {
       const editProd = await api.addPriceProduto(_id, {
         priceDb,
         priceVendaDb,
       });
       if (editProd) {
+        setMessage(editProd.msg);
         onClose();
+
+        onEditSuccess();
       }
     } catch (error) {
       setError(error);
