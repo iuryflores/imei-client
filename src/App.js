@@ -30,6 +30,7 @@ import { Footer } from "./components/Footer.js";
 import Estoque from "./views/Estoque.js";
 import AddProduto from "./views/AddProduto.js";
 import Produtos from "./views/Produtos.js";
+import Estatisticas from "./views/Estatisticas.js";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -156,7 +157,7 @@ function App() {
               }
             />
             <Route
-              path="/compras/"
+              path="/estatisticas/compras/"
               element={
                 <Compras
                   message={message}
@@ -166,7 +167,7 @@ function App() {
                   loadingGif={loadingGif}
                   error={error}
                   setError={setError}
-                  userId={userId}
+                  userData={userData}
                   showModal={showModal}
                   setShowModal={setShowModal}
                   openModal={openModal}
@@ -175,7 +176,7 @@ function App() {
               }
             />
             <Route
-              path="/vendas/"
+              path="/estatisticas/vendas/"
               element={
                 <Vendas
                   message={message}
@@ -210,6 +211,26 @@ function App() {
                   formatarData={formatarData}
                   formatarDataEHora={formatarDataEHora}
                   userData={userData}
+                />
+              }
+            />
+            <Route
+              path="/estatisticas/"
+              element={
+                <Estatisticas
+                  message={message}
+                  setMessage={setMessage}
+                  loading={loading}
+                  setLoading={setLoading}
+                  loadingGif={loadingGif}
+                  error={error}
+                  setError={setError}
+                  userId={userId}
+                  formatarData={formatarData}
+                  formatarDataEHora={formatarDataEHora}
+                  openModal={openModal}
+                  closeModal={closeModal}
+                  showModal={showModal}
                 />
               }
             />

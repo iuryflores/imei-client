@@ -50,7 +50,6 @@ const MeuCaixa = ({
       try {
         setLoading(true);
         const caixaAberto = await api.checkCaixaAberto(selectedDate);
-        console.log(caixaAberto);
         if (caixaAberto) {
           setCaixaDiario(caixaAberto);
           setCaixa_id(caixaAberto._id);
@@ -91,7 +90,6 @@ const MeuCaixa = ({
       console.log(error);
     }
   };
-  console.log("caixa_id: ", caixa_id);
   useEffect(() => {
     const getLancamentos = async () => {
       try {

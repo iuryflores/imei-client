@@ -163,6 +163,33 @@ body {
   border-radius: 4px;
 }
 
+.divs-estat {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  flex-direction: row;
+}
+
+.divs-estat>a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  background-color: #34db3944;
+  padding: 40px 20px;
+  font-weight: bold;
+  box-sizing: border-box;
+  transition: 0.2s all;
+}
+.divs-estat>a:hover {
+  font-size: 1.1rem;
+}
+.divs-estat i {
+  font-size: 1.8rem;
+}
+
 /* Estilos para botão
 .btn {
   display: block;

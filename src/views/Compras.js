@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import { Link } from "react-router-dom";
+import { ModalEditCompra } from "../components/ModalEditCompra";
 
 export const Compras = ({
   message,
@@ -10,9 +11,14 @@ export const Compras = ({
   loading,
   setLoading,
   loadingGif,
-  userId,
+  userData,
+  openModal,
+  showModal,
+  closeModal,
 }) => {
   const [compras, setCompras] = useState([]);
+
+  const [compraID, setCompraID] = useState("");
 
   useEffect(() => {
     const getCompras = async () => {
@@ -89,6 +95,12 @@ export const Compras = ({
     }
   };
 
+  const editCompra = async (compra_id) => {
+    setCompraID(compra_id);
+    console.log(compraID);
+    openModal(true);
+  };
+
   const renderTable = () => {
     if (loading === false) {
       if (compras.length > 0) {
@@ -101,7 +113,7 @@ export const Compras = ({
                 <th>Fornecedor</th>
                 <th>Produto</th>
                 <th>Qtd</th>
-                <th>Valor (unitário)</th>
+                {/* <th>Valor (unitário)</th> */}
                 <th>Valor (total)</th>
                 <th>Comprador(a)</th>
                 <th></th>
@@ -110,6 +122,8 @@ export const Compras = ({
             <tbody>
               {compras.map((compra, index) => {
                 const valorTotalCompra = compra.imei_id.length * compra.price;
+                const comprador =
+                  compra.user_buy && compra.user_buy.full_name.split(" ");
 
                 return (
                   <tr
@@ -134,24 +148,38 @@ export const Compras = ({
                       {compra.fornecedor_id.full_name} (
                       {compra.fornecedor_id.document})
                     </td>
-                    <td>{compra.description}</td>
-                    <td>{compra.imei_id.length}</td>
-                    <td style={{ width: "fit-content" }}>
-                      R$ {formatarValorMonetario(compra.price)}
+                    <td>
+                      {compra.produto_id && compra.produto_id.description}
                     </td>
+                    <td>{(compra.produto_id && compra.produto_id.qtd) || 0}</td>
+                    {/* <td style={{ width: "fit-content" }}>
+                      R$ {formatarValorMonetario(compra.price)}
+                    </td> */}
                     <td style={{ width: "fit-content" }}>
                       R$ {formatarValorMonetario(valorTotalCompra)}
                     </td>
-                    <td>{compra.user_buy && compra.user_buy.full_name}</td>
+                    <td>{compra.user_buy && comprador[0]}</td>
                     <td>
-                      <div
-                        className="btn btn-outline-danger"
-                        onClick={() => {
-                          deleteCompra(compra._id);
-                        }}
-                      >
-                        <i className="bi bi-trash3-fill"></i>
-                      </div>
+                      {userData.admin ? (
+                        <>
+                          <div
+                            className="btn btn-warning mx-1"
+                            onClick={() => {
+                              editCompra(compra._id);
+                            }}
+                          >
+                            <i className="bi bi-pencil-square"></i>
+                          </div>
+                          <div
+                            className="btn btn-danger"
+                            onClick={() => {
+                              deleteCompra(compra._id);
+                            }}
+                          >
+                            <i className="bi bi-trash3-fill"></i>
+                          </div>
+                        </>
+                      ) : null}
                     </td>
                   </tr>
                 );
@@ -192,6 +220,15 @@ export const Compras = ({
       <hr />
       {message ? <div className="alert alert-success">{message}</div> : null}
       <div className="border p-2 shadow rounded w-100">{renderTable()}</div>
+      {/* Modal de edit produto */}
+      <ModalEditCompra
+        show={showModal}
+        onClose={closeModal}
+        error={error}
+        setError={setError}
+        userData={userData}
+        compraID={compraID}
+      />
     </div>
   );
 };

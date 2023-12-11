@@ -86,7 +86,7 @@ const AppNavbar = ({
             >
               Fornecedores
             </Nav.Link> */}
-            {isAdmin !== true ? (
+            {/* {isAdmin === true ? (
               <NavDropdown
                 title="Estatística"
                 id="admin-dropdown"
@@ -112,7 +112,7 @@ const AppNavbar = ({
                   Vendas
                 </NavDropdown.Item>
               </NavDropdown>
-            ) : null}
+            ) : null} */}
 
             <Nav.Link as={Link} to="/estoque/" active={isActive("estoque")}>
               Estoque
