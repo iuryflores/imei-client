@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
 import { Link } from "react-router-dom";
 import { ModalEditCompra } from "../components/ModalEditCompra";
+import { ModalDelete } from "../components/ModalDelete";
 
 export const Compras = ({
   message,
@@ -17,6 +18,9 @@ export const Compras = ({
   closeModal,
 }) => {
   const [compras, setCompras] = useState([]);
+
+  console.log("Compras: ", compras);
+  const [showModalDelete, setShowModalDelete] = useState(false);
 
   const [compraID, setCompraID] = useState("");
 
@@ -81,7 +85,7 @@ export const Compras = ({
       const deleteCompra = await api.deleteCompra({ compra_id });
       setLoading(false);
       setMessage(deleteCompra.msg);
-
+      setShowModalDelete(false);
       // Remove the deleted venda from the list
       setCompras((prevCompras) =>
         prevCompras.filter((compra) => compra._id !== compra_id)
@@ -93,6 +97,19 @@ export const Compras = ({
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const [currentCompraID, setCurrentCompraID] = useState("");
+  const [currentCompra, setCurrentCompra] = useState("");
+
+  const handleMsgConfirm = (compra_id, compra) => {
+    setCurrentCompraID(compra_id);
+    setCurrentCompra(compra);
+    setShowModalDelete(true);
+  };
+
+  const closeDelete = () => {
+    setShowModalDelete(false);
   };
 
   const editCompra = async (compra_id) => {
@@ -173,7 +190,7 @@ export const Compras = ({
                           <div
                             className="btn btn-danger"
                             onClick={() => {
-                              deleteCompra(compra._id);
+                              handleMsgConfirm(compra._id, compra);
                             }}
                           >
                             <i className="bi bi-trash3-fill"></i>
@@ -228,6 +245,17 @@ export const Compras = ({
         setError={setError}
         userData={userData}
         compraID={compraID}
+      />
+      {/* Modal de edit produto */}
+      <ModalDelete
+        showModalDelete={showModalDelete}
+        onClose={closeDelete}
+        error={error}
+        setError={setError}
+        userData={userData}
+        deleteCompra={deleteCompra}
+        currentCompra={currentCompra}
+        currentCompraID={currentCompraID}
       />
     </div>
   );
