@@ -19,7 +19,7 @@ export const Compras = ({
 }) => {
   const [compras, setCompras] = useState([]);
 
-  console.log("Compras: ", compras);
+  // console.log("Compras: ", compras);
   const [showModalDelete, setShowModalDelete] = useState(false);
 
   const [compraID, setCompraID] = useState("");
@@ -179,14 +179,16 @@ export const Compras = ({
                     <td>
                       {userData.admin ? (
                         <>
-                          <div
-                            className="btn btn-warning mx-1"
-                            onClick={() => {
-                              editCompra(compra._id);
-                            }}
-                          >
-                            <i className="bi bi-pencil-square"></i>
-                          </div>
+                          {compra.price <= 0 ? (
+                            <div
+                              className="btn btn-warning mx-1"
+                              onClick={() => {
+                                editCompra(compra._id);
+                              }}
+                            >
+                              <i className="bi bi-pencil-square"></i>
+                            </div>
+                          ) : null}
                           <div
                             className="btn btn-danger"
                             onClick={() => {

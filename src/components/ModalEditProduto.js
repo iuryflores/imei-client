@@ -11,7 +11,6 @@ export const ModalEditProduto = ({
 }) => {
   const [description, setDescription] = useState(selectedProduto.description);
 
-
   const handleSubmit = async (e) => {
     const produtoID = selectedProduto._id;
     e.preventDefault();
@@ -29,7 +28,6 @@ export const ModalEditProduto = ({
     } catch (error) {
       console.log(error);
     }
-    console.log(selectedProduto);
   };
 
   return (

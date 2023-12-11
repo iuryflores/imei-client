@@ -7,7 +7,6 @@ export const ModalDelete = ({
   currentCompra,
   currentCompraID,
 }) => {
-  console.log(currentCompra);
   return (
     <div className={`modal  ${showModalDelete ? "show" : ""}`}>
       <div

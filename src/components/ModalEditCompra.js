@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import api from "../utils/api.utils";
+import InputMask from "react-input-mask";
 
 export const ModalEditCompra = ({ show, onClose, compraID }) => {
   const [compra, setCompra] = useState("");
 
-  const [value, setValue] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [priceDb, setPriceDb] = useState(0);
+
+  const [priceVenda, setPriceVenda] = useState(0);
+  const [priceVendaDb, setPriceVendaDb] = useState(0);
 
   const [error, setError] = useState("");
 
@@ -14,7 +19,16 @@ export const ModalEditCompra = ({ show, onClose, compraID }) => {
         try {
           const getProduto = await api.getProdutoID(compraID);
           setCompra(getProduto);
-          setValue(getProduto.price);
+          setPrice(
+            getProduto.price.toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+            })
+          );
+          setPriceVenda(
+            getProduto.sellPrice.toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+            })
+          );
         } catch (error) {
           console.log(error);
         }
@@ -28,15 +42,66 @@ export const ModalEditCompra = ({ show, onClose, compraID }) => {
     e.preventDefault();
     try {
       const editProd = await api.addPriceProduto(_id, {
-        value,
+        priceDb,
+        priceVendaDb,
       });
       if (editProd) {
         onClose();
       }
     } catch (error) {
+      setError(error);
       console.log(error);
     }
   };
+  const handleValorChange = (e) => {
+    const inputValor = e.target.value;
+    const valorNumerico = parseFloat(inputValor.replace(/[^0-9]/g, "")) / 100;
+
+    setPriceDb(valorNumerico);
+
+    if (!isNaN(valorNumerico)) {
+      setPrice(
+        valorNumerico.toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      );
+    } else {
+      setPrice("");
+    }
+  };
+  const handleValorVendaChange = (e) => {
+    const inputValor = e.target.value;
+
+    const valorNumericoVenda =
+      parseFloat(inputValor.replace(/[^0-9]/g, "")) / 100;
+
+    setPriceVendaDb(valorNumericoVenda);
+
+    if (!isNaN(valorNumericoVenda)) {
+      setPriceVenda(
+        valorNumericoVenda.toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+      );
+    } else {
+      setPrice("");
+    }
+  };
+
+  useEffect(() => {
+    const formattedPrice = price.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+    });
+    const formattedPriceVenda = priceVenda.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+    });
+
+    // Setar os valores formatados
+    setPrice(formattedPrice);
+    setPriceVenda(formattedPriceVenda);
+  }, [price, priceVenda]);
 
   return (
     <div className={`modal modal-lg ${show ? "show" : ""}`}>
@@ -64,13 +129,30 @@ export const ModalEditCompra = ({ show, onClose, compraID }) => {
 
               <div className="form-group">
                 <label htmlFor="value">Valor</label>
-                <input
-                  type="text"
+                <InputMask
+                  mask=""
+                  maskChar=""
+                  alwaysShowMask={false}
+                  id="price"
+                  name="price"
+                  value={price}
+                  placeholder="0,00"
+                  onChange={handleValorChange}
                   className="form-control"
-                  id="value"
-                  name="value"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="value">Valor de venda</label>
+                <InputMask
+                  mask=""
+                  maskChar=""
+                  alwaysShowMask={false}
+                  id="priceVenda"
+                  name="priceVenda"
+                  value={priceVenda}
+                  placeholder="0,00"
+                  onChange={handleValorVendaChange}
+                  className="form-control"
                 />
               </div>
             </form>

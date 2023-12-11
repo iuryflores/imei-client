@@ -10,7 +10,7 @@ const Estoque = ({
   loading,
   setLoading,
   loadingGif,
-  userId,
+  userData,
   openModal,
   showModal,
   closeModal,
@@ -135,8 +135,12 @@ const Estoque = ({
             <span>
               Quantidade: <b> {estoque.length}</b>
             </span>
-            <span className="mx-3"> | </span>
-            <span>Total: R$ {formatarValor(valorEstoque)}</span>
+            {userData.admin ? (
+              <>
+                <span className="mx-3"> | </span>
+                <span>Total: R$ {formatarValor(valorEstoque)}</span>
+              </>
+            ) : null}
           </div>
 
           <Link className="btn btn-success" to={"/compras/cadastrando"}>
@@ -146,7 +150,7 @@ const Estoque = ({
       </div>
       <div className="mb-3">
         <input
-        className="form-control"
+          className="form-control"
           type="text"
           placeholder="Pesquisar produto"
           value={searchTerm}

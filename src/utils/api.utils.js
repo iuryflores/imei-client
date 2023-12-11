@@ -5,9 +5,9 @@ class Api {
   constructor() {
     this.api = axios.create({
       // baseURL: "http://imeiapp.iuryflores.com/",
-      baseURL: "http://localhost:9000",
+      // baseURL: "http://localhost:9000",
       // baseURL: "http://35.175.178.173:3001",
-      // baseURL: "https://imeiapi.iuryflores.dev.br/",
+      baseURL: "https://imeiapi.iuryflores.dev.br/",
     });
     this.api.interceptors.request.use(
       (config) => {
@@ -469,12 +469,12 @@ class Api {
       throw error.response.data.msg;
     }
   };
-  addPriceProduto = async (produtoID, value, quantity) => {
+  addPriceProduto = async (buy_id, priceDb, priceVendaDb) => {
     try {
       const { data } = await this.api.put(
-        `/produtos/add-price/${produtoID}`,
-        value,
-        quantity
+        `/compras/add-price/${buy_id}`,
+        priceDb,
+        priceVendaDb
       );
       return data;
     } catch (error) {
